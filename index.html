@@ -369,10 +369,11 @@ header#navbar.scrolled{
   border-bottom:1px solid var(--glass-border-strong);padding:11px 0;
   box-shadow:var(--glass-shadow-1);
 }
-/* The navbar now shares the same responsive max-width as the rest of
-   the page's .container (see LAYOUT UTILITIES above) so the header and
-   every section scale together consistently at wide viewports. */
-.nav-container{max-width:clamp(1240px, 78vw, 1600px);}
+/* The navbar keeps its own wider, fixed max-width (independent of the
+   page content's responsive clamp() below) so the logo/nav links never
+   shift inward compared to before — the header should always be at
+   least as wide as the page content beneath it, never narrower. */
+.nav-container{max-width:1600px;}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;}
 .logo{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk';font-weight:700;font-size:19px;}
 .logo-mark{
