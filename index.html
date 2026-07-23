@@ -351,9 +351,9 @@ header#navbar.scrolled{
   backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
 }
 .logo-text span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;}
-.nav-links{display:flex;align-items:center;gap:4px;}
+.nav-links{display:flex;align-items:center;gap:2px;flex-shrink:1;min-width:0;}
 .nav-links a{
-  padding:9px 15px;border-radius:999px;font-size:14px;font-weight:500;color:var(--text-dim);
+  padding:9px 15px;border-radius:999px;font-size:14px;font-weight:500;color:var(--text-dim);white-space:nowrap;
   transition:color .3s, background .3s, backdrop-filter .3s;position:relative;
 }
 .nav-links a:hover{color:var(--text);background:var(--glass);backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);}
@@ -386,6 +386,16 @@ header#navbar.scrolled .nav-current-section{
 }
 @media (max-width:1180px){
   .nav-current-desktop{display:none;}
+}
+/* Just above the hamburger breakpoint, nav-links has the least room
+   (competing with the logo, status pill, "Get Started" button and
+   theme toggle all in one row) — tighten spacing here so every item
+   ("PDF Studio", "Legal AI", etc.) stays on one line instead of
+   wrapping to two, without changing anything at wider widths. */
+@media (max-width:1320px) and (min-width:1181px){
+  .nav-links{gap:0;}
+  .nav-links a{padding:9px 10px;font-size:13.5px;}
+  .nav-dashboard-desktop{padding:9px 16px;font-size:13.5px;}
 }
 
 /* Mobile/tablet floating version — fixed under the header, independent of flex flow */
