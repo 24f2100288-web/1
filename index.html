@@ -565,16 +565,13 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
       <a href="#study">Study</a>
       <a href="#productivity">Productivity</a>
       <a href="#engineering">Engineering</a>
-      <a href="#ai-tools">AI Tools</a>
       <a href="#legal-ai">Legal AI</a>
-      <a href="#knowledge-hub">Knowledge Hub</a>
       <a href="#build">Build</a>
       <a href="#about">About</a>
       <a href="#contact">Contact</a>
-      <a href="#dashboard" class="nav-dashboard-mobile">Dashboard</a>
     </nav>
     <div class="nav-actions">
-      <a href="#dashboard" class="btn btn-primary btn-sm nav-dashboard-desktop">Dashboard</a>
+      <a href="#legal-ai" class="btn btn-primary btn-sm nav-dashboard-desktop">Legal AI</a>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
     </div>
   </div>
@@ -592,14 +589,14 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
     <div class="search-wrap">
       <div class="search-bar">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="white" stroke-width="1.8"/><path d="M21 21l-4.35-4.35" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
-        <input type="text" id="globalSearch" placeholder="Search 60+ tools — try 'resume', 'python', 'electronics'..." autocomplete="off">
+        <input type="text" id="globalSearch" placeholder="Search tools — try 'resume', 'legal', 'electronics'..." autocomplete="off">
         <button class="btn btn-primary" id="searchBtn">Search</button>
       </div>
       <div id="searchResults" class="glass"></div>
     </div>
 
     <div class="hero-floaters">
-      <div class="floater glass"><div class="fnum">70+</div><div class="flabel">Student Tools</div></div>
+      <div class="floater glass"><div class="fnum">30+</div><div class="flabel">Student Tools</div></div>
       <div class="floater glass"><div class="fnum">16</div><div class="flabel">Live Calculators</div></div>
       <div class="floater glass"><div class="fnum">7</div><div class="flabel">Career Roadmaps</div></div>
       <div class="floater glass"><div class="fnum">100%</div><div class="flabel">Free, Zero Backend</div></div>
@@ -617,7 +614,7 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
     <div class="section-head reveal">
       <div class="eyebrow">Study Tools</div>
       <h2>Study smarter, <span class="gradient-text">not harder</span></h2>
-      <p>Twelve focused tools to help you absorb, organize and retain knowledge faster.</p>
+      <p>Focused tools to help you absorb, organize and retain knowledge faster.</p>
     </div>
     <div class="grid grid-cols" id="studyGrid"></div>
   </div>
@@ -631,7 +628,7 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
     <div class="section-head reveal">
       <div class="eyebrow">Productivity</div>
       <h2>Plan your day, <span class="gradient-text">own your semester</span></h2>
-      <p>Ten tools that keep your goals, habits and schedule perfectly in sync.</p>
+      <p>Simple tools that keep your goals and habits perfectly in sync.</p>
     </div>
     <div class="grid grid-cols" id="productivityGrid"></div>
   </div>
@@ -648,20 +645,6 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
       <p>Sixteen real, working calculators for circuits, logic and number systems.</p>
     </div>
     <div class="grid grid-cols" id="engineeringGrid"></div>
-  </div>
-</section>
-
-<!-- ============================================================
-     AI TOOLS SECTION
-     ============================================================ -->
-<section class="section" id="ai-tools">
-  <div class="container">
-    <div class="section-head reveal">
-      <div class="eyebrow">AI Tools</div>
-      <h2>Your <span class="gradient-text">AI co-pilot</span> for everything academic</h2>
-      <p>Ten AI-powered assistants for prompts, careers, interviews and study help.</p>
-    </div>
-    <div class="grid grid-cols" id="aiGrid"></div>
   </div>
 </section>
 
@@ -742,20 +725,6 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 </section>
 
 <!-- ============================================================
-     KNOWLEDGE HUB SECTION
-     ============================================================ -->
-<section class="section" id="knowledge-hub">
-  <div class="container">
-    <div class="section-head reveal">
-      <div class="eyebrow">Knowledge Hub</div>
-      <h2>An AI-curated <span class="gradient-text">learning library</span></h2>
-      <p>Legitimate, free learning resources organized by category — no pirated content, ever.</p>
-    </div>
-    <div class="grid grid-cols" id="knowledgeGrid"></div>
-  </div>
-</section>
-
-<!-- ============================================================
      BUILD SECTION
      ============================================================ -->
 <section class="section" id="build">
@@ -783,20 +752,6 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
       <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:8px;" id="roadmapRoles"></div>
       <div id="roadmapOutput" style="margin-top:28px;"></div>
     </div>
-  </div>
-</section>
-
-<!-- ============================================================
-     PRODUCTIVITY DASHBOARD SECTION
-     ============================================================ -->
-<section class="section" id="dashboard">
-  <div class="container">
-    <div class="section-head reveal">
-      <div class="eyebrow">Dashboard</div>
-      <h2>Your <span class="gradient-text">daily command center</span></h2>
-      <p>A live snapshot of your goals, focus time and weekly progress.</p>
-    </div>
-    <div class="grid grid-cols reveal" id="dashboardGrid"></div>
   </div>
 </section>
 
@@ -872,7 +827,7 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
         <ul style="display:flex;flex-direction:column;gap:10px;font-size:13.5px;">
           <li><a href="#study" style="color:var(--text-dim);">Study Tools</a></li>
           <li><a href="#engineering" style="color:var(--text-dim);">Engineering Tools</a></li>
-          <li><a href="#ai-tools" style="color:var(--text-dim);">AI Tools</a></li>
+          <li><a href="#legal-ai" style="color:var(--text-dim);">Legal AI</a></li>
           <li><a href="#roadmap" style="color:var(--text-dim);">Roadmaps</a></li>
         </ul>
       </div>
@@ -945,30 +900,15 @@ function fmt(n){ if(!isFinite(n)) return '—'; return round(n,4).toLocaleString
    --------------------------------------------------------------- */
 const STUDY_TOOLS = [
   {id:'pdf-summarizer', icon:'📄', title:'PDF Summarizer', desc:'Paste text from any PDF/notes and get a quick bullet-point summary.'},
-  {id:'notes-generator', icon:'📝', title:'Notes Generator', desc:'Turn a topic into a structured outline of study notes instantly.'},
-  {id:'flashcards', icon:'🗂️', title:'Flashcard Generator', desc:'Create and flip through flashcards to memorize key terms fast.'},
   {id:'quiz-generator', icon:'❓', title:'Quiz Generator', desc:'Auto-generate a short practice quiz from any topic you type in.'},
-  {id:'exam-planner', icon:'📅', title:'Exam Planner', desc:'Build a day-by-day countdown plan leading up to your exam date.'},
-  {id:'study-planner', icon:'📖', title:'Study Planner', desc:'Distribute subjects and hours across your available study days.'},
-  {id:'pomodoro', icon:'⏱️', title:'Pomodoro Timer', desc:'Focus in 25-minute sprints with automatic short and long breaks.'},
-  {id:'research-helper', icon:'🔬', title:'Research Helper', desc:'Get a structured research outline: sources, angles and key questions.'},
   {id:'formula-sheet', icon:'∑', title:'Formula Sheet Generator', desc:'Generate a quick-reference formula sheet for popular subjects.'},
   {id:'mind-map', icon:'🧠', title:'Mind Map Generator', desc:'Turn a central topic into a branching mind map of subtopics.'},
-  {id:'study-scheduler', icon:'🗓️', title:'Study Scheduler', desc:'Auto-build a weekly recurring study timetable across subjects.'},
   {id:'pyq-helper', icon:'📚', title:'Previous Year Question Helper', desc:'Organize and tag previous year questions by topic and frequency.'},
 ];
 
 const PRODUCTIVITY_TOOLS = [
-  {id:'daily-planner', icon:'☀️', title:'Daily Planner', desc:'Lay out your entire day, hour by hour, in one clean view.'},
   {id:'habit-tracker', icon:'🔁', title:'Habit Tracker', desc:'Track daily habits with streaks and a visual weekly grid.'},
   {id:'todo-list', icon:'✅', title:'To-Do List', desc:'A fast, local to-do list with priorities and completion tracking.'},
-  {id:'goal-tracker', icon:'🎯', title:'Goal Tracker', desc:'Set goals with progress bars and target dates.'},
-  {id:'productivity-dashboard', icon:'📊', title:'Productivity Dashboard', desc:'See your score, streaks and focus stats in one glance.'},
-  {id:'focus-timer', icon:'🎧', title:'Focus Timer', desc:'A distraction-free countdown timer for deep work sessions.'},
-  {id:'calendar', icon:'📆', title:'Calendar', desc:'A lightweight monthly calendar to visualize your schedule.'},
-  {id:'semester-planner', icon:'🎓', title:'Semester Planner', desc:'Map out courses, credits and milestones for the whole semester.'},
-  {id:'timetable-creator', icon:'🕒', title:'Timetable Creator', desc:'Build a weekly class timetable grid in seconds.'},
-  {id:'progress-tracker', icon:'📈', title:'Daily Progress Tracker', desc:'Log how each day went and visualize your trend over time.'},
 ];
 
 const ENGINEERING_TOOLS = [
@@ -988,31 +928,6 @@ const ENGINEERING_TOOLS = [
   {id:'boolean-algebra', icon:'🔣', title:'Boolean Algebra Calculator', desc:'Evaluate boolean expressions and generate their truth table.'},
   {id:'logic-gates', icon:'🚪', title:'Logic Gate Simulator', desc:'Simulate AND, OR, NOT, XOR, NAND & NOR gates with live inputs.'},
   {id:'unit-converter', icon:'📐', title:'Unit Converter', desc:'Convert length, mass, temperature, time and data units.'},
-];
-
-const AI_TOOLS = [
-  {id:'ai-tool-finder', icon:'🔍', title:'AI Tool Finder', desc:'Describe your task and get matching tools from this site.'},
-  {id:'ai-prompt-generator', icon:'✨', title:'AI Prompt Generator', desc:'Turn a rough idea into a detailed, well-structured AI prompt.'},
-  {id:'ai-roadmap', icon:'🗺️', title:'AI Learning Roadmap Generator', desc:'Jump straight to the full roadmap generator below.'},
-  {id:'ai-career-guide', icon:'💼', title:'AI Career Guide', desc:'Get a tailored career path suggestion based on your interests.'},
-  {id:'ai-productivity', icon:'🤖', title:'AI Productivity Assistant', desc:'Get personalized suggestions to improve your daily routine.'},
-  {id:'ai-course-finder', icon:'🎓', title:'AI Course Finder', desc:'Discover free course categories matching a topic you enter.'},
-  {id:'ai-startup-idea', icon:'🚀', title:'AI Startup Idea Generator', desc:'Generate a random student-friendly startup concept.'},
-  {id:'ai-project-suggestion', icon:'🛠️', title:'AI Project Suggestion Tool', desc:'Get a project idea tailored to your skill level and field.'},
-  {id:'ai-interview-prep', icon:'🎤', title:'AI Interview Preparation Tool', desc:'Practice with role-specific mock interview questions.'},
-  {id:'ai-study-assistant', icon:'📘', title:'AI Study Assistant', desc:'Ask for a study strategy for any subject and get a quick plan.'},
-];
-
-const KNOWLEDGE_HUB = [
-  {id:'kh-electronics', icon:'🔌', title:'Electronics Resources', desc:'Circuit basics, datasheets etiquette, and simulator tool links.', links:[['All About Circuits','https://www.allaboutcircuits.com/'],['Falstad Circuit Simulator','https://www.falstad.com/circuit/']]},
-  {id:'kh-programming', icon:'💻', title:'Programming Resources', desc:'Free tutorials and references for popular programming languages.', links:[['freeCodeCamp','https://www.freecodecamp.org/'],['MDN Web Docs','https://developer.mozilla.org/']]},
-  {id:'kh-ai', icon:'🧠', title:'AI Resources', desc:'Foundational AI/ML courses and documentation from top providers.', links:[['Google ML Crash Course','https://developers.google.com/machine-learning/crash-course'],['Hugging Face Learn','https://huggingface.co/learn']]},
-  {id:'kh-math', icon:'➗', title:'Mathematics Resources', desc:'Free math learning content from beginner to advanced levels.', links:[['Khan Academy','https://www.khanacademy.org/'],['Paul’s Online Math Notes','https://tutorial.math.lamar.edu/']]},
-  {id:'kh-productivity', icon:'📋', title:'Productivity Resources', desc:'Frameworks and guides for better time management and focus.', links:[['Todoist Productivity Methods','https://www.todoist.com/productivity-methods'],['Cal Newport (Deep Work)','https://calnewport.com/']]},
-  {id:'kh-career', icon:'💼', title:'Career Resources', desc:'Resume, interview and job-search guidance from trusted sources.', links:[['Google Career Certificates','https://grow.google/certificates/'],['LinkedIn Learning (free content)','https://www.linkedin.com/learning/']]},
-  {id:'kh-research', icon:'📄', title:'Research Papers', desc:'Open-access academic paper repositories, fully legal to browse.', links:[['arXiv.org','https://arxiv.org/'],['Google Scholar','https://scholar.google.com/']]},
-  {id:'kh-cheatsheets', icon:'🗒️', title:'Cheat Sheets', desc:'Quick-reference sheets for coding, math and electronics.', links:[['DevHints Cheatsheets','https://devhints.io/'],['OverAPI','https://overapi.com/']]},
-  {id:'kh-free-learning', icon:'🆓', title:'Free Learning Resources', desc:'Massive open course catalogs, all completely free to access.', links:[['MIT OpenCourseWare','https://ocw.mit.edu/'],['edX Free Courses','https://www.edx.org/']]},
 ];
 
 const BUILD_TOOLS = [
@@ -1043,8 +958,6 @@ const SEARCH_INDEX = [
   ...STUDY_TOOLS.map(t => ({...t, cat:'Study', anchor:'study'})),
   ...PRODUCTIVITY_TOOLS.map(t => ({...t, cat:'Productivity', anchor:'productivity'})),
   ...ENGINEERING_TOOLS.map(t => ({...t, cat:'Engineering', anchor:'engineering'})),
-  ...AI_TOOLS.map(t => ({...t, cat:'AI Tools', anchor:'ai-tools'})),
-  ...KNOWLEDGE_HUB.map(t => ({...t, cat:'Knowledge Hub', anchor:'knowledge-hub'})),
   ...BUILD_TOOLS.map(t => ({...t, cat:'Build', anchor:'build'})),
   {id:'legal-ai-india', icon:'⚖️', title:'Legal AI India', desc:"Know your rights before it's too late — AI-powered Indian legal information assistant.", cat:'Legal AI', anchor:'legal-ai'},
 ];
@@ -1069,24 +982,6 @@ function renderToolCards(list, containerId, opts={}){
   });
 }
 
-function renderKnowledgeCards(){
-  const container = $('#knowledgeGrid');
-  container.innerHTML = '';
-  KNOWLEDGE_HUB.forEach((item,i) => {
-    const card = el('div', 'tool-card glass reveal');
-    card.style.transitionDelay = (i % 6) * 0.05 + 's';
-    card.innerHTML = `
-      <div class="tool-icon">${item.icon}</div>
-      <h3>${item.title}</h3>
-      <p>${item.desc}</p>
-      <div style="margin-top:14px;position:relative;z-index:1;">
-        ${item.links.map(([label,url]) => `<a href="${url}" target="_blank" rel="noopener" class="tag" style="cursor:pointer;">${label} ↗</a>`).join('')}
-      </div>
-    `;
-    container.appendChild(card);
-  });
-}
-
 function renderFutureCards(){
   const container = $('#futureGrid');
   container.innerHTML = '';
@@ -1107,9 +1002,7 @@ function renderFutureCards(){
 renderToolCards(STUDY_TOOLS, '#studyGrid');
 renderToolCards(PRODUCTIVITY_TOOLS, '#productivityGrid');
 renderToolCards(ENGINEERING_TOOLS, '#engineeringGrid');
-renderToolCards(AI_TOOLS, '#aiGrid');
 renderToolCards(BUILD_TOOLS, '#buildGrid');
-renderKnowledgeCards();
 renderFutureCards();
 
 /* ---------------------------------------------------------------
@@ -1165,7 +1058,7 @@ document.addEventListener('click', e => {
 /* ---------------------------------------------------------------
    5. MODAL ENGINE
    --------------------------------------------------------------- */
-const ALL_TOOLS = [...STUDY_TOOLS, ...PRODUCTIVITY_TOOLS, ...ENGINEERING_TOOLS, ...AI_TOOLS, ...BUILD_TOOLS];
+const ALL_TOOLS = [...STUDY_TOOLS, ...PRODUCTIVITY_TOOLS, ...ENGINEERING_TOOLS, ...BUILD_TOOLS];
 const modalOverlay = $('#modalOverlay');
 const modalIcon    = $('#modalIcon');
 const modalTitle   = $('#modalTitle');
@@ -1221,66 +1114,6 @@ TOOL_RENDERERS['pdf-summarizer'] = (wrap) => {
   });
 };
 
-/* -- Notes Generator -- */
-TOOL_RENDERERS['notes-generator'] = (wrap) => {
-  wrap.innerHTML = `
-    <div class="field"><label>Topic</label><input type="text" id="notesTopic" placeholder="e.g. Photosynthesis"></div>
-    <button class="btn btn-primary btn-block" id="notesBtn">Generate Notes Outline</button>
-    <div class="result-box hidden" id="notesResult"></div>
-  `;
-  $('#notesBtn', wrap).addEventListener('click', () => {
-    const topic = $('#notesTopic', wrap).value.trim() || 'Your Topic';
-    const box = $('#notesResult', wrap);
-    box.classList.remove('hidden');
-    box.innerHTML = `
-      <b>${topic} — Study Notes Outline</b>
-      <ol style="margin-top:10px;padding-left:18px;line-height:1.8;">
-        <li>Definition & core concept of ${topic}</li>
-        <li>Why ${topic} matters / real-world relevance</li>
-        <li>Key components / sub-topics to break down</li>
-        <li>Step-by-step process or mechanism (if applicable)</li>
-        <li>Common formulas, laws or rules related to ${topic}</li>
-        <li>Examples and worked problems</li>
-        <li>Common mistakes & misconceptions</li>
-        <li>Summary in 3 bullet points for quick revision</li>
-      </ol>`;
-  });
-};
-
-/* -- Flashcard Generator -- */
-TOOL_RENDERERS['flashcards'] = (wrap) => {
-  wrap.innerHTML = `
-    <div class="field"><label>Term</label><input type="text" id="fcTerm" placeholder="e.g. Mitochondria"></div>
-    <div class="field"><label>Definition</label><input type="text" id="fcDef" placeholder="e.g. The powerhouse of the cell"></div>
-    <button class="btn btn-primary btn-block" id="fcAdd">Add Flashcard</button>
-    <div id="fcList" style="margin-top:18px;display:grid;gap:10px;"></div>
-  `;
-  const cards = [];
-  function draw(){
-    const list = $('#fcList', wrap); list.innerHTML='';
-    cards.forEach((c,i) => {
-      const card = el('div','glass');
-      card.style.padding='16px'; card.style.cursor='pointer'; card.style.textAlign='center'; card.style.userSelect='none';
-      card.dataset.flipped='0';
-      card.innerHTML = `<div style="font-weight:600;">${c.term}</div>`;
-      card.addEventListener('click', () => {
-        const flipped = card.dataset.flipped === '1';
-        card.dataset.flipped = flipped ? '0':'1';
-        card.innerHTML = flipped ? `<div style="font-weight:600;">${c.term}</div>` : `<div style="color:var(--text-dim);font-size:13.5px;">${c.def}</div>`;
-      });
-      list.appendChild(card);
-    });
-  }
-  $('#fcAdd', wrap).addEventListener('click', () => {
-    const term = $('#fcTerm', wrap).value.trim();
-    const def = $('#fcDef', wrap).value.trim();
-    if(!term || !def) return;
-    cards.push({term, def});
-    $('#fcTerm', wrap).value=''; $('#fcDef', wrap).value='';
-    draw();
-  });
-};
-
 /* -- Quiz Generator (template-based sample quiz) -- */
 TOOL_RENDERERS['quiz-generator'] = (wrap) => {
   wrap.innerHTML = `
@@ -1302,120 +1135,6 @@ TOOL_RENDERERS['quiz-generator'] = (wrap) => {
         <li>Solve a basic problem that applies ${topic}.</li>
       </ol>
       <p class="hint">Tip: try answering out loud — active recall retains 2x more than re-reading.</p>`;
-  });
-};
-
-/* -- Exam Planner -- */
-TOOL_RENDERERS['exam-planner'] = (wrap) => {
-  wrap.innerHTML = `
-    <div class="field-row">
-      <div class="field"><label>Exam Date</label><input type="date" id="examDate"></div>
-      <div class="field"><label>Subject</label><input type="text" id="examSubject" placeholder="e.g. Physics"></div>
-    </div>
-    <button class="btn btn-primary btn-block" id="examBtn">Build Countdown Plan</button>
-    <div class="result-box hidden" id="examResult"></div>
-  `;
-  $('#examBtn', wrap).addEventListener('click', () => {
-    const dateVal = $('#examDate', wrap).value;
-    const subject = $('#examSubject', wrap).value.trim() || 'your subject';
-    const box = $('#examResult', wrap);
-    if(!dateVal){ box.classList.add('hidden'); return; }
-    const target = new Date(dateVal);
-    const today = new Date(); today.setHours(0,0,0,0);
-    const days = Math.max(1, Math.round((target - today) / 86400000));
-    box.classList.remove('hidden');
-    const phase1 = Math.ceil(days*0.5), phase2 = Math.ceil(days*0.3), phase3 = days - phase1 - phase2;
-    box.innerHTML = `
-      <b>${days} days</b> until your ${subject} exam.
-      <table class="calc-table">
-        <tr><th>Phase</th><th>Days</th><th>Focus</th></tr>
-        <tr><td>Learn</td><td>${phase1}</td><td>Cover all syllabus topics once</td></tr>
-        <tr><td>Practice</td><td>${phase2}</td><td>Solve problems & past papers</td></tr>
-        <tr><td>Revise</td><td>${Math.max(phase3,1)}</td><td>Fast revision + mock tests</td></tr>
-      </table>`;
-  });
-};
-
-/* -- Study Planner (distributes hours across subjects) -- */
-TOOL_RENDERERS['study-planner'] = (wrap) => {
-  wrap.innerHTML = `
-    <div class="field"><label>Subjects (comma separated)</label><input type="text" id="spSubjects" placeholder="Math, Physics, Chemistry"></div>
-    <div class="field"><label>Available hours per day</label><input type="number" id="spHours" placeholder="e.g. 4" min="1"></div>
-    <button class="btn btn-primary btn-block" id="spBtn">Generate Plan</button>
-    <div class="result-box hidden" id="spResult"></div>
-  `;
-  $('#spBtn', wrap).addEventListener('click', () => {
-    const subs = $('#spSubjects', wrap).value.split(',').map(s=>s.trim()).filter(Boolean);
-    const hours = parseFloat($('#spHours', wrap).value);
-    const box = $('#spResult', wrap);
-    if(!subs.length || !hours){ box.classList.add('hidden'); return; }
-    const per = round(hours/subs.length, 2);
-    box.classList.remove('hidden');
-    box.innerHTML = `<b>Daily allocation (${hours}h total)</b><table class="calc-table"><tr><th>Subject</th><th>Hours/day</th></tr>${subs.map(s=>`<tr><td>${s}</td><td>${per}h</td></tr>`).join('')}</table>`;
-  });
-};
-
-/* -- Pomodoro Timer (fully working countdown) -- */
-TOOL_RENDERERS['pomodoro'] = (wrap) => {
-  wrap.innerHTML = `
-    <div style="text-align:center;">
-      <div id="pomoDisplay" style="font-family:'Space Grotesk';font-size:52px;font-weight:700;margin:10px 0;" class="gradient-text">25:00</div>
-      <div id="pomoMode" style="color:var(--text-dim);font-size:13px;margin-bottom:18px;">FOCUS SESSION</div>
-      <div style="display:flex;gap:10px;justify-content:center;">
-        <button class="btn btn-primary" id="pomoStart">Start</button>
-        <button class="btn btn-ghost" id="pomoReset">Reset</button>
-      </div>
-    </div>
-  `;
-  let total = 25*60, remaining = total, timer = null, isBreak = false;
-  const display = $('#pomoDisplay', wrap), modeEl = $('#pomoMode', wrap), startBtn = $('#pomoStart', wrap);
-  function draw(){
-    const m = String(Math.floor(remaining/60)).padStart(2,'0');
-    const s = String(remaining%60).padStart(2,'0');
-    display.textContent = `${m}:${s}`;
-  }
-  function tick(){
-    remaining--;
-    if(remaining < 0){
-      isBreak = !isBreak;
-      total = isBreak ? 5*60 : 25*60;
-      remaining = total;
-      modeEl.textContent = isBreak ? 'BREAK TIME' : 'FOCUS SESSION';
-    }
-    draw();
-  }
-  startBtn.addEventListener('click', () => {
-    if(timer){ clearInterval(timer); timer=null; startBtn.textContent='Start'; }
-    else { timer = setInterval(tick, 1000); startBtn.textContent='Pause'; }
-  });
-  $('#pomoReset', wrap).addEventListener('click', () => {
-    clearInterval(timer); timer=null; startBtn.textContent='Start';
-    isBreak=false; total=25*60; remaining=total; modeEl.textContent='FOCUS SESSION'; draw();
-  });
-  draw();
-};
-
-/* -- Research Helper -- */
-TOOL_RENDERERS['research-helper'] = (wrap) => {
-  wrap.innerHTML = `
-    <div class="field"><label>Research Topic</label><input type="text" id="rhTopic" placeholder="e.g. Renewable Energy Storage"></div>
-    <button class="btn btn-primary btn-block" id="rhBtn">Build Research Outline</button>
-    <div class="result-box hidden" id="rhResult"></div>
-  `;
-  $('#rhBtn', wrap).addEventListener('click', () => {
-    const topic = $('#rhTopic', wrap).value.trim() || 'your topic';
-    const box = $('#rhResult', wrap);
-    box.classList.remove('hidden');
-    box.innerHTML = `
-      <b>Research Outline: ${topic}</b>
-      <ul style="margin-top:10px;padding-left:18px;line-height:1.9;">
-        <li><b>Background:</b> current state and history of ${topic}</li>
-        <li><b>Problem:</b> what gap or challenge exists in ${topic}</li>
-        <li><b>Key Questions:</b> 2-3 focused research questions</li>
-        <li><b>Sources:</b> search arXiv, Google Scholar, and official documentation</li>
-        <li><b>Methodology:</b> how you'll gather/evaluate evidence</li>
-        <li><b>Conclusion Angle:</b> what impact your findings could have</li>
-      </ul>`;
   });
 };
 
@@ -1459,22 +1178,6 @@ TOOL_RENDERERS['mind-map'] = (wrap) => {
   });
 };
 
-/* -- Study Scheduler (weekly recurring grid) -- */
-TOOL_RENDERERS['study-scheduler'] = (wrap) => {
-  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  wrap.innerHTML = `
-    <div class="field"><label>Subjects (comma separated)</label><input type="text" id="ssSubjects" placeholder="Math, Physics, English"></div>
-    <button class="btn btn-primary btn-block" id="ssBtn">Build Weekly Schedule</button>
-    <div id="ssResult" style="margin-top:16px;overflow-x:auto;"></div>
-  `;
-  $('#ssBtn', wrap).addEventListener('click', () => {
-    const subs = $('#ssSubjects', wrap).value.split(',').map(s=>s.trim()).filter(Boolean);
-    const box = $('#ssResult', wrap);
-    if(!subs.length) return;
-    box.innerHTML = `<table class="calc-table"><tr><th>Day</th><th>Focus Subject</th></tr>${days.map((d,i)=>`<tr><td>${d}</td><td>${subs[i % subs.length]}</td></tr>`).join('')}</table>`;
-  });
-};
-
 /* -- Previous Year Question Helper -- */
 TOOL_RENDERERS['pyq-helper'] = (wrap) => {
   wrap.innerHTML = `
@@ -1493,26 +1196,6 @@ TOOL_RENDERERS['pyq-helper'] = (wrap) => {
 /* ================================================================
    PRODUCTIVITY TOOL RENDERERS
    ================================================================ */
-
-/* -- Daily Planner -- */
-TOOL_RENDERERS['daily-planner'] = (wrap) => {
-  const slots = ['Morning (6-10am)','Late Morning (10am-12pm)','Afternoon (12-4pm)','Evening (4-8pm)','Night (8-11pm)'];
-  wrap.innerHTML = `<div style="display:grid;gap:10px;">${slots.map((s,i)=>`
-    <div class="field" style="margin-bottom:0;">
-      <label>${s}</label>
-      <input type="text" placeholder="What will you do?" id="dp${i}">
-    </div>`).join('')}</div>
-    <button class="btn btn-primary btn-block" style="margin-top:14px;" id="dpSave">Save Plan (this session)</button>
-    <div class="result-box hidden" id="dpResult"></div>`;
-  $('#dpSave', wrap).addEventListener('click', () => {
-    const box = $('#dpResult', wrap);
-    box.classList.remove('hidden');
-    box.innerHTML = '<b>Today\'s plan saved:</b><ul style="margin-top:8px;padding-left:18px;">' + slots.map((s,i)=>{
-      const v = $('#dp'+i, wrap).value.trim();
-      return v ? `<li>${s}: ${v}</li>` : '';
-    }).join('') + '</ul>';
-  });
-};
 
 /* -- Habit Tracker -- */
 TOOL_RENDERERS['habit-tracker'] = (wrap) => {
@@ -1577,140 +1260,6 @@ TOOL_RENDERERS['todo-list'] = (wrap) => {
     if(!text) return;
     tasks.push({text, priority:$('#todoPriority', wrap).value, done:false});
     $('#todoInput', wrap).value=''; draw();
-  });
-};
-
-/* -- Goal Tracker -- */
-TOOL_RENDERERS['goal-tracker'] = (wrap) => {
-  wrap.innerHTML = `
-    <div class="field"><label>Goal</label><input type="text" id="gtGoal" placeholder="e.g. Finish React course"></div>
-    <div class="field"><label>Progress (%)</label><input type="number" id="gtProgress" min="0" max="100" placeholder="e.g. 40"></div>
-    <button class="btn btn-primary btn-block" id="gtAdd">Add Goal</button>
-    <div id="gtList" style="margin-top:16px;display:grid;gap:12px;"></div>
-  `;
-  const goals = [];
-  function draw(){
-    const list = $('#gtList', wrap); list.innerHTML='';
-    goals.forEach(g => {
-      const row = el('div','glass'); row.style.padding='14px';
-      row.innerHTML = `<div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:13.5px;"><b>${g.goal}</b><span>${g.progress}%</span></div>
-        <div style="height:8px;border-radius:99px;background:var(--glass-strong);overflow:hidden;"><div style="height:100%;width:${g.progress}%;background:var(--grad);border-radius:99px;"></div></div>`;
-      list.appendChild(row);
-    });
-  }
-  $('#gtAdd', wrap).addEventListener('click', () => {
-    const goal = $('#gtGoal', wrap).value.trim();
-    const progress = Math.min(100, Math.max(0, parseInt($('#gtProgress', wrap).value) || 0));
-    if(!goal) return;
-    goals.push({goal, progress});
-    $('#gtGoal', wrap).value=''; $('#gtProgress', wrap).value=''; draw();
-  });
-};
-
-/* -- Productivity Dashboard (tool card shortcut) -- */
-TOOL_RENDERERS['productivity-dashboard'] = (wrap) => {
-  wrap.innerHTML = `<p style="color:var(--text-dim);">The full live dashboard is available further down the page.</p>
-  <button class="btn btn-primary btn-block" id="goDash">Jump to Dashboard</button>`;
-  $('#goDash', wrap).addEventListener('click', () => { closeModal(); $('#dashboard').scrollIntoView({behavior:'smooth'}); });
-};
-
-/* -- Focus Timer (custom countdown) -- */
-TOOL_RENDERERS['focus-timer'] = (wrap) => {
-  wrap.innerHTML = `
-    <div class="field"><label>Focus duration (minutes)</label><input type="number" id="ftMinutes" value="30" min="1"></div>
-    <div style="text-align:center;">
-      <div id="ftDisplay" style="font-family:'Space Grotesk';font-size:48px;font-weight:700;margin:14px 0;" class="gradient-text">30:00</div>
-      <div style="display:flex;gap:10px;justify-content:center;">
-        <button class="btn btn-primary" id="ftStart">Start</button>
-        <button class="btn btn-ghost" id="ftReset">Reset</button>
-      </div>
-    </div>
-  `;
-  let remaining = 30*60, timer=null;
-  const display = $('#ftDisplay', wrap), startBtn = $('#ftStart', wrap);
-  function draw(){ display.textContent = `${String(Math.floor(remaining/60)).padStart(2,'0')}:${String(remaining%60).padStart(2,'0')}`; }
-  startBtn.addEventListener('click', () => {
-    if(timer){ clearInterval(timer); timer=null; startBtn.textContent='Start'; return; }
-    remaining = (parseInt($('#ftMinutes', wrap).value)||30) * 60;
-    timer = setInterval(()=>{ if(remaining>0){ remaining--; draw(); } else { clearInterval(timer); timer=null; startBtn.textContent='Start'; } }, 1000);
-    startBtn.textContent='Pause';
-  });
-  $('#ftReset', wrap).addEventListener('click', () => { clearInterval(timer); timer=null; startBtn.textContent='Start'; remaining=(parseInt($('#ftMinutes', wrap).value)||30)*60; draw(); });
-  draw();
-};
-
-/* -- Calendar (simple current month view) -- */
-TOOL_RENDERERS['calendar'] = (wrap) => {
-  const now = new Date();
-  const year = now.getFullYear(), month = now.getMonth();
-  const first = new Date(year, month, 1).getDay();
-  const days = new Date(year, month+1, 0).getDate();
-  const monthName = now.toLocaleString('default',{month:'long'});
-  let cells = '';
-  for(let i=0;i<first;i++) cells += `<div></div>`;
-  for(let d=1; d<=days; d++){
-    const isToday = d === now.getDate();
-    cells += `<div style="padding:8px;text-align:center;border-radius:8px;font-size:13px;${isToday?'background:var(--grad);font-weight:700;':''}">${d}</div>`;
-  }
-  wrap.innerHTML = `
-    <div style="text-align:center;font-weight:700;margin-bottom:12px;font-family:'Space Grotesk';">${monthName} ${year}</div>
-    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;font-size:11px;color:var(--text-faint);text-align:center;margin-bottom:6px;">
-      ${['S','M','T','W','T','F','S'].map(d=>`<div>${d}</div>`).join('')}
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;">${cells}</div>
-  `;
-};
-
-/* -- Semester Planner -- */
-TOOL_RENDERERS['semester-planner'] = (wrap) => {
-  wrap.innerHTML = `
-    <div class="field"><label>Courses (comma separated)</label><input type="text" id="sepCourses" placeholder="Calculus, Circuits, English"></div>
-    <div class="field"><label>Weeks in semester</label><input type="number" id="sepWeeks" value="16" min="1"></div>
-    <button class="btn btn-primary btn-block" id="sepBtn">Build Milestones</button>
-    <div id="sepResult" style="margin-top:16px;"></div>
-  `;
-  $('#sepBtn', wrap).addEventListener('click', () => {
-    const courses = $('#sepCourses', wrap).value.split(',').map(c=>c.trim()).filter(Boolean);
-    const weeks = parseInt($('#sepWeeks', wrap).value) || 16;
-    const box = $('#sepResult', wrap);
-    if(!courses.length) return;
-    box.innerHTML = `<table class="calc-table"><tr><th>Course</th><th>Midterm Check-in</th><th>Final Push</th></tr>
-      ${courses.map(c=>`<tr><td>${c}</td><td>Week ${Math.round(weeks*0.5)}</td><td>Week ${weeks-1}-${weeks}</td></tr>`).join('')}</table>`;
-  });
-};
-
-/* -- Timetable Creator -- */
-TOOL_RENDERERS['timetable-creator'] = (wrap) => {
-  const days = ['Mon','Tue','Wed','Thu','Fri'];
-  const slots = ['9-10','10-11','11-12','1-2','2-3'];
-  wrap.innerHTML = `<div style="overflow-x:auto;"><table class="calc-table"><tr><th>Time</th>${days.map(d=>`<th>${d}</th>`).join('')}</tr>
-    ${slots.map(s=>`<tr><td>${s}</td>${days.map((d,di)=>`<td><input type="text" data-s="${s}" data-d="${di}" placeholder="—" style="width:100%;background:transparent;border:none;color:var(--text);font-size:12.5px;"></td>`).join('')}</tr>`).join('')}
-    </table></div>
-    <p class="hint">Type your class/subject directly into each cell — it's stored for this session.</p>`;
-};
-
-/* -- Daily Progress Tracker -- */
-TOOL_RENDERERS['progress-tracker'] = (wrap) => {
-  wrap.innerHTML = `
-    <div class="field"><label>How did today go? (1-10)</label><input type="number" id="ptScore" min="1" max="10" placeholder="e.g. 7"></div>
-    <div class="field"><label>Note</label><input type="text" id="ptNote" placeholder="What went well or could improve?"></div>
-    <button class="btn btn-primary btn-block" id="ptAdd">Log Today</button>
-    <div id="ptList" style="margin-top:16px;display:grid;gap:8px;"></div>
-  `;
-  const logs = [];
-  function draw(){
-    const list = $('#ptList', wrap); list.innerHTML='';
-    logs.slice().reverse().forEach(l => {
-      const row = el('div','glass'); row.style.padding='12px 14px'; row.style.display='flex'; row.style.justifyContent='space-between'; row.style.gap='10px';
-      row.innerHTML = `<span style="font-size:13px;color:var(--text-dim);">${l.note || 'No note'}</span><b style="color:var(--blue-soft);">${l.score}/10</b>`;
-      list.appendChild(row);
-    });
-  }
-  $('#ptAdd', wrap).addEventListener('click', () => {
-    const score = parseInt($('#ptScore', wrap).value);
-    if(!score) return;
-    logs.push({score, note:$('#ptNote', wrap).value.trim()});
-    $('#ptScore', wrap).value=''; $('#ptNote', wrap).value=''; draw();
   });
 };
 
@@ -2191,186 +1740,9 @@ TOOL_RENDERERS['unit-converter'] = (wrap) => {
 };
 
 /* ================================================================
-   AI TOOL RENDERERS (simulated/templated "AI" output — fully
-   client-side, no external API calls)
+   RANDOM PICKER UTILITY (used by Build idea generators below)
    ================================================================ */
 function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
-
-TOOL_RENDERERS['ai-tool-finder'] = (wrap) => {
-  wrap.innerHTML = `
-    <div class="field"><label>Describe what you need help with</label><input type="text" id="atfQuery" placeholder="e.g. I need to make flashcards for biology"></div>
-    <button class="btn btn-primary btn-block" id="atfBtn">Find Matching Tools</button>
-    <div id="atfResult" style="margin-top:16px;"></div>
-  `;
-  $('#atfBtn', wrap).addEventListener('click', () => {
-    const q = $('#atfQuery', wrap).value.trim().toLowerCase();
-    const box = $('#atfResult', wrap);
-    if(!q){ box.innerHTML=''; return; }
-    const matches = SEARCH_INDEX.filter(item => q.split(' ').some(word => word.length>2 && (item.title.toLowerCase().includes(word) || item.desc.toLowerCase().includes(word)))).slice(0,5);
-    box.innerHTML = matches.length
-      ? matches.map(m => `<div class="glass" style="padding:12px 14px;margin-bottom:8px;"><b>${m.icon} ${m.title}</b><div style="font-size:12.5px;color:var(--text-dim);">${m.cat}</div></div>`).join('')
-      : '<p class="hint">No direct match — try the global search bar at the top of the page.</p>';
-  });
-};
-
-TOOL_RENDERERS['ai-prompt-generator'] = (wrap) => {
-  wrap.innerHTML = `
-    <div class="field"><label>Rough idea</label><input type="text" id="apgIdea" placeholder="e.g. essay about climate change"></div>
-    <button class="btn btn-primary btn-block" id="apgBtn">Generate Detailed Prompt</button>
-    <div class="result-box hidden" id="apgResult"></div>
-  `;
-  $('#apgBtn', wrap).addEventListener('click', () => {
-    const idea = $('#apgIdea', wrap).value.trim() || 'your topic';
-    const box = $('#apgResult', wrap);
-    box.classList.remove('hidden');
-    box.innerHTML = `<b>Generated Prompt:</b><p style="margin-top:8px;">"Act as an expert tutor. Explain <b>${idea}</b> in a structured way with: (1) a simple analogy, (2) key facts, (3) common misconceptions, (4) 3 practice questions with answers. Keep the tone clear and beginner-friendly, and format the response with headings."</p>`;
-  });
-};
-
-TOOL_RENDERERS['ai-roadmap'] = (wrap) => {
-  wrap.innerHTML = `<p style="color:var(--text-dim);">Head to the full Roadmap Generator section to pick a career path.</p>
-  <button class="btn btn-primary btn-block" id="goRoadmap">Jump to Roadmap Generator</button>`;
-  $('#goRoadmap', wrap).addEventListener('click', () => { closeModal(); $('#roadmap').scrollIntoView({behavior:'smooth'}); });
-};
-
-TOOL_RENDERERS['ai-career-guide'] = (wrap) => {
-  wrap.innerHTML = `
-    <div class="field"><label>What do you enjoy most?</label>
-      <select id="acgInterest">
-        <option>Solving math/logic puzzles</option>
-        <option>Building things with code</option>
-        <option>Tinkering with circuits/hardware</option>
-        <option>Analyzing data & patterns</option>
-        <option>Designing user experiences</option>
-        <option>Thinking about security & risk</option>
-      </select>
-    </div>
-    <button class="btn btn-primary btn-block" id="acgBtn">Get Career Suggestion</button>
-    <div class="result-box hidden" id="acgResult"></div>
-  `;
-  const map = {
-    'Solving math/logic puzzles':'Data Scientist or AI Engineer — both rely heavily on mathematical reasoning.',
-    'Building things with code':'Software Engineer or Web Developer — great for people who love building end-to-end.',
-    'Tinkering with circuits/hardware':'Electronics Engineer or Robotics Engineer — hands-on hardware careers.',
-    'Analyzing data & patterns':'Data Scientist — a strong fit for pattern-driven, analytical thinkers.',
-    'Designing user experiences':'Web Developer (Frontend) — combine creativity with technical implementation.',
-    'Thinking about security & risk':'Cyber Security Engineer — perfect for defensively-minded problem solvers.',
-  };
-  $('#acgBtn', wrap).addEventListener('click', () => {
-    const interest = $('#acgInterest', wrap).value;
-    const box = $('#acgResult', wrap);
-    box.classList.remove('hidden');
-    box.innerHTML = `<b>Suggested Path:</b><p style="margin-top:6px;">${map[interest]}</p>`;
-  });
-};
-
-TOOL_RENDERERS['ai-productivity'] = (wrap) => {
-  const tips = [
-    'Try time-blocking: assign every hour of your day a single task, not a list.',
-    'Use the 2-minute rule — if a task takes under 2 minutes, do it immediately.',
-    'Batch similar tasks together (all emails, then all calls) to reduce context switching.',
-    'Review your day for 5 minutes before bed and plan tomorrow\'s top 3 priorities.',
-    'Turn off notifications during your first deep-work block of the day.',
-  ];
-  wrap.innerHTML = `<button class="btn btn-primary btn-block" id="apBtn">Get a Productivity Suggestion</button>
-  <div class="result-box hidden" id="apResult"></div>`;
-  $('#apBtn', wrap).addEventListener('click', () => {
-    const box = $('#apResult', wrap);
-    box.classList.remove('hidden');
-    box.innerHTML = `💡 ${pick(tips)}`;
-  });
-};
-
-TOOL_RENDERERS['ai-course-finder'] = (wrap) => {
-  wrap.innerHTML = `
-    <div class="field"><label>Topic</label><input type="text" id="acfTopic" placeholder="e.g. web development"></div>
-    <button class="btn btn-primary btn-block" id="acfBtn">Find Free Course Categories</button>
-    <div class="result-box hidden" id="acfResult"></div>
-  `;
-  $('#acfBtn', wrap).addEventListener('click', () => {
-    const topic = $('#acfTopic', wrap).value.trim() || 'your topic';
-    const box = $('#acfResult', wrap);
-    box.classList.remove('hidden');
-    box.innerHTML = `Search these trusted, free platforms for "<b>${topic}</b>":<br><br>
-      <a class="tag" href="https://www.freecodecamp.org/" target="_blank" rel="noopener">freeCodeCamp ↗</a>
-      <a class="tag" href="https://ocw.mit.edu/" target="_blank" rel="noopener">MIT OpenCourseWare ↗</a>
-      <a class="tag" href="https://www.edx.org/" target="_blank" rel="noopener">edX ↗</a>
-      <a class="tag" href="https://www.khanacademy.org/" target="_blank" rel="noopener">Khan Academy ↗</a>`;
-  });
-};
-
-TOOL_RENDERERS['ai-startup-idea'] = (wrap) => {
-  const audiences = ['college students','high schoolers','busy parents','remote workers','freelancers','small businesses'];
-  const problems = ['managing study schedules','finding affordable tutors','tracking expenses','staying focused while working','organizing group projects','finding internships'];
-  const formats = ['a mobile app','a browser extension','a Discord bot','a lightweight web app','an AI chatbot'];
-  wrap.innerHTML = `<button class="btn btn-primary btn-block" id="asiBtn">Generate Startup Idea</button><div class="result-box hidden" id="asiResult"></div>`;
-  $('#asiBtn', wrap).addEventListener('click', () => {
-    const box = $('#asiResult', wrap);
-    box.classList.remove('hidden');
-    box.innerHTML = `Build <b>${pick(formats)}</b> that helps <b>${pick(audiences)}</b> with <b>${pick(problems)}</b>.`;
-  });
-};
-
-TOOL_RENDERERS['ai-project-suggestion'] = (wrap) => {
-  wrap.innerHTML = `
-    <div class="field"><label>Skill Level</label><select id="apsLevel"><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></div>
-    <div class="field"><label>Field</label><select id="apsField"><option>Web Dev</option><option>AI/ML</option><option>Electronics</option><option>Data Science</option></select></div>
-    <button class="btn btn-primary btn-block" id="apsBtn">Suggest a Project</button>
-    <div class="result-box hidden" id="apsResult"></div>
-  `;
-  const ideas = {
-    'Web Dev': {Beginner:'A personal portfolio site with a working contact form.', Intermediate:'A full to-do app with local storage and drag-and-drop.', Advanced:'A real-time collaborative note-taking app.'},
-    'AI/ML': {Beginner:'A movie recommendation system using basic filtering.', Intermediate:'A handwritten digit classifier using a small neural network.', Advanced:'A text summarization tool using transformer embeddings.'},
-    'Electronics': {Beginner:'An LED chaser circuit with a 555 timer.', Intermediate:'A temperature-controlled fan using a microcontroller.', Advanced:'A DIY oscilloscope using a microcontroller and ADC.'},
-    'Data Science': {Beginner:'Analyze a public dataset and visualize trends.', Intermediate:'Build a dashboard for COVID/weather/stock data.', Advanced:'Build an end-to-end ML pipeline with model deployment.'},
-  };
-  $('#apsBtn', wrap).addEventListener('click', () => {
-    const level = $('#apsLevel', wrap).value, field = $('#apsField', wrap).value;
-    const box = $('#apsResult', wrap);
-    box.classList.remove('hidden');
-    box.innerHTML = `<b>${field} — ${level} Project:</b><p style="margin-top:6px;">${ideas[field][level]}</p>`;
-  });
-};
-
-TOOL_RENDERERS['ai-interview-prep'] = (wrap) => {
-  const questions = {
-    'Software Engineer': ['Explain the difference between an array and a linked list.','What is time complexity and why does it matter?','Describe a bug you fixed and how you found it.'],
-    'Data Scientist': ['What is overfitting and how do you prevent it?','Explain the bias-variance tradeoff.','How would you handle missing data in a dataset?'],
-    'Electronics Engineer': ['Explain the difference between AC and DC.','What is the purpose of a capacitor in a circuit?','Describe how a transistor can act as a switch.'],
-    'General / HR': ['Tell me about yourself.','What is your biggest weakness?','Why do you want to work here?'],
-  };
-  wrap.innerHTML = `
-    <div class="field"><label>Role</label><select id="aipRole">${Object.keys(questions).map(r=>`<option>${r}</option>`).join('')}</select></div>
-    <button class="btn btn-primary btn-block" id="aipBtn">Get Mock Questions</button>
-    <div id="aipResult" style="margin-top:16px;"></div>
-  `;
-  $('#aipBtn', wrap).addEventListener('click', () => {
-    const role = $('#aipRole', wrap).value;
-    const box = $('#aipResult', wrap);
-    box.innerHTML = `<ol style="padding-left:18px;line-height:1.9;">${questions[role].map(q=>`<li>${q}</li>`).join('')}</ol>`;
-  });
-};
-
-TOOL_RENDERERS['ai-study-assistant'] = (wrap) => {
-  wrap.innerHTML = `
-    <div class="field"><label>Subject</label><input type="text" id="asaSubject" placeholder="e.g. Organic Chemistry"></div>
-    <button class="btn btn-primary btn-block" id="asaBtn">Get Study Strategy</button>
-    <div class="result-box hidden" id="asaResult"></div>
-  `;
-  $('#asaBtn', wrap).addEventListener('click', () => {
-    const subject = $('#asaSubject', wrap).value.trim() || 'your subject';
-    const box = $('#asaResult', wrap);
-    box.classList.remove('hidden');
-    box.innerHTML = `<b>Strategy for ${subject}:</b>
-      <ol style="margin-top:8px;padding-left:18px;line-height:1.9;">
-        <li>Skim the full syllabus once to see the big picture.</li>
-        <li>Use active recall — test yourself instead of just re-reading.</li>
-        <li>Space repetition over several days instead of cramming.</li>
-        <li>Teach the concept to someone else (or explain it out loud).</li>
-        <li>Do timed practice questions close to your exam date.</li>
-      </ol>`;
-  });
-};
 
 /* ================================================================
    BUILD SECTION RENDERERS — randomized idea generators
@@ -2474,75 +1846,6 @@ function renderRoadmapOutput(role){
     </div>`;
 }
 renderRoadmapRoles();
-
-/* ================================================================
-   8. PRODUCTIVITY DASHBOARD
-   ================================================================ */
-function renderDashboard(){
-  const grid = $('#dashboardGrid');
-  const weekData = [40,65,50,80,30,90,70]; // sample weekly focus % for visualization
-  const dayLabels = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  const quotes = [
-    'Small daily progress leads to big results.',
-    'Discipline is choosing what you want most over what you want now.',
-    'Consistency beats intensity — show up every day.',
-    'Your future self is built by today\'s habits.',
-    'Progress, not perfection.',
-  ];
-  grid.innerHTML = `
-    <div class="glass reveal visible" style="padding:24px;">
-      <div class="eyebrow">Today's Goals</div>
-      <div id="dashGoals" style="margin-top:8px;font-size:14px;color:var(--text-dim);">
-        <label style="display:flex;gap:8px;align-items:center;margin-bottom:8px;"><input type="checkbox"> Finish Chapter 4 reading</label>
-        <label style="display:flex;gap:8px;align-items:center;margin-bottom:8px;"><input type="checkbox"> Complete 20 practice problems</label>
-        <label style="display:flex;gap:8px;align-items:center;"><input type="checkbox"> 30-min focused revision</label>
-      </div>
-    </div>
-    <div class="glass reveal visible" style="padding:24px;text-align:center;">
-      <div class="eyebrow" style="justify-content:center;">Productivity Score</div>
-      <div style="font-family:'Space Grotesk';font-size:40px;font-weight:700;margin:10px 0;" class="gradient-text" id="prodScore">82</div>
-      <div style="font-size:12.5px;color:var(--text-dim);">Based on tasks completed + focus time today</div>
-    </div>
-    <div class="glass reveal visible" style="padding:24px;">
-      <div class="eyebrow">Study Time Today</div>
-      <div style="font-family:'Space Grotesk';font-size:32px;font-weight:700;margin:10px 0;">2h 45m</div>
-      <div style="height:8px;border-radius:99px;background:var(--glass-strong);overflow:hidden;"><div style="height:100%;width:68%;background:var(--grad);"></div></div>
-    </div>
-    <div class="glass reveal visible" style="padding:24px;grid-column:span 2;">
-      <div class="eyebrow">Weekly Progress</div>
-      <div style="display:flex;align-items:flex-end;gap:10px;height:120px;margin-top:14px;">
-        ${weekData.map((v,i)=>`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;">
-          <div style="width:100%;height:${v}px;border-radius:6px 6px 0 0;background:var(--grad);"></div>
-          <span style="font-size:11px;color:var(--text-faint);">${dayLabels[i]}</span>
-        </div>`).join('')}
-      </div>
-    </div>
-    <div class="glass reveal visible" style="padding:24px;">
-      <div class="eyebrow">Focus Timer</div>
-      <div style="text-align:center;margin-top:10px;">
-        <div id="dashTimer" style="font-family:'Space Grotesk';font-size:32px;font-weight:700;" class="gradient-text">25:00</div>
-        <button class="btn btn-primary btn-sm" style="margin-top:10px;" id="dashTimerBtn">Start</button>
-      </div>
-    </div>
-    <div class="glass reveal visible" style="padding:24px;">
-      <div class="eyebrow">Completed Tasks</div>
-      <div style="font-family:'Space Grotesk';font-size:32px;font-weight:700;margin:10px 0;">14 <span style="font-size:14px;color:var(--text-dim);font-weight:400;">/ 18 today</span></div>
-      <div style="height:8px;border-radius:99px;background:var(--glass-strong);overflow:hidden;"><div style="height:100%;width:78%;background:var(--grad);"></div></div>
-    </div>
-    <div class="glass reveal visible" style="padding:24px;grid-column:span 1;">
-      <div class="eyebrow">Daily Motivation</div>
-      <p id="dashQuote" style="margin-top:10px;font-size:14.5px;font-style:italic;color:var(--text-dim);">"${pick(quotes)}"</p>
-    </div>
-  `;
-  let dt = 25*60, dtimer=null;
-  const dtDisplay = $('#dashTimer'), dtBtn = $('#dashTimerBtn');
-  dtBtn.addEventListener('click', () => {
-    if(dtimer){ clearInterval(dtimer); dtimer=null; dtBtn.textContent='Start'; return; }
-    dtimer = setInterval(()=>{ if(dt>0){ dt--; dtDisplay.textContent = `${String(Math.floor(dt/60)).padStart(2,'0')}:${String(dt%60).padStart(2,'0')}`; } else { clearInterval(dtimer); dtimer=null; dtBtn.textContent='Start'; } },1000);
-    dtBtn.textContent='Pause';
-  });
-}
-renderDashboard();
 
 /* ================================================================
    LEGAL AI INDIA — MODULE
