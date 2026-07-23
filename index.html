@@ -1,0 +1,3216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ============================================================
+     STUDENT OS AI — PREMIUM STUDENT OPERATING SYSTEM
+     Single-file website: HTML + CSS + JS (no frameworks)
+     ============================================================ -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudentOS AI — Everything a Student Needs. One Website.</title>
+<meta name="description" content="StudentOS AI is an AI-powered Student Operating System combining study tools, productivity tools, engineering calculators, AI tools, a knowledge hub and career roadmaps in one place.">
+
+<!-- Google Fonts (falls back to system fonts automatically if offline) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Inline favicon (no external file needed) -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233b82f6'/%3E%3Cstop offset='1' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='24' fill='%23060608'/%3E%3Ctext x='50' y='66' font-size='54' text-anchor='middle' fill='url(%23g)' font-family='Arial' font-weight='bold'%3ES%3C/text%3E%3C/svg%3E">
+
+<style>
+/* ================================================================
+   1. GLOBAL RESET + CSS VARIABLES (theme tokens)
+   ================================================================ */
+:root{
+  --bg:#05050a;
+  --bg-soft:#0a0a14;
+  --glass:rgba(255,255,255,0.045);
+  --glass-strong:rgba(255,255,255,0.08);
+  --border:rgba(255,255,255,0.09);
+  --border-strong:rgba(255,255,255,0.16);
+  --text:#eef0f7;
+  --text-dim:#9a9cb0;
+  --text-faint:#63647a;
+  --blue:#3b82f6;
+  --blue-soft:#60a5fa;
+  --purple:#a855f7;
+  --purple-soft:#c084fc;
+  --pink:#ec4899;
+  --green:#34d399;
+  --amber:#fbbf24;
+  --red:#f87171;
+  --grad: linear-gradient(135deg, var(--blue), var(--purple));
+  --grad-2: linear-gradient(135deg, var(--purple), var(--pink));
+  --grad-soft: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(168,85,247,0.15));
+  --radius-sm:12px;
+  --radius:18px;
+  --radius-lg:26px;
+  --shadow-glass: 0 8px 32px rgba(0,0,0,0.45);
+  --ease: cubic-bezier(.16,1,.3,1);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;overflow-x:hidden;width:100%;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  line-height:1.6;
+  overflow-x:hidden;
+  width:100%;
+  position:relative;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4,.font-display{
+  font-family:'Space Grotesk','Inter',sans-serif;
+  letter-spacing:-0.02em;
+}
+img,svg{display:block;max-width:100%;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+input,textarea,select{font-family:inherit;color:var(--text);}
+ul{list-style:none;}
+::selection{background:var(--purple);color:#fff;}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:10px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--blue),var(--purple));border-radius:10px;}
+
+/* Focus visibility for accessibility, kept subtle */
+:focus-visible{outline:2px solid var(--blue-soft);outline-offset:2px;}
+
+/* ================================================================
+   2. LAYOUT UTILITIES
+   ================================================================ */
+.container{width:100%;max-width:1280px;margin:0 auto;padding:0 24px;}
+.section{padding:120px 0 60px;position:relative;}
+.section-tight{padding:80px 0;}
+.section-head{max-width:720px;margin:0 auto 56px;text-align:center;}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:12.5px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--blue-soft);
+  padding:6px 14px;border-radius:999px;
+  background:var(--grad-soft);
+  border:1px solid var(--border);
+  margin-bottom:18px;
+}
+.eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--grad);}
+.section-head h2{font-size:clamp(28px,4vw,44px);font-weight:700;margin-bottom:14px;}
+.section-head p{color:var(--text-dim);font-size:16.5px;}
+.gradient-text{
+  background:var(--grad);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.grid{display:grid;gap:20px;}
+.grid-cols{grid-template-columns:repeat(auto-fit,minmax(260px,1fr));}
+.grid-3{grid-template-columns:repeat(3,1fr);}
+.grid-2{grid-template-columns:repeat(2,1fr);}
+
+/* ================================================================
+   3. GLASSMORPHISM CORE + BUTTONS
+   ================================================================ */
+.glass{
+  background:var(--glass);
+  border:1px solid var(--border);
+  backdrop-filter:blur(18px) saturate(140%);
+  -webkit-backdrop-filter:blur(18px) saturate(140%);
+  border-radius:var(--radius);
+}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:13px 26px;border-radius:999px;font-weight:600;font-size:14.5px;
+  transition:transform .35s var(--ease), box-shadow .35s var(--ease), background .35s var(--ease), border-color .35s var(--ease);
+  white-space:nowrap;
+}
+.btn-primary{
+  background:var(--grad);color:#fff;
+  box-shadow:0 8px 24px rgba(139,92,246,0.35);
+}
+.btn-primary:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 12px 32px rgba(139,92,246,0.5);}
+.btn-primary:active{transform:translateY(0) scale(0.98);}
+.btn-ghost{
+  background:var(--glass);border:1px solid var(--border);color:var(--text);
+}
+.btn-ghost:hover{border-color:var(--border-strong);background:var(--glass-strong);transform:translateY(-2px);}
+.btn-sm{padding:9px 18px;font-size:13px;}
+.btn-block{width:100%;}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none !important;}
+
+/* ================================================================
+   4. ANIMATED BACKGROUND (floating gradient orbs)
+   ================================================================ */
+.bg-orbs{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;max-width:100vw;}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55;will-change:transform;}
+.orb-1{width:520px;height:520px;background:radial-gradient(circle,var(--blue),transparent 70%);top:-160px;left:-120px;animation:float1 22s ease-in-out infinite;}
+.orb-2{width:460px;height:460px;background:radial-gradient(circle,var(--purple),transparent 70%);top:20%;right:-160px;animation:float2 26s ease-in-out infinite;}
+.orb-3{width:400px;height:400px;background:radial-gradient(circle,var(--pink),transparent 70%);bottom:-140px;left:30%;animation:float3 30s ease-in-out infinite;}
+.orb-4{width:340px;height:340px;background:radial-gradient(circle,var(--blue-soft),transparent 70%);bottom:10%;right:10%;animation:float1 18s ease-in-out infinite reverse;}
+@keyframes float1{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(60px,80px) scale(1.15);}}
+@keyframes float2{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-70px,50px) scale(0.9);}}
+@keyframes float3{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(40px,-60px) scale(1.1);}}
+.noise-grid{
+  position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35;
+  background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);
+  background-size:44px 44px;
+  mask-image:radial-gradient(circle at 50% 0%, black, transparent 75%);
+}
+
+/* ================================================================
+   5. LOADING SCREEN
+   ================================================================ */
+#loader{
+  position:fixed;inset:0;z-index:9999;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;
+  transition:opacity .6s var(--ease), visibility .6s var(--ease);
+}
+#loader.hide{opacity:0;visibility:hidden;pointer-events:none;}
+.loader-logo{font-family:'Space Grotesk';font-size:26px;font-weight:700;letter-spacing:-0.02em;}
+.loader-bar{width:220px;height:3px;border-radius:99px;background:rgba(255,255,255,0.08);overflow:hidden;}
+.loader-bar::after{
+  content:'';display:block;height:100%;width:40%;border-radius:99px;
+  background:var(--grad);animation:loaderMove 1.1s ease-in-out infinite;
+}
+@keyframes loaderMove{0%{transform:translateX(-100%);}100%{transform:translateX(340%);}}
+
+/* ================================================================
+   6. NAVIGATION BAR
+   ================================================================ */
+header#navbar{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  padding:16px 0;transition:background .4s var(--ease), border-color .4s var(--ease), padding .4s var(--ease);
+  border-bottom:1px solid transparent;
+}
+header#navbar.scrolled{
+  background:rgba(6,6,10,0.72);backdrop-filter:blur(16px) saturate(150%);
+  border-bottom:1px solid var(--border);padding:11px 0;
+}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;}
+.logo{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk';font-weight:700;font-size:19px;}
+.logo-mark{
+  width:34px;height:34px;border-radius:10px;background:var(--grad);
+  display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;
+  box-shadow:0 4px 16px rgba(139,92,246,0.5);
+}
+.logo-text span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.nav-links{display:flex;align-items:center;gap:4px;}
+.nav-links a{
+  padding:9px 15px;border-radius:999px;font-size:14px;font-weight:500;color:var(--text-dim);
+  transition:color .3s, background .3s;position:relative;
+}
+.nav-links a:hover{color:var(--text);background:var(--glass);}
+.nav-actions{display:flex;align-items:center;gap:10px;}
+.nav-toggle{display:none;width:38px;height:38px;border-radius:10px;background:var(--glass);border:1px solid var(--border);align-items:center;justify-content:center;flex-direction:column;gap:4px;}
+.nav-toggle span{width:16px;height:2px;background:var(--text);border-radius:2px;transition:.3s;}
+.nav-toggle.active span:nth-child(1){transform:translateY(6px) rotate(45deg);}
+.nav-toggle.active span:nth-child(2){opacity:0;}
+.nav-toggle.active span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
+.nav-dashboard-mobile{display:none;}
+
+/* ================================================================
+   7. HERO SECTION
+   ================================================================ */
+.hero{position:relative;padding:170px 0 90px;text-align:center;z-index:1;}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;margin-bottom:26px;
+  padding:8px 16px;border-radius:999px;font-size:13px;font-weight:500;
+  background:var(--glass);border:1px solid var(--border);color:var(--text-dim);
+  animation:fadeUp .8s var(--ease) both;
+}
+.hero-badge b{color:var(--blue-soft);font-weight:600;}
+.hero h1{
+  font-size:clamp(38px,6.4vw,74px);font-weight:700;line-height:1.06;margin-bottom:22px;
+  animation:fadeUp .9s var(--ease) .05s both;
+}
+.hero h1 .line2{display:block;}
+.hero p.tagline{
+  font-size:clamp(16px,2vw,21px);color:var(--text-dim);max-width:600px;margin:0 auto 42px;
+  animation:fadeUp .9s var(--ease) .15s both;
+  min-height:32px;
+}
+.typing-cursor{display:inline-block;width:2px;height:1em;background:var(--blue-soft);margin-left:2px;vertical-align:middle;animation:blink 1s steps(1) infinite;}
+@keyframes blink{50%{opacity:0;}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+
+/* Search bar */
+.search-wrap{position:relative;max-width:600px;margin:0 auto 54px;animation:fadeUp .9s var(--ease) .25s both;}
+.search-bar{
+  display:flex;align-items:center;gap:10px;padding:8px 8px 8px 22px;border-radius:999px;
+  background:var(--glass-strong);border:1px solid var(--border-strong);
+  box-shadow:var(--shadow-glass);transition:border-color .3s, box-shadow .3s;
+}
+.search-bar:focus-within{border-color:var(--blue-soft);box-shadow:0 0 0 4px rgba(59,130,246,0.15);}
+.search-bar svg{flex-shrink:0;opacity:.6;}
+.search-bar input{
+  flex:1;background:transparent;border:none;outline:none;font-size:15.5px;color:var(--text);padding:10px 0;
+}
+.search-bar input::placeholder{color:var(--text-faint);}
+.search-bar .btn{flex-shrink:0;}
+#searchResults{
+  position:absolute;top:calc(100% + 10px);left:0;right:0;z-index:50;
+  max-height:420px;overflow-y:auto;text-align:left;
+  border-radius:var(--radius);opacity:0;visibility:hidden;transform:translateY(-8px);
+  transition:opacity .25s, transform .25s, visibility .25s;
+  padding:10px;
+}
+#searchResults.active{opacity:1;visibility:visible;transform:translateY(0);}
+.search-result-item{
+  display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;cursor:pointer;
+  transition:background .2s;text-align:left;
+}
+.search-result-item:hover{background:var(--glass-strong);}
+.search-result-icon{
+  width:34px;height:34px;border-radius:9px;background:var(--grad-soft);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;
+}
+.search-result-item .sr-title{font-size:14px;font-weight:600;}
+.search-result-item .sr-cat{font-size:12px;color:var(--text-faint);}
+.search-empty{padding:24px;text-align:center;color:var(--text-faint);font-size:13.5px;}
+
+/* Floating hero stat cards */
+.hero-floaters{display:flex;flex-wrap:wrap;justify-content:center;gap:18px;max-width:920px;margin:0 auto;animation:fadeUp .9s var(--ease) .35s both;}
+.floater{
+  padding:18px 24px;border-radius:var(--radius);min-width:150px;
+  animation:bob 6s ease-in-out infinite;
+}
+.floater:nth-child(2){animation-delay:.4s;}
+.floater:nth-child(3){animation-delay:.8s;}
+.floater:nth-child(4){animation-delay:1.2s;}
+@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+.floater .fnum{font-family:'Space Grotesk';font-size:26px;font-weight:700;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.floater .flabel{font-size:12.5px;color:var(--text-dim);margin-top:2px;}
+.scroll-hint{margin-top:60px;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text-faint);font-size:12px;letter-spacing:.08em;text-transform:uppercase;animation:fadeUp 1s var(--ease) .5s both;}
+.scroll-hint .dot{width:20px;height:32px;border:1.5px solid var(--border-strong);border-radius:12px;position:relative;}
+.scroll-hint .dot::after{content:'';position:absolute;top:6px;left:50%;width:3px;height:6px;background:var(--blue-soft);border-radius:2px;transform:translateX(-50%);animation:scrollDot 1.6s ease-in-out infinite;}
+@keyframes scrollDot{0%{opacity:1;top:6px;}100%{opacity:0;top:16px;}}
+
+/* ================================================================
+   8. TOOL CARDS (shared across Study / Productivity / Engineering / AI / Build)
+   ================================================================ */
+.tool-card{
+  padding:26px;cursor:pointer;position:relative;overflow:hidden;
+  transition:transform .4s var(--ease), border-color .4s var(--ease), background .4s var(--ease);
+}
+.tool-card::before{
+  content:'';position:absolute;inset:0;opacity:0;background:var(--grad-soft);transition:opacity .4s;
+}
+.tool-card:hover{transform:translateY(-6px);border-color:var(--border-strong);}
+.tool-card:hover::before{opacity:1;}
+.tool-card:active{transform:translateY(-2px) scale(0.99);}
+.tool-icon{
+  width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+  font-size:22px;background:var(--grad-soft);border:1px solid var(--border);margin-bottom:16px;position:relative;z-index:1;
+  transition:transform .4s var(--ease);
+}
+.tool-card:hover .tool-icon{transform:scale(1.1) rotate(-4deg);}
+.tool-card h3{font-size:16.5px;font-weight:600;margin-bottom:8px;position:relative;z-index:1;}
+.tool-card p{font-size:13.5px;color:var(--text-dim);position:relative;z-index:1;}
+.tool-card .tc-arrow{position:absolute;bottom:22px;right:22px;opacity:0;transform:translateX(-6px);transition:.35s;z-index:1;color:var(--blue-soft);}
+.tool-card:hover .tc-arrow{opacity:1;transform:translateX(0);}
+
+/* Scroll reveal */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .8s var(--ease), transform .8s var(--ease);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ================================================================
+   9. MODAL (generic tool interaction surface)
+   ================================================================ */
+#modalOverlay{
+  position:fixed;inset:0;z-index:2000;background:rgba(4,4,8,0.72);
+  display:flex;align-items:flex-start;justify-content:center;padding:70px 18px 40px;
+  opacity:0;visibility:hidden;transition:opacity .35s var(--ease), visibility .35s var(--ease);
+  overflow-y:auto;backdrop-filter:blur(4px);
+}
+#modalOverlay.active{opacity:1;visibility:visible;}
+.modal-box{
+  width:100%;max-width:640px;border-radius:var(--radius-lg);
+  background:linear-gradient(180deg, rgba(20,20,32,0.98), rgba(10,10,18,0.98));
+  border:1px solid var(--border-strong);box-shadow:0 30px 80px rgba(0,0,0,0.6);
+  transform:translateY(30px) scale(.97);transition:transform .4s var(--ease);
+  max-height:85vh;display:flex;flex-direction:column;
+}
+#modalOverlay.active .modal-box{transform:translateY(0) scale(1);}
+.modal-head{display:flex;align-items:center;gap:14px;padding:22px 24px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.modal-head .tool-icon{margin-bottom:0;}
+.modal-head h3{font-size:18px;font-weight:700;flex:1;}
+.modal-close{width:34px;height:34px;border-radius:10px;background:var(--glass);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;transition:.25s;}
+.modal-close:hover{background:var(--glass-strong);transform:rotate(90deg);}
+.modal-body{padding:24px;overflow-y:auto;}
+.modal-desc{color:var(--text-dim);font-size:13.5px;margin-bottom:18px;}
+
+/* ================================================================
+   10. FORM ELEMENTS shared inside modals/widgets
+   ================================================================ */
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:12.5px;font-weight:600;color:var(--text-dim);margin-bottom:6px;letter-spacing:.02em;}
+.field input[type=text],.field input[type=number],.field input[type=date],.field input[type=time],.field textarea,.field select{
+  width:100%;padding:11px 14px;border-radius:11px;background:rgba(255,255,255,0.045);
+  border:1px solid var(--border);font-size:14px;transition:border-color .25s;
+}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--blue-soft);}
+.field textarea{resize:vertical;min-height:90px;}
+.field select{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239a9cb0' fill='none' stroke-width='1.6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:34px;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.result-box{
+  margin-top:16px;padding:18px;border-radius:14px;background:var(--grad-soft);
+  border:1px solid var(--border);font-size:14px;
+}
+.result-box .rb-value{font-family:'Space Grotesk';font-size:24px;font-weight:700;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.result-box.hidden{display:none;}
+.hint{font-size:12px;color:var(--text-faint);margin-top:6px;}
+.tag{display:inline-block;padding:4px 10px;border-radius:999px;background:var(--glass-strong);border:1px solid var(--border);font-size:11.5px;color:var(--text-dim);margin:3px 4px 0 0;}
+table.calc-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13.5px;}
+table.calc-table th,table.calc-table td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--border);}
+table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em;}
+
+/* ================================================================
+   LEGAL AI INDIA — SECTION STYLES
+   A premium AI legal-consultant dashboard (NOT a chatbot UI):
+   console/input, structured report cards, category explorer,
+   knowledge hub, recent + popular questions.
+   ================================================================ */
+.legal-console{
+  padding:30px;max-width:920px;margin:0 auto 40px;position:relative;overflow:hidden;
+}
+.legal-console::before{
+  content:'';position:absolute;top:-60%;right:-20%;width:60%;height:220%;
+  background:radial-gradient(circle, rgba(168,85,247,0.12), transparent 65%);pointer-events:none;
+}
+.legal-console-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;position:relative;z-index:1;}
+.legal-console-badge{
+  display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--purple-soft);
+  padding:7px 14px;border-radius:999px;background:var(--grad-soft);border:1px solid var(--border);
+}
+.lang-toggle{display:flex;gap:4px;background:var(--glass-strong);border:1px solid var(--border);border-radius:999px;padding:3px;}
+.lang-btn{padding:6px 14px;border-radius:999px;font-size:12.5px;font-weight:600;color:var(--text-dim);transition:.25s;}
+.lang-btn.active{background:var(--grad);color:#fff;}
+#legalInput{
+  width:100%;min-height:110px;padding:16px 18px;border-radius:14px;background:rgba(255,255,255,0.045);
+  border:1px solid var(--border);font-size:15px;color:var(--text);resize:vertical;position:relative;z-index:1;
+  font-family:inherit;line-height:1.6;transition:border-color .25s;
+}
+#legalInput:focus{outline:none;border-color:var(--purple-soft);}
+.legal-examples{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;position:relative;z-index:1;}
+.legal-chip{
+  font-size:12.5px;padding:7px 13px;border-radius:999px;background:var(--glass-strong);
+  border:1px solid var(--border);color:var(--text-dim);transition:.25s;cursor:pointer;
+}
+.legal-chip:hover{border-color:var(--border-strong);color:var(--text);transform:translateY(-1px);}
+.legal-console-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;position:relative;z-index:1;}
+.legal-console-meta{font-size:11.5px;color:var(--text-faint);margin-top:10px;position:relative;z-index:1;display:flex;align-items:center;gap:6px;}
+.legal-console-meta .dot-live{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);}
+
+/* Loading state */
+.legal-loading{max-width:920px;margin:0 auto 40px;padding:30px;text-align:center;}
+.legal-spinner{
+  width:46px;height:46px;border-radius:50%;margin:0 auto 16px;
+  border:3px solid var(--glass-strong);border-top-color:var(--blue-soft);border-right-color:var(--purple-soft);
+  animation:legalSpin 0.9s linear infinite;
+}
+@keyframes legalSpin{to{transform:rotate(360deg);}}
+.legal-loading p{color:var(--text-dim);font-size:14px;}
+.legal-loading .lstep{font-size:12px;color:var(--text-faint);margin-top:6px;}
+
+/* Report */
+.legal-report{max-width:920px;margin:0 auto 50px;}
+.legal-report-top{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;
+  padding:22px 26px;border-radius:var(--radius) var(--radius) 0 0;
+  background:var(--grad-soft);border:1px solid var(--border);border-bottom:none;
+}
+.legal-report-top h3{font-size:18px;font-weight:700;}
+.legal-report-top .lr-sub{font-size:12.5px;color:var(--text-dim);margin-top:3px;}
+.confidence-badge{
+  display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;font-size:12.5px;font-weight:700;
+  letter-spacing:.03em;text-transform:uppercase;flex-shrink:0;
+}
+.confidence-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:currentColor;}
+.confidence-high{background:rgba(52,211,153,0.14);color:var(--green);border:1px solid rgba(52,211,153,0.3);}
+.confidence-medium{background:rgba(251,191,36,0.14);color:var(--amber);border:1px solid rgba(251,191,36,0.3);}
+.confidence-low{background:rgba(248,113,113,0.14);color:var(--red);border:1px solid rgba(248,113,113,0.3);}
+.legal-report-actions{
+  display:flex;gap:8px;flex-wrap:wrap;padding:16px 26px;background:var(--glass);
+  border:1px solid var(--border);border-top:none;border-bottom:none;
+}
+.legal-report-body{
+  border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);
+  overflow:hidden;background:rgba(255,255,255,0.02);
+}
+.legal-section-card{padding:24px 26px;border-bottom:1px solid var(--border);}
+.legal-section-card:last-child{border-bottom:none;}
+.legal-section-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.legal-section-num{
+  width:30px;height:30px;border-radius:10px;background:var(--grad-soft);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--blue-soft);flex-shrink:0;
+}
+.legal-section-head h4{font-size:15px;font-weight:700;}
+.legal-section-card p, .legal-section-card li{font-size:14px;color:var(--text-dim);line-height:1.75;}
+.legal-section-card ul, .legal-section-card ol{padding-left:20px;display:grid;gap:6px;}
+.legal-law-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+.legal-law-tag{
+  font-size:12px;padding:6px 12px;border-radius:8px;background:var(--grad-soft);
+  border:1px solid var(--border);color:var(--blue-soft);font-weight:600;
+}
+.legal-disclaimer-inline{
+  margin-top:14px;padding:12px 14px;border-radius:10px;background:rgba(251,191,36,0.08);
+  border:1px solid rgba(251,191,36,0.25);color:var(--amber);font-size:12.5px;line-height:1.6;
+}
+.legal-disclaimer{
+  max-width:920px;margin:0 auto;padding:22px 26px;text-align:center;font-size:13px;color:var(--text-dim);line-height:1.7;
+}
+.legal-disclaimer b{color:var(--text);}
+
+/* Recent + Popular grid */
+.legal-subgrid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:920px;margin:0 auto 60px;}
+.legal-list-item{
+  display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:11px;cursor:pointer;
+  transition:background .2s;font-size:13.5px;color:var(--text-dim);
+}
+.legal-list-item:hover{background:var(--glass-strong);color:var(--text);}
+.legal-list-item .lli-icon{flex-shrink:0;opacity:.6;}
+.legal-empty-state{font-size:13px;color:var(--text-faint);padding:10px 4px;}
+
+/* Category explorer cards — color-coded accents */
+.legal-category-card{
+  padding:22px;cursor:pointer;position:relative;overflow:hidden;transition:transform .4s var(--ease), border-color .4s var(--ease);
+}
+.legal-category-card:hover{transform:translateY(-5px);border-color:var(--border-strong);}
+.legal-category-card .lc-icon{
+  width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;
+  margin-bottom:14px;border:1px solid var(--border);
+}
+.legal-category-card h4{font-size:14.5px;font-weight:600;margin-bottom:6px;}
+.legal-category-card p{font-size:12.5px;color:var(--text-dim);}
+
+/* Legal Knowledge Hub cards reuse .tool-card via markup, no extra class needed */
+
+@media (max-width:760px){
+  .legal-subgrid{grid-template-columns:1fr;}
+  .legal-console-head{flex-direction:column;align-items:flex-start;}
+  .legal-report-top{flex-direction:column;align-items:flex-start;}
+}
+
+/* ================================================================
+   11. RESPONSIVE MEDIA QUERIES
+   ================================================================ */
+@media (max-width:1180px){
+  .nav-links{display:none;}
+  .nav-toggle{display:flex;flex-shrink:0;}
+  .nav-dashboard-desktop{display:none;}
+  .nav-dashboard-mobile{
+    display:block;margin-top:8px;text-align:center;padding:12px 14px;border-radius:999px;
+    background:var(--grad);color:#fff;font-weight:600;
+  }
+  .nav-links.mobile-open{
+    display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;
+    background:rgba(8,8,14,0.98);border:1px solid var(--border);border-radius:0 0 18px 18px;padding:14px;gap:2px;
+    max-height:calc(100vh - 70px);overflow-y:auto;
+  }
+  .nav-links.mobile-open a{width:100%;padding:12px 14px;}
+  .grid-3,.grid-2{grid-template-columns:1fr;}
+  .field-row{grid-template-columns:1fr;}
+}
+@media (max-width:640px){
+  .logo-text{font-size:16px;}
+  .hero-badge{font-size:12px;padding:7px 12px;}
+  .floater{padding:14px 18px;min-width:130px;}
+}
+@media (max-width:400px){
+  .hero-floaters{gap:10px;}
+  .floater{min-width:120px;padding:12px 14px;}
+  .search-bar{padding:6px 6px 6px 16px;}
+  .search-bar input{font-size:14px;}
+}
+@media (max-width:640px){
+  .section{padding:90px 0 40px;}
+  .hero{padding:140px 0 60px;}
+  .hero-floaters{gap:12px;}
+  .floater{padding:14px 18px;min-width:130px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     LOADING SCREEN
+     ============================================================ -->
+<div id="loader">
+  <div class="loader-logo"><span class="gradient-text">StudentOS AI</span></div>
+  <div class="loader-bar"></div>
+</div>
+
+<!-- ============================================================
+     ANIMATED BACKGROUND (fixed, behind all content)
+     ============================================================ -->
+<div class="bg-orbs" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="orb orb-4"></div>
+</div>
+<div class="noise-grid" aria-hidden="true"></div>
+
+<!-- ============================================================
+     NAVIGATION BAR
+     ============================================================ -->
+<header id="navbar">
+  <div class="container nav-inner">
+    <a href="#home" class="logo">
+      <span class="logo-mark">S</span>
+      <span class="logo-text">Student<span>OS</span> AI</span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#home">Home</a>
+      <a href="#study">Study</a>
+      <a href="#productivity">Productivity</a>
+      <a href="#engineering">Engineering</a>
+      <a href="#ai-tools">AI Tools</a>
+      <a href="#legal-ai">Legal AI</a>
+      <a href="#knowledge-hub">Knowledge Hub</a>
+      <a href="#build">Build</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+      <a href="#dashboard" class="nav-dashboard-mobile">Dashboard</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="#dashboard" class="btn btn-primary btn-sm nav-dashboard-desktop">Dashboard</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     HERO SECTION
+     ============================================================ -->
+<section class="hero" id="home">
+  <div class="container">
+    <div class="hero-badge">✨ <b>v2.0</b> — Built for the modern student</div>
+    <h1>Welcome to <span class="gradient-text">StudentOS&nbsp;AI</span><span class="line2">Your entire academic life, unified.</span></h1>
+    <p class="tagline" id="typingTarget"><span id="typingText"></span><span class="typing-cursor"></span></p>
+
+    <div class="search-wrap">
+      <div class="search-bar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="white" stroke-width="1.8"/><path d="M21 21l-4.35-4.35" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <input type="text" id="globalSearch" placeholder="Search 60+ tools — try 'resume', 'python', 'electronics'..." autocomplete="off">
+        <button class="btn btn-primary" id="searchBtn">Search</button>
+      </div>
+      <div id="searchResults" class="glass"></div>
+    </div>
+
+    <div class="hero-floaters">
+      <div class="floater glass"><div class="fnum">70+</div><div class="flabel">Student Tools</div></div>
+      <div class="floater glass"><div class="fnum">16</div><div class="flabel">Live Calculators</div></div>
+      <div class="floater glass"><div class="fnum">7</div><div class="flabel">Career Roadmaps</div></div>
+      <div class="floater glass"><div class="fnum">100%</div><div class="flabel">Free, Zero Backend</div></div>
+    </div>
+
+    <div class="scroll-hint"><span>Scroll to explore</span><span class="dot"></span></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     STUDY SECTION
+     ============================================================ -->
+<section class="section" id="study">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">Study Tools</div>
+      <h2>Study smarter, <span class="gradient-text">not harder</span></h2>
+      <p>Twelve focused tools to help you absorb, organize and retain knowledge faster.</p>
+    </div>
+    <div class="grid grid-cols" id="studyGrid"></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PRODUCTIVITY SECTION
+     ============================================================ -->
+<section class="section" id="productivity">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">Productivity</div>
+      <h2>Plan your day, <span class="gradient-text">own your semester</span></h2>
+      <p>Ten tools that keep your goals, habits and schedule perfectly in sync.</p>
+    </div>
+    <div class="grid grid-cols" id="productivityGrid"></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     ENGINEERING TOOLS SECTION
+     ============================================================ -->
+<section class="section" id="engineering">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">Engineering Tools</div>
+      <h2>Live <span class="gradient-text">electronics calculators</span></h2>
+      <p>Sixteen real, working calculators for circuits, logic and number systems.</p>
+    </div>
+    <div class="grid grid-cols" id="engineeringGrid"></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     AI TOOLS SECTION
+     ============================================================ -->
+<section class="section" id="ai-tools">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">AI Tools</div>
+      <h2>Your <span class="gradient-text">AI co-pilot</span> for everything academic</h2>
+      <p>Ten AI-powered assistants for prompts, careers, interviews and study help.</p>
+    </div>
+    <div class="grid grid-cols" id="aiGrid"></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     LEGAL AI INDIA SECTION
+     A premium AI-powered legal information dashboard — NOT a chatbot.
+     Structured console input + structured report output.
+     ============================================================ -->
+<section class="section" id="legal-ai">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">⚖️ Legal Intelligence</div>
+      <h2>Legal AI <span class="gradient-text">India</span></h2>
+      <p id="legalTagline">Know Your Rights Before It's Too Late.</p>
+    </div>
+
+    <!-- Console: structured input, not a chat bubble -->
+    <div class="legal-console glass reveal">
+      <div class="legal-console-head">
+        <div class="legal-console-badge">🧠 AI Legal Analysis Engine</div>
+        <div class="lang-toggle" id="legalLangToggle">
+          <button class="lang-btn active" data-lang="en">English</button>
+          <button class="lang-btn" data-lang="hi">हिंदी</button>
+        </div>
+      </div>
+      <textarea id="legalInput" placeholder="Describe your legal situation in detail... e.g. 'My employer has not paid my salary for two months.'"></textarea>
+      <div class="legal-examples" id="legalExamples"></div>
+      <div class="legal-console-actions">
+        <button class="btn btn-ghost btn-sm" id="legalClearBtn">Clear</button>
+        <button class="btn btn-primary" id="legalAnalyzeBtn">Analyze My Legal Situation</button>
+      </div>
+      <div class="legal-console-meta"><span class="dot-live"></span> Educational legal information only — not a substitute for a licensed lawyer.</div>
+    </div>
+
+    <!-- Loading state -->
+    <div class="legal-loading glass" id="legalLoading" style="display:none;">
+      <div class="legal-spinner"></div>
+      <p id="legalLoadingText">Analyzing applicable Indian laws...</p>
+      <div class="lstep" id="legalLoadingStep">Cross-referencing constitutional provisions</div>
+    </div>
+
+    <!-- Structured AI Legal Report (populated by JS) -->
+    <div class="legal-report" id="legalReport" style="display:none;"></div>
+
+    <!-- Recent + Popular -->
+    <div class="legal-subgrid">
+      <div class="glass reveal" style="padding:22px;">
+        <div class="eyebrow">Recent Searches</div>
+        <div id="legalRecent" style="margin-top:10px;"></div>
+      </div>
+      <div class="glass reveal" style="padding:22px;">
+        <div class="eyebrow">Popular Legal Questions</div>
+        <div id="legalPopular" style="margin-top:10px;"></div>
+      </div>
+    </div>
+
+    <!-- Category Explorer -->
+    <div class="section-head reveal" style="margin-top:20px;">
+      <div class="eyebrow">Explore</div>
+      <h2>Legal <span class="gradient-text">Categories</span></h2>
+      <p>Tap a category to pre-fill the console with a related scenario.</p>
+    </div>
+    <div class="grid grid-cols" id="legalCategoryGrid"></div>
+
+    <!-- Legal Knowledge Hub -->
+    <div class="section-head reveal" style="margin-top:80px;">
+      <div class="eyebrow">Legal Knowledge Hub</div>
+      <h2>Understand the <span class="gradient-text">law itself</span></h2>
+      <p>Foundational, free legal knowledge — no pirated or copyrighted material.</p>
+    </div>
+    <div class="grid grid-cols" id="legalKnowledgeGrid"></div>
+
+    <!-- Disclaimer -->
+    <div class="glass reveal legal-disclaimer" style="margin-top:40px;">
+      ⚖️ <b>Disclaimer:</b> This Legal AI Assistant provides educational and informational legal guidance only. It is not a substitute for professional legal advice, a lawyer, or a court's decision.
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     KNOWLEDGE HUB SECTION
+     ============================================================ -->
+<section class="section" id="knowledge-hub">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">Knowledge Hub</div>
+      <h2>An AI-curated <span class="gradient-text">learning library</span></h2>
+      <p>Legitimate, free learning resources organized by category — no pirated content, ever.</p>
+    </div>
+    <div class="grid grid-cols" id="knowledgeGrid"></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     BUILD SECTION
+     ============================================================ -->
+<section class="section" id="build">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">Build</div>
+      <h2>Generate your <span class="gradient-text">next big idea</span></h2>
+      <p>Instant idea generators for projects, portfolios, startups and hackathons.</p>
+    </div>
+    <div class="grid grid-cols" id="buildGrid"></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     AI ROADMAP GENERATOR SECTION
+     ============================================================ -->
+<section class="section" id="roadmap">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">Career Roadmap</div>
+      <h2>Your personalized <span class="gradient-text">learning roadmap</span></h2>
+      <p>Pick a career path and get a month-by-month plan generated instantly.</p>
+    </div>
+    <div class="glass reveal" style="padding:32px;max-width:960px;margin:0 auto;">
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:8px;" id="roadmapRoles"></div>
+      <div id="roadmapOutput" style="margin-top:28px;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PRODUCTIVITY DASHBOARD SECTION
+     ============================================================ -->
+<section class="section" id="dashboard">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">Dashboard</div>
+      <h2>Your <span class="gradient-text">daily command center</span></h2>
+      <p>A live snapshot of your goals, focus time and weekly progress.</p>
+    </div>
+    <div class="grid grid-cols reveal" id="dashboardGrid"></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FUTURE FEATURES SECTION
+     ============================================================ -->
+<section class="section-tight" id="future">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">Coming Soon</div>
+      <h2>What's <span class="gradient-text">next</span> for StudentOS AI</h2>
+      <p>We're building the future of student productivity. Here's a glimpse.</p>
+    </div>
+    <div class="grid grid-cols" id="futureGrid"></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     ABOUT SECTION
+     ============================================================ -->
+<section class="section-tight" id="about">
+  <div class="container">
+    <div class="glass reveal" style="padding:48px;display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:center;">
+      <div>
+        <div class="eyebrow">About Us</div>
+        <h2 style="font-size:30px;margin-bottom:14px;">Built by students, for students.</h2>
+        <p style="color:var(--text-dim);margin-bottom:16px;">StudentOS AI began as a simple idea: instead of juggling twenty different apps and tabs for studying, planning, calculating and career prep — why not have one unified operating system for student life?</p>
+        <p style="color:var(--text-dim);">Every tool on this site runs entirely in your browser. No sign-ups, no data collection, no backend servers — just fast, private, offline-friendly tools that respect your time.</p>
+      </div>
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="glass" style="padding:20px;text-align:center;"><div class="fnum" style="font-family:'Space Grotesk';font-size:24px;font-weight:700;" class="gradient-text">2035</div><div class="flabel" style="font-size:12px;color:var(--text-dim);">Design Era</div></div>
+        <div class="glass" style="padding:20px;text-align:center;"><div style="font-family:'Space Grotesk';font-size:24px;font-weight:700;" class="gradient-text">0</div><div style="font-size:12px;color:var(--text-dim);">Backend Servers</div></div>
+        <div class="glass" style="padding:20px;text-align:center;"><div style="font-family:'Space Grotesk';font-size:24px;font-weight:700;" class="gradient-text">100%</div><div style="font-size:12px;color:var(--text-dim);">Client-Side</div></div>
+        <div class="glass" style="padding:20px;text-align:center;"><div style="font-family:'Space Grotesk';font-size:24px;font-weight:700;" class="gradient-text">∞</div><div style="font-size:12px;color:var(--text-dim);">Free Forever</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CONTACT SECTION
+     ============================================================ -->
+<section class="section-tight" id="contact">
+  <div class="container">
+    <div class="glass reveal" style="padding:48px;max-width:700px;margin:0 auto;text-align:center;">
+      <div class="eyebrow" style="margin:0 auto 18px;display:inline-flex;">Contact</div>
+      <h2 style="font-size:28px;margin-bottom:12px;">Have feedback or an idea?</h2>
+      <p style="color:var(--text-dim);margin-bottom:28px;">This is a static, front-end-only demo — the form below won't send data anywhere, but feel free to wire it up to your own backend or form service.</p>
+      <form id="contactForm" style="text-align:left;">
+        <div class="field-row">
+          <div class="field"><label>Your Name</label><input type="text" placeholder="Ada Lovelace" required></div>
+          <div class="field"><label>Email</label><input type="text" placeholder="you@example.com" required></div>
+        </div>
+        <div class="field"><label>Message</label><textarea placeholder="Tell us what you'd love to see..." required></textarea></div>
+        <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer style="position:relative;z-index:1;border-top:1px solid var(--border);padding:60px 0 30px;margin-top:40px;">
+  <div class="container">
+    <div class="grid" style="grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px;margin-bottom:40px;">
+      <div>
+        <div class="logo" style="margin-bottom:14px;"><span class="logo-mark">S</span><span class="logo-text">Student<span>OS</span> AI</span></div>
+        <p style="color:var(--text-dim);font-size:13.5px;max-width:280px;">Everything a student needs. One website. Built entirely with HTML, CSS and JavaScript — no frameworks, no backend.</p>
+      </div>
+      <div>
+        <h4 style="font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-dim);margin-bottom:14px;">Product</h4>
+        <ul style="display:flex;flex-direction:column;gap:10px;font-size:13.5px;">
+          <li><a href="#study" style="color:var(--text-dim);">Study Tools</a></li>
+          <li><a href="#engineering" style="color:var(--text-dim);">Engineering Tools</a></li>
+          <li><a href="#ai-tools" style="color:var(--text-dim);">AI Tools</a></li>
+          <li><a href="#roadmap" style="color:var(--text-dim);">Roadmaps</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-dim);margin-bottom:14px;">Company</h4>
+        <ul style="display:flex;flex-direction:column;gap:10px;font-size:13.5px;">
+          <li><a href="#about" style="color:var(--text-dim);">About</a></li>
+          <li><a href="#contact" style="color:var(--text-dim);">Contact</a></li>
+          <li><a href="#" style="color:var(--text-dim);" id="privacyLink">Privacy Policy</a></li>
+          <li><a href="#future" style="color:var(--text-dim);">Future Updates</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-dim);margin-bottom:14px;">Connect</h4>
+        <div style="display:flex;gap:10px;">
+          <a href="#" class="glass" style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:10px;" aria-label="X (Twitter)"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.6 8.7L23 22h-6.6l-5.2-6.8L5 22H2l8.2-9.3L1.5 2H8.3l4.7 6.2L18.9 2z"/></svg></a>
+          <a href="#" class="glass" style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:10px;" aria-label="LinkedIn"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5C4.98 4.88 3.9 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8.25h4V23h-4V8.25zM8.5 8.25h3.83v2.02h.05c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1V23h-4v-6.9c0-1.65-.03-3.77-2.3-3.77-2.3 0-2.65 1.8-2.65 3.65V23h-4V8.25z"/></svg></a>
+          <a href="#" class="glass" style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:10px;" aria-label="GitHub"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.98 5.24.98 11.5c0 4.86 3.15 8.98 7.52 10.43.55.1.75-.24.75-.53v-2c-3.06.67-3.7-1.3-3.7-1.3-.5-1.27-1.22-1.6-1.22-1.6-1-.68.07-.67.07-.67 1.1.08 1.68 1.13 1.68 1.13.98 1.68 2.57 1.2 3.2.9.1-.7.38-1.2.7-1.47-2.44-.28-5-1.22-5-5.42 0-1.2.43-2.18 1.13-2.95-.11-.28-.49-1.4.11-2.92 0 0 .93-.3 3.05 1.13a10.6 10.6 0 0 1 5.56 0C16.95 5.4 17.88 5.7 17.88 5.7c.6 1.52.22 2.64.11 2.92.7.77 1.13 1.75 1.13 2.95 0 4.21-2.57 5.14-5.02 5.4.4.35.75 1.02.75 2.05v3.05c0 .3.2.63.75.53 4.36-1.45 7.5-5.57 7.5-10.43C23.02 5.24 18.27.5 12 .5z"/></svg></a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--border);padding-top:24px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:12.5px;color:var(--text-faint);">
+      <span>© <span id="yearNow"></span> StudentOS AI. Built with HTML, CSS &amp; JavaScript. No frameworks used.</span>
+      <span>Developed as a concept project — not affiliated with any university.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================================
+     GENERIC MODAL (used by all interactive tools)
+     ============================================================ -->
+<div id="modalOverlay">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="tool-icon" id="modalIcon">⚡</div>
+      <h3 id="modalTitle">Tool Name</h3>
+      <button class="modal-close" id="modalClose"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 4l16 16M20 4L4 20" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   STUDENT OS AI — JAVASCRIPT
+   Organized into clearly commented modules:
+   1. Utilities
+   2. Data (Study / Productivity / Engineering / AI / Knowledge / Build / Future)
+   3. Card rendering + Search index
+   4. Global search system
+   5. Modal engine + per-tool render/interaction functions
+   6. Engineering calculators (logic)
+   7. Roadmap generator
+   8. Dashboard widgets
+   9. Animations (loader, nav, typing, scroll reveal, smooth scroll)
+   ================================================================ */
+
+/* ---------------------------------------------------------------
+   1. UTILITIES
+   --------------------------------------------------------------- */
+const $  = (sel, ctx=document) => ctx.querySelector(sel);
+const $$ = (sel, ctx=document) => [...ctx.querySelectorAll(sel)];
+const el = (tag, cls) => { const e = document.createElement(tag); if(cls) e.className = cls; return e; };
+function round(n, d=3){ const p = Math.pow(10,d); return Math.round((n+Number.EPSILON)*p)/p; }
+function fmt(n){ if(!isFinite(n)) return '—'; return round(n,4).toLocaleString(); }
+
+/* ---------------------------------------------------------------
+   2. DATA — every tool lives here so the search system and
+      card renderers stay perfectly in sync.
+   --------------------------------------------------------------- */
+const STUDY_TOOLS = [
+  {id:'pdf-summarizer', icon:'📄', title:'PDF Summarizer', desc:'Paste text from any PDF/notes and get a quick bullet-point summary.'},
+  {id:'notes-generator', icon:'📝', title:'Notes Generator', desc:'Turn a topic into a structured outline of study notes instantly.'},
+  {id:'flashcards', icon:'🗂️', title:'Flashcard Generator', desc:'Create and flip through flashcards to memorize key terms fast.'},
+  {id:'quiz-generator', icon:'❓', title:'Quiz Generator', desc:'Auto-generate a short practice quiz from any topic you type in.'},
+  {id:'exam-planner', icon:'📅', title:'Exam Planner', desc:'Build a day-by-day countdown plan leading up to your exam date.'},
+  {id:'study-planner', icon:'📖', title:'Study Planner', desc:'Distribute subjects and hours across your available study days.'},
+  {id:'pomodoro', icon:'⏱️', title:'Pomodoro Timer', desc:'Focus in 25-minute sprints with automatic short and long breaks.'},
+  {id:'research-helper', icon:'🔬', title:'Research Helper', desc:'Get a structured research outline: sources, angles and key questions.'},
+  {id:'formula-sheet', icon:'∑', title:'Formula Sheet Generator', desc:'Generate a quick-reference formula sheet for popular subjects.'},
+  {id:'mind-map', icon:'🧠', title:'Mind Map Generator', desc:'Turn a central topic into a branching mind map of subtopics.'},
+  {id:'study-scheduler', icon:'🗓️', title:'Study Scheduler', desc:'Auto-build a weekly recurring study timetable across subjects.'},
+  {id:'pyq-helper', icon:'📚', title:'Previous Year Question Helper', desc:'Organize and tag previous year questions by topic and frequency.'},
+];
+
+const PRODUCTIVITY_TOOLS = [
+  {id:'daily-planner', icon:'☀️', title:'Daily Planner', desc:'Lay out your entire day, hour by hour, in one clean view.'},
+  {id:'habit-tracker', icon:'🔁', title:'Habit Tracker', desc:'Track daily habits with streaks and a visual weekly grid.'},
+  {id:'todo-list', icon:'✅', title:'To-Do List', desc:'A fast, local to-do list with priorities and completion tracking.'},
+  {id:'goal-tracker', icon:'🎯', title:'Goal Tracker', desc:'Set goals with progress bars and target dates.'},
+  {id:'productivity-dashboard', icon:'📊', title:'Productivity Dashboard', desc:'See your score, streaks and focus stats in one glance.'},
+  {id:'focus-timer', icon:'🎧', title:'Focus Timer', desc:'A distraction-free countdown timer for deep work sessions.'},
+  {id:'calendar', icon:'📆', title:'Calendar', desc:'A lightweight monthly calendar to visualize your schedule.'},
+  {id:'semester-planner', icon:'🎓', title:'Semester Planner', desc:'Map out courses, credits and milestones for the whole semester.'},
+  {id:'timetable-creator', icon:'🕒', title:'Timetable Creator', desc:'Build a weekly class timetable grid in seconds.'},
+  {id:'progress-tracker', icon:'📈', title:'Daily Progress Tracker', desc:'Log how each day went and visualize your trend over time.'},
+];
+
+const ENGINEERING_TOOLS = [
+  {id:'ohms-law', icon:'🔌', title:"Ohm's Law Calculator", desc:'Solve for Voltage, Current or Resistance from any two values.'},
+  {id:'power-calc', icon:'⚡', title:'Power Calculator', desc:'Calculate electrical power from voltage and current.'},
+  {id:'voltage-calc', icon:'🔋', title:'Voltage Calculator', desc:'Find voltage from power & current, or current & resistance.'},
+  {id:'current-calc', icon:'➰', title:'Current Calculator', desc:'Calculate current from power/voltage or voltage/resistance.'},
+  {id:'resistance-calc', icon:'🧯', title:'Resistance Calculator', desc:'Solve for resistance using Ohm’s law or the power form.'},
+  {id:'frequency-calc', icon:'📶', title:'Frequency Calculator', desc:'Convert between frequency and period, or find resonant frequency.'},
+  {id:'rc-circuit', icon:'🔧', title:'RC Circuit Calculator', desc:'Compute time constant and cutoff frequency of an RC circuit.'},
+  {id:'rl-circuit', icon:'🧰', title:'RL Circuit Calculator', desc:'Compute time constant and cutoff frequency of an RL circuit.'},
+  {id:'rlc-circuit', icon:'🛠️', title:'RLC Circuit Calculator', desc:'Find the resonant frequency and damping of an RLC circuit.'},
+  {id:'resistor-color', icon:'🎨', title:'Resistance Color Calculator', desc:'Decode 4-band resistor color codes into ohm values instantly.'},
+  {id:'voltage-divider', icon:'🔀', title:'Voltage Divider Calculator', desc:'Calculate output voltage of a two-resistor voltage divider.'},
+  {id:'number-system', icon:'🔢', title:'Number System Converter', desc:'Convert between binary, octal, decimal and hexadecimal.'},
+  {id:'scientific-calc', icon:'🧮', title:'Scientific Calculator', desc:'A full scientific calculator with trig, logs, powers and more.'},
+  {id:'boolean-algebra', icon:'🔣', title:'Boolean Algebra Calculator', desc:'Evaluate boolean expressions and generate their truth table.'},
+  {id:'logic-gates', icon:'🚪', title:'Logic Gate Simulator', desc:'Simulate AND, OR, NOT, XOR, NAND & NOR gates with live inputs.'},
+  {id:'unit-converter', icon:'📐', title:'Unit Converter', desc:'Convert length, mass, temperature, time and data units.'},
+];
+
+const AI_TOOLS = [
+  {id:'ai-tool-finder', icon:'🔍', title:'AI Tool Finder', desc:'Describe your task and get matching tools from this site.'},
+  {id:'ai-prompt-generator', icon:'✨', title:'AI Prompt Generator', desc:'Turn a rough idea into a detailed, well-structured AI prompt.'},
+  {id:'ai-roadmap', icon:'🗺️', title:'AI Learning Roadmap Generator', desc:'Jump straight to the full roadmap generator below.'},
+  {id:'ai-career-guide', icon:'💼', title:'AI Career Guide', desc:'Get a tailored career path suggestion based on your interests.'},
+  {id:'ai-productivity', icon:'🤖', title:'AI Productivity Assistant', desc:'Get personalized suggestions to improve your daily routine.'},
+  {id:'ai-course-finder', icon:'🎓', title:'AI Course Finder', desc:'Discover free course categories matching a topic you enter.'},
+  {id:'ai-startup-idea', icon:'🚀', title:'AI Startup Idea Generator', desc:'Generate a random student-friendly startup concept.'},
+  {id:'ai-project-suggestion', icon:'🛠️', title:'AI Project Suggestion Tool', desc:'Get a project idea tailored to your skill level and field.'},
+  {id:'ai-interview-prep', icon:'🎤', title:'AI Interview Preparation Tool', desc:'Practice with role-specific mock interview questions.'},
+  {id:'ai-study-assistant', icon:'📘', title:'AI Study Assistant', desc:'Ask for a study strategy for any subject and get a quick plan.'},
+];
+
+const KNOWLEDGE_HUB = [
+  {id:'kh-electronics', icon:'🔌', title:'Electronics Resources', desc:'Circuit basics, datasheets etiquette, and simulator tool links.', links:[['All About Circuits','https://www.allaboutcircuits.com/'],['Falstad Circuit Simulator','https://www.falstad.com/circuit/']]},
+  {id:'kh-programming', icon:'💻', title:'Programming Resources', desc:'Free tutorials and references for popular programming languages.', links:[['freeCodeCamp','https://www.freecodecamp.org/'],['MDN Web Docs','https://developer.mozilla.org/']]},
+  {id:'kh-ai', icon:'🧠', title:'AI Resources', desc:'Foundational AI/ML courses and documentation from top providers.', links:[['Google ML Crash Course','https://developers.google.com/machine-learning/crash-course'],['Hugging Face Learn','https://huggingface.co/learn']]},
+  {id:'kh-math', icon:'➗', title:'Mathematics Resources', desc:'Free math learning content from beginner to advanced levels.', links:[['Khan Academy','https://www.khanacademy.org/'],['Paul’s Online Math Notes','https://tutorial.math.lamar.edu/']]},
+  {id:'kh-productivity', icon:'📋', title:'Productivity Resources', desc:'Frameworks and guides for better time management and focus.', links:[['Todoist Productivity Methods','https://www.todoist.com/productivity-methods'],['Cal Newport (Deep Work)','https://calnewport.com/']]},
+  {id:'kh-career', icon:'💼', title:'Career Resources', desc:'Resume, interview and job-search guidance from trusted sources.', links:[['Google Career Certificates','https://grow.google/certificates/'],['LinkedIn Learning (free content)','https://www.linkedin.com/learning/']]},
+  {id:'kh-research', icon:'📄', title:'Research Papers', desc:'Open-access academic paper repositories, fully legal to browse.', links:[['arXiv.org','https://arxiv.org/'],['Google Scholar','https://scholar.google.com/']]},
+  {id:'kh-cheatsheets', icon:'🗒️', title:'Cheat Sheets', desc:'Quick-reference sheets for coding, math and electronics.', links:[['DevHints Cheatsheets','https://devhints.io/'],['OverAPI','https://overapi.com/']]},
+  {id:'kh-free-learning', icon:'🆓', title:'Free Learning Resources', desc:'Massive open course catalogs, all completely free to access.', links:[['MIT OpenCourseWare','https://ocw.mit.edu/'],['edX Free Courses','https://www.edx.org/']]},
+];
+
+const BUILD_TOOLS = [
+  {id:'website-idea', icon:'🌐', title:'Website Idea Generator', desc:'Generate a random website concept to build for practice.'},
+  {id:'project-suggestion', icon:'📦', title:'Project Suggestion Generator', desc:'Get a randomized project idea across any tech stack.'},
+  {id:'portfolio-generator', icon:'🖼️', title:'Portfolio Generator', desc:'Get a suggested outline/structure for your personal portfolio.'},
+  {id:'startup-idea-gen', icon:'🚀', title:'Startup Idea Generator', desc:'Generate a fresh student-startup concept in one click.'},
+  {id:'electronics-project', icon:'🔧', title:'Electronics Project Generator', desc:'Get a beginner-to-advanced electronics project idea.'},
+  {id:'robotics-project', icon:'🤖', title:'Robotics Project Generator', desc:'Generate a robotics build idea with core components.'},
+  {id:'hackathon-idea', icon:'🏆', title:'Hackathon Idea Generator', desc:'Get a hackathon-ready concept you can build in 24-48 hours.'},
+  {id:'github-project', icon:'🐙', title:'GitHub Project Generator', desc:'Generate an open-source project idea worth putting on GitHub.'},
+];
+
+const FUTURE_FEATURES = [
+  {icon:'👤', title:'User Accounts', desc:'Save your data securely across devices with a personal account.'},
+  {icon:'💬', title:'AI Chatbot', desc:'A conversational AI assistant embedded across the whole platform.'},
+  {icon:'⭐', title:'Premium Membership', desc:'Unlock advanced AI features and unlimited generations.'},
+  {icon:'🌍', title:'Community Features', desc:'Connect with other students, share notes and study together.'},
+  {icon:'📱', title:'Mobile App', desc:'A native app experience for iOS and Android.'},
+  {icon:'🧩', title:'Browser Extension', desc:'Quick access to StudentOS AI tools from any tab.'},
+  {icon:'☁️', title:'Notes Sync', desc:'Automatically sync notes and flashcards across all your devices.'},
+  {icon:'🗄️', title:'Cloud Storage', desc:'Store documents and study material securely in the cloud.'},
+  {icon:'🏅', title:'Student Leaderboards', desc:'Friendly competition based on study streaks and focus time.'},
+];
+
+/* Master search index combining every tool across every section */
+const SEARCH_INDEX = [
+  ...STUDY_TOOLS.map(t => ({...t, cat:'Study', anchor:'study'})),
+  ...PRODUCTIVITY_TOOLS.map(t => ({...t, cat:'Productivity', anchor:'productivity'})),
+  ...ENGINEERING_TOOLS.map(t => ({...t, cat:'Engineering', anchor:'engineering'})),
+  ...AI_TOOLS.map(t => ({...t, cat:'AI Tools', anchor:'ai-tools'})),
+  ...KNOWLEDGE_HUB.map(t => ({...t, cat:'Knowledge Hub', anchor:'knowledge-hub'})),
+  ...BUILD_TOOLS.map(t => ({...t, cat:'Build', anchor:'build'})),
+  {id:'legal-ai-india', icon:'⚖️', title:'Legal AI India', desc:"Know your rights before it's too late — AI-powered Indian legal information assistant.", cat:'Legal AI', anchor:'legal-ai'},
+];
+
+/* ---------------------------------------------------------------
+   3. CARD RENDERING
+   --------------------------------------------------------------- */
+function renderToolCards(list, containerId, opts={}){
+  const container = $(containerId);
+  container.innerHTML = '';
+  list.forEach((item, i) => {
+    const card = el('div', 'tool-card glass reveal');
+    card.style.transitionDelay = (i % 6) * 0.05 + 's';
+    card.innerHTML = `
+      <div class="tool-icon">${item.icon}</div>
+      <h3>${item.title}</h3>
+      <p>${item.desc}</p>
+      <div class="tc-arrow">→</div>
+    `;
+    card.addEventListener('click', () => opts.onClick ? opts.onClick(item) : openTool(item.id));
+    container.appendChild(card);
+  });
+}
+
+function renderKnowledgeCards(){
+  const container = $('#knowledgeGrid');
+  container.innerHTML = '';
+  KNOWLEDGE_HUB.forEach((item,i) => {
+    const card = el('div', 'tool-card glass reveal');
+    card.style.transitionDelay = (i % 6) * 0.05 + 's';
+    card.innerHTML = `
+      <div class="tool-icon">${item.icon}</div>
+      <h3>${item.title}</h3>
+      <p>${item.desc}</p>
+      <div style="margin-top:14px;position:relative;z-index:1;">
+        ${item.links.map(([label,url]) => `<a href="${url}" target="_blank" rel="noopener" class="tag" style="cursor:pointer;">${label} ↗</a>`).join('')}
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function renderFutureCards(){
+  const container = $('#futureGrid');
+  container.innerHTML = '';
+  FUTURE_FEATURES.forEach((item,i) => {
+    const card = el('div', 'tool-card glass reveal');
+    card.style.transitionDelay = (i % 6) * 0.05 + 's';
+    card.style.cursor = 'default';
+    card.innerHTML = `
+      <div class="tool-icon">${item.icon}</div>
+      <h3>${item.title}</h3>
+      <p>${item.desc}</p>
+      <span class="tag" style="position:relative;z-index:1;margin-top:14px;">Coming Soon</span>
+    `;
+    container.appendChild(card);
+  });
+}
+
+renderToolCards(STUDY_TOOLS, '#studyGrid');
+renderToolCards(PRODUCTIVITY_TOOLS, '#productivityGrid');
+renderToolCards(ENGINEERING_TOOLS, '#engineeringGrid');
+renderToolCards(AI_TOOLS, '#aiGrid');
+renderToolCards(BUILD_TOOLS, '#buildGrid');
+renderKnowledgeCards();
+renderFutureCards();
+
+/* ---------------------------------------------------------------
+   4. GLOBAL SEARCH SYSTEM
+   --------------------------------------------------------------- */
+const searchInput   = $('#globalSearch');
+const searchResults = $('#searchResults');
+const searchBtn     = $('#searchBtn');
+
+function runSearch(query){
+  const q = query.trim().toLowerCase();
+  searchResults.innerHTML = '';
+  if(!q){ searchResults.classList.remove('active'); return; }
+
+  const matches = SEARCH_INDEX.filter(item =>
+    item.title.toLowerCase().includes(q) ||
+    item.desc.toLowerCase().includes(q) ||
+    item.cat.toLowerCase().includes(q)
+  ).slice(0, 8);
+
+  if(matches.length === 0){
+    searchResults.innerHTML = `<div class="search-empty">No tools found for "<b>${query}</b>". Try "python", "resume" or "electronics".</div>`;
+  } else {
+    matches.forEach(item => {
+      const row = el('div', 'search-result-item');
+      row.innerHTML = `
+        <div class="search-result-icon">${item.icon}</div>
+        <div>
+          <div class="sr-title">${item.title}</div>
+          <div class="sr-cat">${item.cat}</div>
+        </div>
+      `;
+      row.addEventListener('click', () => {
+        searchResults.classList.remove('active');
+        searchInput.value = '';
+        document.getElementById(item.anchor)?.scrollIntoView({behavior:'smooth', block:'start'});
+        setTimeout(() => openTool(item.id), 450);
+      });
+      searchResults.appendChild(row);
+    });
+  }
+  searchResults.classList.add('active');
+}
+
+searchInput.addEventListener('input', e => runSearch(e.target.value));
+searchInput.addEventListener('focus', e => { if(e.target.value) searchResults.classList.add('active'); });
+searchBtn.addEventListener('click', () => runSearch(searchInput.value));
+searchInput.addEventListener('keydown', e => { if(e.key === 'Enter') runSearch(searchInput.value); });
+document.addEventListener('click', e => {
+  if(!e.target.closest('.search-wrap')) searchResults.classList.remove('active');
+});
+
+/* ---------------------------------------------------------------
+   5. MODAL ENGINE
+   --------------------------------------------------------------- */
+const ALL_TOOLS = [...STUDY_TOOLS, ...PRODUCTIVITY_TOOLS, ...ENGINEERING_TOOLS, ...AI_TOOLS, ...BUILD_TOOLS];
+const modalOverlay = $('#modalOverlay');
+const modalIcon    = $('#modalIcon');
+const modalTitle   = $('#modalTitle');
+const modalBody    = $('#modalBody');
+
+function openTool(id){
+  const meta = ALL_TOOLS.find(t => t.id === id);
+  if(!meta) return;
+  modalIcon.textContent  = meta.icon;
+  modalTitle.textContent = meta.title;
+  modalBody.innerHTML = `<p class="modal-desc">${meta.desc}</p>`;
+  const renderer = TOOL_RENDERERS[id];
+  if(renderer){
+    const wrap = el('div');
+    modalBody.appendChild(wrap);
+    renderer(wrap);
+  }
+  modalOverlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(){
+  modalOverlay.classList.remove('active');
+  document.body.style.overflow = '';
+}
+$('#modalClose').addEventListener('click', closeModal);
+modalOverlay.addEventListener('click', e => { if(e.target === modalOverlay) closeModal(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); });
+
+/* Registry of interactive renderers, keyed by tool id. Filled in below. */
+const TOOL_RENDERERS = {};
+
+/* ================================================================
+   STUDY TOOL RENDERERS
+   ================================================================ */
+
+/* -- PDF Summarizer (works on any pasted text, not just PDFs) -- */
+TOOL_RENDERERS['pdf-summarizer'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field"><label>Paste your text / notes</label><textarea id="pdfText" placeholder="Paste a paragraph or article here..."></textarea></div>
+    <button class="btn btn-primary btn-block" id="pdfBtn">Summarize</button>
+    <div class="result-box hidden" id="pdfResult"></div>
+  `;
+  $('#pdfBtn', wrap).addEventListener('click', () => {
+    const text = $('#pdfText', wrap).value.trim();
+    const box = $('#pdfResult', wrap);
+    if(!text){ box.classList.add('hidden'); return; }
+    const sentences = text.replace(/\s+/g,' ').split(/(?<=[.?!])\s+/).filter(s => s.length > 15);
+    const picked = sentences.length <= 4 ? sentences : sentences
+      .map((s,i)=>({s,score:s.length + (i===0?40:0)}))
+      .sort((a,b)=>b.score-a.score).slice(0,4).map(x=>x.s);
+    box.classList.remove('hidden');
+    box.innerHTML = `<b>Key points:</b><ul style="margin-top:8px;padding-left:18px;">${picked.map(s=>`<li style="margin-bottom:6px;">${s}</li>`).join('')}</ul>`;
+  });
+};
+
+/* -- Notes Generator -- */
+TOOL_RENDERERS['notes-generator'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field"><label>Topic</label><input type="text" id="notesTopic" placeholder="e.g. Photosynthesis"></div>
+    <button class="btn btn-primary btn-block" id="notesBtn">Generate Notes Outline</button>
+    <div class="result-box hidden" id="notesResult"></div>
+  `;
+  $('#notesBtn', wrap).addEventListener('click', () => {
+    const topic = $('#notesTopic', wrap).value.trim() || 'Your Topic';
+    const box = $('#notesResult', wrap);
+    box.classList.remove('hidden');
+    box.innerHTML = `
+      <b>${topic} — Study Notes Outline</b>
+      <ol style="margin-top:10px;padding-left:18px;line-height:1.8;">
+        <li>Definition & core concept of ${topic}</li>
+        <li>Why ${topic} matters / real-world relevance</li>
+        <li>Key components / sub-topics to break down</li>
+        <li>Step-by-step process or mechanism (if applicable)</li>
+        <li>Common formulas, laws or rules related to ${topic}</li>
+        <li>Examples and worked problems</li>
+        <li>Common mistakes & misconceptions</li>
+        <li>Summary in 3 bullet points for quick revision</li>
+      </ol>`;
+  });
+};
+
+/* -- Flashcard Generator -- */
+TOOL_RENDERERS['flashcards'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field"><label>Term</label><input type="text" id="fcTerm" placeholder="e.g. Mitochondria"></div>
+    <div class="field"><label>Definition</label><input type="text" id="fcDef" placeholder="e.g. The powerhouse of the cell"></div>
+    <button class="btn btn-primary btn-block" id="fcAdd">Add Flashcard</button>
+    <div id="fcList" style="margin-top:18px;display:grid;gap:10px;"></div>
+  `;
+  const cards = [];
+  function draw(){
+    const list = $('#fcList', wrap); list.innerHTML='';
+    cards.forEach((c,i) => {
+      const card = el('div','glass');
+      card.style.padding='16px'; card.style.cursor='pointer'; card.style.textAlign='center'; card.style.userSelect='none';
+      card.dataset.flipped='0';
+      card.innerHTML = `<div style="font-weight:600;">${c.term}</div>`;
+      card.addEventListener('click', () => {
+        const flipped = card.dataset.flipped === '1';
+        card.dataset.flipped = flipped ? '0':'1';
+        card.innerHTML = flipped ? `<div style="font-weight:600;">${c.term}</div>` : `<div style="color:var(--text-dim);font-size:13.5px;">${c.def}</div>`;
+      });
+      list.appendChild(card);
+    });
+  }
+  $('#fcAdd', wrap).addEventListener('click', () => {
+    const term = $('#fcTerm', wrap).value.trim();
+    const def = $('#fcDef', wrap).value.trim();
+    if(!term || !def) return;
+    cards.push({term, def});
+    $('#fcTerm', wrap).value=''; $('#fcDef', wrap).value='';
+    draw();
+  });
+};
+
+/* -- Quiz Generator (template-based sample quiz) -- */
+TOOL_RENDERERS['quiz-generator'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field"><label>Topic</label><input type="text" id="quizTopic" placeholder="e.g. Newton's Laws"></div>
+    <button class="btn btn-primary btn-block" id="quizBtn">Generate Quiz</button>
+    <div class="result-box hidden" id="quizResult"></div>
+  `;
+  $('#quizBtn', wrap).addEventListener('click', () => {
+    const topic = $('#quizTopic', wrap).value.trim() || 'this topic';
+    const box = $('#quizResult', wrap);
+    box.classList.remove('hidden');
+    box.innerHTML = `
+      <b>Practice Quiz: ${topic}</b>
+      <ol style="margin-top:10px;padding-left:18px;line-height:1.9;">
+        <li>Define ${topic} in your own words.</li>
+        <li>List two real-world applications of ${topic}.</li>
+        <li>What is the most common misconception about ${topic}?</li>
+        <li>Explain how ${topic} connects to a topic studied earlier.</li>
+        <li>Solve a basic problem that applies ${topic}.</li>
+      </ol>
+      <p class="hint">Tip: try answering out loud — active recall retains 2x more than re-reading.</p>`;
+  });
+};
+
+/* -- Exam Planner -- */
+TOOL_RENDERERS['exam-planner'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field-row">
+      <div class="field"><label>Exam Date</label><input type="date" id="examDate"></div>
+      <div class="field"><label>Subject</label><input type="text" id="examSubject" placeholder="e.g. Physics"></div>
+    </div>
+    <button class="btn btn-primary btn-block" id="examBtn">Build Countdown Plan</button>
+    <div class="result-box hidden" id="examResult"></div>
+  `;
+  $('#examBtn', wrap).addEventListener('click', () => {
+    const dateVal = $('#examDate', wrap).value;
+    const subject = $('#examSubject', wrap).value.trim() || 'your subject';
+    const box = $('#examResult', wrap);
+    if(!dateVal){ box.classList.add('hidden'); return; }
+    const target = new Date(dateVal);
+    const today = new Date(); today.setHours(0,0,0,0);
+    const days = Math.max(1, Math.round((target - today) / 86400000));
+    box.classList.remove('hidden');
+    const phase1 = Math.ceil(days*0.5), phase2 = Math.ceil(days*0.3), phase3 = days - phase1 - phase2;
+    box.innerHTML = `
+      <b>${days} days</b> until your ${subject} exam.
+      <table class="calc-table">
+        <tr><th>Phase</th><th>Days</th><th>Focus</th></tr>
+        <tr><td>Learn</td><td>${phase1}</td><td>Cover all syllabus topics once</td></tr>
+        <tr><td>Practice</td><td>${phase2}</td><td>Solve problems & past papers</td></tr>
+        <tr><td>Revise</td><td>${Math.max(phase3,1)}</td><td>Fast revision + mock tests</td></tr>
+      </table>`;
+  });
+};
+
+/* -- Study Planner (distributes hours across subjects) -- */
+TOOL_RENDERERS['study-planner'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field"><label>Subjects (comma separated)</label><input type="text" id="spSubjects" placeholder="Math, Physics, Chemistry"></div>
+    <div class="field"><label>Available hours per day</label><input type="number" id="spHours" placeholder="e.g. 4" min="1"></div>
+    <button class="btn btn-primary btn-block" id="spBtn">Generate Plan</button>
+    <div class="result-box hidden" id="spResult"></div>
+  `;
+  $('#spBtn', wrap).addEventListener('click', () => {
+    const subs = $('#spSubjects', wrap).value.split(',').map(s=>s.trim()).filter(Boolean);
+    const hours = parseFloat($('#spHours', wrap).value);
+    const box = $('#spResult', wrap);
+    if(!subs.length || !hours){ box.classList.add('hidden'); return; }
+    const per = round(hours/subs.length, 2);
+    box.classList.remove('hidden');
+    box.innerHTML = `<b>Daily allocation (${hours}h total)</b><table class="calc-table"><tr><th>Subject</th><th>Hours/day</th></tr>${subs.map(s=>`<tr><td>${s}</td><td>${per}h</td></tr>`).join('')}</table>`;
+  });
+};
+
+/* -- Pomodoro Timer (fully working countdown) -- */
+TOOL_RENDERERS['pomodoro'] = (wrap) => {
+  wrap.innerHTML = `
+    <div style="text-align:center;">
+      <div id="pomoDisplay" style="font-family:'Space Grotesk';font-size:52px;font-weight:700;margin:10px 0;" class="gradient-text">25:00</div>
+      <div id="pomoMode" style="color:var(--text-dim);font-size:13px;margin-bottom:18px;">FOCUS SESSION</div>
+      <div style="display:flex;gap:10px;justify-content:center;">
+        <button class="btn btn-primary" id="pomoStart">Start</button>
+        <button class="btn btn-ghost" id="pomoReset">Reset</button>
+      </div>
+    </div>
+  `;
+  let total = 25*60, remaining = total, timer = null, isBreak = false;
+  const display = $('#pomoDisplay', wrap), modeEl = $('#pomoMode', wrap), startBtn = $('#pomoStart', wrap);
+  function draw(){
+    const m = String(Math.floor(remaining/60)).padStart(2,'0');
+    const s = String(remaining%60).padStart(2,'0');
+    display.textContent = `${m}:${s}`;
+  }
+  function tick(){
+    remaining--;
+    if(remaining < 0){
+      isBreak = !isBreak;
+      total = isBreak ? 5*60 : 25*60;
+      remaining = total;
+      modeEl.textContent = isBreak ? 'BREAK TIME' : 'FOCUS SESSION';
+    }
+    draw();
+  }
+  startBtn.addEventListener('click', () => {
+    if(timer){ clearInterval(timer); timer=null; startBtn.textContent='Start'; }
+    else { timer = setInterval(tick, 1000); startBtn.textContent='Pause'; }
+  });
+  $('#pomoReset', wrap).addEventListener('click', () => {
+    clearInterval(timer); timer=null; startBtn.textContent='Start';
+    isBreak=false; total=25*60; remaining=total; modeEl.textContent='FOCUS SESSION'; draw();
+  });
+  draw();
+};
+
+/* -- Research Helper -- */
+TOOL_RENDERERS['research-helper'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field"><label>Research Topic</label><input type="text" id="rhTopic" placeholder="e.g. Renewable Energy Storage"></div>
+    <button class="btn btn-primary btn-block" id="rhBtn">Build Research Outline</button>
+    <div class="result-box hidden" id="rhResult"></div>
+  `;
+  $('#rhBtn', wrap).addEventListener('click', () => {
+    const topic = $('#rhTopic', wrap).value.trim() || 'your topic';
+    const box = $('#rhResult', wrap);
+    box.classList.remove('hidden');
+    box.innerHTML = `
+      <b>Research Outline: ${topic}</b>
+      <ul style="margin-top:10px;padding-left:18px;line-height:1.9;">
+        <li><b>Background:</b> current state and history of ${topic}</li>
+        <li><b>Problem:</b> what gap or challenge exists in ${topic}</li>
+        <li><b>Key Questions:</b> 2-3 focused research questions</li>
+        <li><b>Sources:</b> search arXiv, Google Scholar, and official documentation</li>
+        <li><b>Methodology:</b> how you'll gather/evaluate evidence</li>
+        <li><b>Conclusion Angle:</b> what impact your findings could have</li>
+      </ul>`;
+  });
+};
+
+/* -- Formula Sheet Generator -- */
+TOOL_RENDERERS['formula-sheet'] = (wrap) => {
+  const sheets = {
+    Physics: ['v = u + at', 'F = ma', 'E = mc²', 'P = W/t', 'V = IR'],
+    Math: ['a² + b² = c²', 'Area of circle = πr²', 'Quadratic: x = (-b±√(b²-4ac))/2a', 'sin²θ + cos²θ = 1'],
+    Chemistry: ['PV = nRT', 'moles = mass / molar mass', 'pH = -log[H+]'],
+    Electronics: ['V = IR', 'P = VI', 'f = 1/T', 'Q = CV'],
+  };
+  wrap.innerHTML = `
+    <div class="field"><label>Subject</label><select id="fsSubject">${Object.keys(sheets).map(s=>`<option>${s}</option>`).join('')}</select></div>
+    <button class="btn btn-primary btn-block" id="fsBtn">Generate Sheet</button>
+    <div class="result-box hidden" id="fsResult"></div>
+  `;
+  $('#fsBtn', wrap).addEventListener('click', () => {
+    const subj = $('#fsSubject', wrap).value;
+    const box = $('#fsResult', wrap);
+    box.classList.remove('hidden');
+    box.innerHTML = `<b>${subj} — Formula Sheet</b><ul style="margin-top:10px;padding-left:18px;line-height:1.9;">${sheets[subj].map(f=>`<li style="font-family:'Space Grotesk';">${f}</li>`).join('')}</ul>`;
+  });
+};
+
+/* -- Mind Map Generator (simple radial text layout) -- */
+TOOL_RENDERERS['mind-map'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field"><label>Central Topic</label><input type="text" id="mmTopic" placeholder="e.g. Machine Learning"></div>
+    <button class="btn btn-primary btn-block" id="mmBtn">Generate Mind Map</button>
+    <div id="mmResult" style="margin-top:18px;"></div>
+  `;
+  $('#mmBtn', wrap).addEventListener('click', () => {
+    const topic = $('#mmTopic', wrap).value.trim() || 'Topic';
+    const branches = ['Definition','Types','Applications','Key Tools','Challenges','Future Trends'];
+    const box = $('#mmResult', wrap);
+    box.innerHTML = `
+      <div style="text-align:center;padding:16px;border-radius:14px;background:var(--grad-soft);border:1px solid var(--border);font-weight:700;font-family:'Space Grotesk';margin-bottom:14px;">${topic}</div>
+      <div class="grid grid-2" style="gap:10px;">
+        ${branches.map(b=>`<div class="glass" style="padding:12px 14px;font-size:13.5px;">↳ ${b}</div>`).join('')}
+      </div>`;
+  });
+};
+
+/* -- Study Scheduler (weekly recurring grid) -- */
+TOOL_RENDERERS['study-scheduler'] = (wrap) => {
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  wrap.innerHTML = `
+    <div class="field"><label>Subjects (comma separated)</label><input type="text" id="ssSubjects" placeholder="Math, Physics, English"></div>
+    <button class="btn btn-primary btn-block" id="ssBtn">Build Weekly Schedule</button>
+    <div id="ssResult" style="margin-top:16px;overflow-x:auto;"></div>
+  `;
+  $('#ssBtn', wrap).addEventListener('click', () => {
+    const subs = $('#ssSubjects', wrap).value.split(',').map(s=>s.trim()).filter(Boolean);
+    const box = $('#ssResult', wrap);
+    if(!subs.length) return;
+    box.innerHTML = `<table class="calc-table"><tr><th>Day</th><th>Focus Subject</th></tr>${days.map((d,i)=>`<tr><td>${d}</td><td>${subs[i % subs.length]}</td></tr>`).join('')}</table>`;
+  });
+};
+
+/* -- Previous Year Question Helper -- */
+TOOL_RENDERERS['pyq-helper'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field"><label>Paste question (one per line)</label><textarea id="pyqInput" placeholder="What is Ohm's Law?&#10;Explain Newton's second law&#10;Derive the quadratic formula"></textarea></div>
+    <button class="btn btn-primary btn-block" id="pyqBtn">Organize Questions</button>
+    <div id="pyqResult" style="margin-top:16px;"></div>
+  `;
+  $('#pyqBtn', wrap).addEventListener('click', () => {
+    const lines = $('#pyqInput', wrap).value.split('\n').map(l=>l.trim()).filter(Boolean);
+    const box = $('#pyqResult', wrap);
+    if(!lines.length) return;
+    box.innerHTML = `<table class="calc-table"><tr><th>#</th><th>Question</th><th>Suggested Priority</th></tr>${lines.map((l,i)=>`<tr><td>${i+1}</td><td>${l}</td><td>${i%3===0?'High':i%3===1?'Medium':'Low'}</td></tr>`).join('')}</table>`;
+  });
+};
+
+/* ================================================================
+   PRODUCTIVITY TOOL RENDERERS
+   ================================================================ */
+
+/* -- Daily Planner -- */
+TOOL_RENDERERS['daily-planner'] = (wrap) => {
+  const slots = ['Morning (6-10am)','Late Morning (10am-12pm)','Afternoon (12-4pm)','Evening (4-8pm)','Night (8-11pm)'];
+  wrap.innerHTML = `<div style="display:grid;gap:10px;">${slots.map((s,i)=>`
+    <div class="field" style="margin-bottom:0;">
+      <label>${s}</label>
+      <input type="text" placeholder="What will you do?" id="dp${i}">
+    </div>`).join('')}</div>
+    <button class="btn btn-primary btn-block" style="margin-top:14px;" id="dpSave">Save Plan (this session)</button>
+    <div class="result-box hidden" id="dpResult"></div>`;
+  $('#dpSave', wrap).addEventListener('click', () => {
+    const box = $('#dpResult', wrap);
+    box.classList.remove('hidden');
+    box.innerHTML = '<b>Today\'s plan saved:</b><ul style="margin-top:8px;padding-left:18px;">' + slots.map((s,i)=>{
+      const v = $('#dp'+i, wrap).value.trim();
+      return v ? `<li>${s}: ${v}</li>` : '';
+    }).join('') + '</ul>';
+  });
+};
+
+/* -- Habit Tracker -- */
+TOOL_RENDERERS['habit-tracker'] = (wrap) => {
+  const days = ['M','T','W','T','F','S','S'];
+  wrap.innerHTML = `
+    <div class="field"><label>Habit name</label><input type="text" id="htName" placeholder="e.g. Read 20 pages"></div>
+    <button class="btn btn-primary btn-block" id="htAdd">Add Habit</button>
+    <div id="htList" style="margin-top:16px;display:grid;gap:10px;"></div>
+  `;
+  const habits = [];
+  function draw(){
+    const list = $('#htList', wrap); list.innerHTML='';
+    habits.forEach((h) => {
+      const row = el('div','glass'); row.style.padding='14px';
+      row.innerHTML = `<div style="font-weight:600;margin-bottom:8px;">${h.name}</div>
+        <div style="display:flex;gap:6px;">${days.map((d,i)=>`<div class="hcell" data-i="${i}" style="width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;background:${h.done[i]?'var(--grad)':'var(--glass-strong)'};border:1px solid var(--border);">${d}</div>`).join('')}</div>`;
+      $$('.hcell', row).forEach(cell => cell.addEventListener('click', () => {
+        const i = +cell.dataset.i; h.done[i] = !h.done[i]; draw();
+      }));
+      list.appendChild(row);
+    });
+  }
+  $('#htAdd', wrap).addEventListener('click', () => {
+    const name = $('#htName', wrap).value.trim();
+    if(!name) return;
+    habits.push({name, done:new Array(7).fill(false)});
+    $('#htName', wrap).value=''; draw();
+  });
+};
+
+/* -- To-Do List -- */
+TOOL_RENDERERS['todo-list'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field-row">
+      <div class="field" style="margin-bottom:0;"><input type="text" id="todoInput" placeholder="Add a task..."></div>
+      <div class="field" style="margin-bottom:0;">
+        <select id="todoPriority"><option>Low</option><option selected>Medium</option><option>High</option></select>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-block" style="margin-top:10px;" id="todoAdd">Add Task</button>
+    <div id="todoList" style="margin-top:16px;display:grid;gap:8px;"></div>
+  `;
+  const tasks = [];
+  function draw(){
+    const list = $('#todoList', wrap); list.innerHTML='';
+    const colors = {Low:'var(--green)',Medium:'var(--amber)',High:'var(--red)'};
+    tasks.forEach((t,i) => {
+      const row = el('div','glass');
+      row.style.padding='10px 14px'; row.style.display='flex'; row.style.alignItems='center'; row.style.gap='10px';
+      row.innerHTML = `
+        <input type="checkbox" ${t.done?'checked':''} style="width:16px;height:16px;">
+        <span style="flex:1;${t.done?'text-decoration:line-through;color:var(--text-faint);':''}">${t.text}</span>
+        <span class="tag" style="color:${colors[t.priority]};border-color:${colors[t.priority]};">${t.priority}</span>
+        <button style="color:var(--text-faint);display:flex;align-items:center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M4 4l16 16M20 4L4 20" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>`;
+      $('input', row).addEventListener('change', () => { t.done = !t.done; draw(); });
+      $('button', row).addEventListener('click', () => { tasks.splice(i,1); draw(); });
+      list.appendChild(row);
+    });
+  }
+  $('#todoAdd', wrap).addEventListener('click', () => {
+    const text = $('#todoInput', wrap).value.trim();
+    if(!text) return;
+    tasks.push({text, priority:$('#todoPriority', wrap).value, done:false});
+    $('#todoInput', wrap).value=''; draw();
+  });
+};
+
+/* -- Goal Tracker -- */
+TOOL_RENDERERS['goal-tracker'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field"><label>Goal</label><input type="text" id="gtGoal" placeholder="e.g. Finish React course"></div>
+    <div class="field"><label>Progress (%)</label><input type="number" id="gtProgress" min="0" max="100" placeholder="e.g. 40"></div>
+    <button class="btn btn-primary btn-block" id="gtAdd">Add Goal</button>
+    <div id="gtList" style="margin-top:16px;display:grid;gap:12px;"></div>
+  `;
+  const goals = [];
+  function draw(){
+    const list = $('#gtList', wrap); list.innerHTML='';
+    goals.forEach(g => {
+      const row = el('div','glass'); row.style.padding='14px';
+      row.innerHTML = `<div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:13.5px;"><b>${g.goal}</b><span>${g.progress}%</span></div>
+        <div style="height:8px;border-radius:99px;background:var(--glass-strong);overflow:hidden;"><div style="height:100%;width:${g.progress}%;background:var(--grad);border-radius:99px;"></div></div>`;
+      list.appendChild(row);
+    });
+  }
+  $('#gtAdd', wrap).addEventListener('click', () => {
+    const goal = $('#gtGoal', wrap).value.trim();
+    const progress = Math.min(100, Math.max(0, parseInt($('#gtProgress', wrap).value) || 0));
+    if(!goal) return;
+    goals.push({goal, progress});
+    $('#gtGoal', wrap).value=''; $('#gtProgress', wrap).value=''; draw();
+  });
+};
+
+/* -- Productivity Dashboard (tool card shortcut) -- */
+TOOL_RENDERERS['productivity-dashboard'] = (wrap) => {
+  wrap.innerHTML = `<p style="color:var(--text-dim);">The full live dashboard is available further down the page.</p>
+  <button class="btn btn-primary btn-block" id="goDash">Jump to Dashboard</button>`;
+  $('#goDash', wrap).addEventListener('click', () => { closeModal(); $('#dashboard').scrollIntoView({behavior:'smooth'}); });
+};
+
+/* -- Focus Timer (custom countdown) -- */
+TOOL_RENDERERS['focus-timer'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field"><label>Focus duration (minutes)</label><input type="number" id="ftMinutes" value="30" min="1"></div>
+    <div style="text-align:center;">
+      <div id="ftDisplay" style="font-family:'Space Grotesk';font-size:48px;font-weight:700;margin:14px 0;" class="gradient-text">30:00</div>
+      <div style="display:flex;gap:10px;justify-content:center;">
+        <button class="btn btn-primary" id="ftStart">Start</button>
+        <button class="btn btn-ghost" id="ftReset">Reset</button>
+      </div>
+    </div>
+  `;
+  let remaining = 30*60, timer=null;
+  const display = $('#ftDisplay', wrap), startBtn = $('#ftStart', wrap);
+  function draw(){ display.textContent = `${String(Math.floor(remaining/60)).padStart(2,'0')}:${String(remaining%60).padStart(2,'0')}`; }
+  startBtn.addEventListener('click', () => {
+    if(timer){ clearInterval(timer); timer=null; startBtn.textContent='Start'; return; }
+    remaining = (parseInt($('#ftMinutes', wrap).value)||30) * 60;
+    timer = setInterval(()=>{ if(remaining>0){ remaining--; draw(); } else { clearInterval(timer); timer=null; startBtn.textContent='Start'; } }, 1000);
+    startBtn.textContent='Pause';
+  });
+  $('#ftReset', wrap).addEventListener('click', () => { clearInterval(timer); timer=null; startBtn.textContent='Start'; remaining=(parseInt($('#ftMinutes', wrap).value)||30)*60; draw(); });
+  draw();
+};
+
+/* -- Calendar (simple current month view) -- */
+TOOL_RENDERERS['calendar'] = (wrap) => {
+  const now = new Date();
+  const year = now.getFullYear(), month = now.getMonth();
+  const first = new Date(year, month, 1).getDay();
+  const days = new Date(year, month+1, 0).getDate();
+  const monthName = now.toLocaleString('default',{month:'long'});
+  let cells = '';
+  for(let i=0;i<first;i++) cells += `<div></div>`;
+  for(let d=1; d<=days; d++){
+    const isToday = d === now.getDate();
+    cells += `<div style="padding:8px;text-align:center;border-radius:8px;font-size:13px;${isToday?'background:var(--grad);font-weight:700;':''}">${d}</div>`;
+  }
+  wrap.innerHTML = `
+    <div style="text-align:center;font-weight:700;margin-bottom:12px;font-family:'Space Grotesk';">${monthName} ${year}</div>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;font-size:11px;color:var(--text-faint);text-align:center;margin-bottom:6px;">
+      ${['S','M','T','W','T','F','S'].map(d=>`<div>${d}</div>`).join('')}
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;">${cells}</div>
+  `;
+};
+
+/* -- Semester Planner -- */
+TOOL_RENDERERS['semester-planner'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field"><label>Courses (comma separated)</label><input type="text" id="sepCourses" placeholder="Calculus, Circuits, English"></div>
+    <div class="field"><label>Weeks in semester</label><input type="number" id="sepWeeks" value="16" min="1"></div>
+    <button class="btn btn-primary btn-block" id="sepBtn">Build Milestones</button>
+    <div id="sepResult" style="margin-top:16px;"></div>
+  `;
+  $('#sepBtn', wrap).addEventListener('click', () => {
+    const courses = $('#sepCourses', wrap).value.split(',').map(c=>c.trim()).filter(Boolean);
+    const weeks = parseInt($('#sepWeeks', wrap).value) || 16;
+    const box = $('#sepResult', wrap);
+    if(!courses.length) return;
+    box.innerHTML = `<table class="calc-table"><tr><th>Course</th><th>Midterm Check-in</th><th>Final Push</th></tr>
+      ${courses.map(c=>`<tr><td>${c}</td><td>Week ${Math.round(weeks*0.5)}</td><td>Week ${weeks-1}-${weeks}</td></tr>`).join('')}</table>`;
+  });
+};
+
+/* -- Timetable Creator -- */
+TOOL_RENDERERS['timetable-creator'] = (wrap) => {
+  const days = ['Mon','Tue','Wed','Thu','Fri'];
+  const slots = ['9-10','10-11','11-12','1-2','2-3'];
+  wrap.innerHTML = `<div style="overflow-x:auto;"><table class="calc-table"><tr><th>Time</th>${days.map(d=>`<th>${d}</th>`).join('')}</tr>
+    ${slots.map(s=>`<tr><td>${s}</td>${days.map((d,di)=>`<td><input type="text" data-s="${s}" data-d="${di}" placeholder="—" style="width:100%;background:transparent;border:none;color:var(--text);font-size:12.5px;"></td>`).join('')}</tr>`).join('')}
+    </table></div>
+    <p class="hint">Type your class/subject directly into each cell — it's stored for this session.</p>`;
+};
+
+/* -- Daily Progress Tracker -- */
+TOOL_RENDERERS['progress-tracker'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field"><label>How did today go? (1-10)</label><input type="number" id="ptScore" min="1" max="10" placeholder="e.g. 7"></div>
+    <div class="field"><label>Note</label><input type="text" id="ptNote" placeholder="What went well or could improve?"></div>
+    <button class="btn btn-primary btn-block" id="ptAdd">Log Today</button>
+    <div id="ptList" style="margin-top:16px;display:grid;gap:8px;"></div>
+  `;
+  const logs = [];
+  function draw(){
+    const list = $('#ptList', wrap); list.innerHTML='';
+    logs.slice().reverse().forEach(l => {
+      const row = el('div','glass'); row.style.padding='12px 14px'; row.style.display='flex'; row.style.justifyContent='space-between'; row.style.gap='10px';
+      row.innerHTML = `<span style="font-size:13px;color:var(--text-dim);">${l.note || 'No note'}</span><b style="color:var(--blue-soft);">${l.score}/10</b>`;
+      list.appendChild(row);
+    });
+  }
+  $('#ptAdd', wrap).addEventListener('click', () => {
+    const score = parseInt($('#ptScore', wrap).value);
+    if(!score) return;
+    logs.push({score, note:$('#ptNote', wrap).value.trim()});
+    $('#ptScore', wrap).value=''; $('#ptNote', wrap).value=''; draw();
+  });
+};
+
+/* ================================================================
+   6. ENGINEERING CALCULATORS
+   ================================================================ */
+
+/* -- Ohm's Law Calculator: solve for whichever field is left empty -- */
+TOOL_RENDERERS['ohms-law'] = (wrap) => {
+  wrap.innerHTML = `
+    <p class="hint" style="margin-bottom:12px;">Fill in any two values, leave the one you want to solve for empty.</p>
+    <div class="field-row">
+      <div class="field"><label>Voltage (V)</label><input type="number" id="olV" placeholder="e.g. 12"></div>
+      <div class="field"><label>Current (A)</label><input type="number" id="olI" placeholder="e.g. 2"></div>
+    </div>
+    <div class="field"><label>Resistance (Ω)</label><input type="number" id="olR" placeholder="e.g. 6"></div>
+    <button class="btn btn-primary btn-block" id="olBtn">Calculate</button>
+    <div class="result-box hidden" id="olResult"></div>
+  `;
+  $('#olBtn', wrap).addEventListener('click', () => {
+    const V = parseFloat($('#olV', wrap).value), I = parseFloat($('#olI', wrap).value), R = parseFloat($('#olR', wrap).value);
+    const box = $('#olResult', wrap);
+    box.classList.remove('hidden');
+    if(isNaN(V) && !isNaN(I) && !isNaN(R)) box.innerHTML = `Voltage = <span class="rb-value">${fmt(I*R)} V</span>`;
+    else if(isNaN(I) && !isNaN(V) && !isNaN(R)) box.innerHTML = `Current = <span class="rb-value">${fmt(V/R)} A</span>`;
+    else if(isNaN(R) && !isNaN(V) && !isNaN(I)) box.innerHTML = `Resistance = <span class="rb-value">${fmt(V/I)} Ω</span>`;
+    else box.innerHTML = `Please leave exactly one field empty (the value to solve for).`;
+  });
+};
+
+/* -- Power Calculator -- */
+TOOL_RENDERERS['power-calc'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field-row">
+      <div class="field"><label>Voltage (V)</label><input type="number" id="pcV" placeholder="e.g. 12"></div>
+      <div class="field"><label>Current (A)</label><input type="number" id="pcI" placeholder="e.g. 2"></div>
+    </div>
+    <button class="btn btn-primary btn-block" id="pcBtn">Calculate Power</button>
+    <div class="result-box hidden" id="pcResult"></div>
+  `;
+  $('#pcBtn', wrap).addEventListener('click', () => {
+    const V = parseFloat($('#pcV', wrap).value), I = parseFloat($('#pcI', wrap).value);
+    const box = $('#pcResult', wrap);
+    if(isNaN(V) || isNaN(I)){ box.classList.add('hidden'); return; }
+    box.classList.remove('hidden');
+    box.innerHTML = `Power = <span class="rb-value">${fmt(V*I)} W</span>`;
+  });
+};
+
+/* -- Voltage Calculator -- */
+TOOL_RENDERERS['voltage-calc'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field"><label>Method</label>
+      <select id="vcMethod"><option value="pi">Power ÷ Current</option><option value="ir">Current × Resistance</option></select>
+    </div>
+    <div class="field-row">
+      <div class="field"><label id="vcLabel1">Power (W)</label><input type="number" id="vcA" placeholder="e.g. 24"></div>
+      <div class="field"><label id="vcLabel2">Current (A)</label><input type="number" id="vcB" placeholder="e.g. 2"></div>
+    </div>
+    <button class="btn btn-primary btn-block" id="vcBtn">Calculate Voltage</button>
+    <div class="result-box hidden" id="vcResult"></div>
+  `;
+  $('#vcMethod', wrap).addEventListener('change', e => {
+    const l1 = $('#vcLabel1', wrap), l2 = $('#vcLabel2', wrap);
+    if(e.target.value === 'pi'){ l1.textContent='Power (W)'; l2.textContent='Current (A)'; }
+    else { l1.textContent='Current (A)'; l2.textContent='Resistance (Ω)'; }
+  });
+  $('#vcBtn', wrap).addEventListener('click', () => {
+    const method = $('#vcMethod', wrap).value;
+    const A = parseFloat($('#vcA', wrap).value), B = parseFloat($('#vcB', wrap).value);
+    const box = $('#vcResult', wrap);
+    if(isNaN(A) || isNaN(B)){ box.classList.add('hidden'); return; }
+    box.classList.remove('hidden');
+    const V = method === 'pi' ? A/B : A*B;
+    box.innerHTML = `Voltage = <span class="rb-value">${fmt(V)} V</span>`;
+  });
+};
+
+/* -- Current Calculator -- */
+TOOL_RENDERERS['current-calc'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field"><label>Method</label>
+      <select id="ccMethod"><option value="pv">Power ÷ Voltage</option><option value="vr">Voltage ÷ Resistance</option></select>
+    </div>
+    <div class="field-row">
+      <div class="field"><label id="ccLabel1">Power (W)</label><input type="number" id="ccA" placeholder="e.g. 24"></div>
+      <div class="field"><label id="ccLabel2">Voltage (V)</label><input type="number" id="ccB" placeholder="e.g. 12"></div>
+    </div>
+    <button class="btn btn-primary btn-block" id="ccBtn">Calculate Current</button>
+    <div class="result-box hidden" id="ccResult"></div>
+  `;
+  $('#ccMethod', wrap).addEventListener('change', e => {
+    const l1 = $('#ccLabel1', wrap), l2 = $('#ccLabel2', wrap);
+    if(e.target.value === 'pv'){ l1.textContent='Power (W)'; l2.textContent='Voltage (V)'; }
+    else { l1.textContent='Voltage (V)'; l2.textContent='Resistance (Ω)'; }
+  });
+  $('#ccBtn', wrap).addEventListener('click', () => {
+    const method = $('#ccMethod', wrap).value;
+    const A = parseFloat($('#ccA', wrap).value), B = parseFloat($('#ccB', wrap).value);
+    const box = $('#ccResult', wrap);
+    if(isNaN(A) || isNaN(B)){ box.classList.add('hidden'); return; }
+    box.classList.remove('hidden');
+    const I = A/B;
+    box.innerHTML = `Current = <span class="rb-value">${fmt(I)} A</span>`;
+  });
+};
+
+/* -- Resistance Calculator -- */
+TOOL_RENDERERS['resistance-calc'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field"><label>Method</label>
+      <select id="rcMethod"><option value="vi">Voltage ÷ Current</option><option value="v2p">Voltage² ÷ Power</option></select>
+    </div>
+    <div class="field-row">
+      <div class="field"><label id="rcLabel1">Voltage (V)</label><input type="number" id="rcA" placeholder="e.g. 12"></div>
+      <div class="field"><label id="rcLabel2">Current (A)</label><input type="number" id="rcB" placeholder="e.g. 2"></div>
+    </div>
+    <button class="btn btn-primary btn-block" id="rcBtn">Calculate Resistance</button>
+    <div class="result-box hidden" id="rcResult"></div>
+  `;
+  $('#rcMethod', wrap).addEventListener('change', e => {
+    const l1 = $('#rcLabel1', wrap), l2 = $('#rcLabel2', wrap);
+    if(e.target.value === 'vi'){ l1.textContent='Voltage (V)'; l2.textContent='Current (A)'; }
+    else { l1.textContent='Voltage (V)'; l2.textContent='Power (W)'; }
+  });
+  $('#rcBtn', wrap).addEventListener('click', () => {
+    const method = $('#rcMethod', wrap).value;
+    const A = parseFloat($('#rcA', wrap).value), B = parseFloat($('#rcB', wrap).value);
+    const box = $('#rcResult', wrap);
+    if(isNaN(A) || isNaN(B)){ box.classList.add('hidden'); return; }
+    box.classList.remove('hidden');
+    const R = method === 'vi' ? A/B : (A*A)/B;
+    box.innerHTML = `Resistance = <span class="rb-value">${fmt(R)} Ω</span>`;
+  });
+};
+
+/* -- Frequency Calculator -- */
+TOOL_RENDERERS['frequency-calc'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field"><label>Period T (seconds)</label><input type="number" id="fqT" placeholder="e.g. 0.02"></div>
+    <button class="btn btn-primary btn-block" id="fqBtn">Calculate Frequency</button>
+    <div class="result-box hidden" id="fqResult"></div>
+  `;
+  $('#fqBtn', wrap).addEventListener('click', () => {
+    const T = parseFloat($('#fqT', wrap).value);
+    const box = $('#fqResult', wrap);
+    if(isNaN(T) || T === 0){ box.classList.add('hidden'); return; }
+    box.classList.remove('hidden');
+    box.innerHTML = `Frequency = <span class="rb-value">${fmt(1/T)} Hz</span>`;
+  });
+};
+
+/* -- RC Circuit Calculator -- */
+TOOL_RENDERERS['rc-circuit'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field-row">
+      <div class="field"><label>Resistance (Ω)</label><input type="number" id="rcR" placeholder="e.g. 1000"></div>
+      <div class="field"><label>Capacitance (F)</label><input type="number" id="rcC" placeholder="e.g. 0.000001"></div>
+    </div>
+    <button class="btn btn-primary btn-block" id="rcCircBtn">Calculate</button>
+    <div class="result-box hidden" id="rcCircResult"></div>
+  `;
+  $('#rcCircBtn', wrap).addEventListener('click', () => {
+    const R = parseFloat($('#rcR', wrap).value), C = parseFloat($('#rcC', wrap).value);
+    const box = $('#rcCircResult', wrap);
+    if(isNaN(R) || isNaN(C)){ box.classList.add('hidden'); return; }
+    const tau = R*C, fc = 1/(2*Math.PI*R*C);
+    box.classList.remove('hidden');
+    box.innerHTML = `Time constant (τ) = <span class="rb-value">${fmt(tau)} s</span><br><br>Cutoff frequency = <span class="rb-value">${fmt(fc)} Hz</span>`;
+  });
+};
+
+/* -- RL Circuit Calculator -- */
+TOOL_RENDERERS['rl-circuit'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field-row">
+      <div class="field"><label>Resistance (Ω)</label><input type="number" id="rlR" placeholder="e.g. 100"></div>
+      <div class="field"><label>Inductance (H)</label><input type="number" id="rlL" placeholder="e.g. 0.01"></div>
+    </div>
+    <button class="btn btn-primary btn-block" id="rlBtn">Calculate</button>
+    <div class="result-box hidden" id="rlResult"></div>
+  `;
+  $('#rlBtn', wrap).addEventListener('click', () => {
+    const R = parseFloat($('#rlR', wrap).value), L = parseFloat($('#rlL', wrap).value);
+    const box = $('#rlResult', wrap);
+    if(isNaN(R) || isNaN(L) || R===0){ box.classList.add('hidden'); return; }
+    const tau = L/R, fc = R/(2*Math.PI*L);
+    box.classList.remove('hidden');
+    box.innerHTML = `Time constant (τ) = <span class="rb-value">${fmt(tau)} s</span><br><br>Cutoff frequency = <span class="rb-value">${fmt(fc)} Hz</span>`;
+  });
+};
+
+/* -- RLC Circuit Calculator -- */
+TOOL_RENDERERS['rlc-circuit'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field-row">
+      <div class="field"><label>Resistance (Ω)</label><input type="number" id="rlcR" placeholder="e.g. 50"></div>
+      <div class="field"><label>Inductance (H)</label><input type="number" id="rlcL" placeholder="e.g. 0.01"></div>
+    </div>
+    <div class="field"><label>Capacitance (F)</label><input type="number" id="rlcC" placeholder="e.g. 0.000001"></div>
+    <button class="btn btn-primary btn-block" id="rlcBtn">Calculate</button>
+    <div class="result-box hidden" id="rlcResult"></div>
+  `;
+  $('#rlcBtn', wrap).addEventListener('click', () => {
+    const R = parseFloat($('#rlcR', wrap).value), L = parseFloat($('#rlcL', wrap).value), C = parseFloat($('#rlcC', wrap).value);
+    const box = $('#rlcResult', wrap);
+    if(isNaN(R) || isNaN(L) || isNaN(C)){ box.classList.add('hidden'); return; }
+    const f0 = 1/(2*Math.PI*Math.sqrt(L*C));
+    const dampingFactor = R / (2*Math.sqrt(L/C));
+    let type = 'Underdamped (oscillates)';
+    if(dampingFactor > 1) type = 'Overdamped';
+    else if(Math.abs(dampingFactor-1) < 0.01) type = 'Critically damped';
+    box.classList.remove('hidden');
+    box.innerHTML = `Resonant frequency = <span class="rb-value">${fmt(f0)} Hz</span><br><br>Damping factor ζ = ${fmt(dampingFactor)}<br>Behavior: <b>${type}</b>`;
+  });
+};
+
+/* -- Resistor Color Code Calculator -- */
+TOOL_RENDERERS['resistor-color'] = (wrap) => {
+  const colors = [
+    {name:'Black', val:0, mult:1, color:'#1a1a1a'},
+    {name:'Brown', val:1, mult:10, color:'#8b5a2b'},
+    {name:'Red', val:2, mult:100, color:'#e53935'},
+    {name:'Orange', val:3, mult:1000, color:'#fb8c00'},
+    {name:'Yellow', val:4, mult:10000, color:'#fdd835'},
+    {name:'Green', val:5, mult:100000, color:'#43a047'},
+    {name:'Blue', val:6, mult:1000000, color:'#1e88e5'},
+    {name:'Violet', val:7, mult:10000000, color:'#8e24aa'},
+    {name:'Grey', val:8, mult:100000000, color:'#9e9e9e'},
+    {name:'White', val:9, mult:1000000000, color:'#f5f5f5'},
+  ];
+  const golds = {name:'Gold', tol:5}, silvers = {name:'Silver', tol:10};
+  const opt = (arr) => arr.map((c,i)=>`<option value="${i}">${c.name}</option>`).join('');
+  wrap.innerHTML = `
+    <div class="field-row">
+      <div class="field"><label>Band 1 (1st digit)</label><select id="rcb1">${opt(colors)}</select></div>
+      <div class="field"><label>Band 2 (2nd digit)</label><select id="rcb2">${opt(colors)}</select></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Band 3 (multiplier)</label><select id="rcb3">${opt(colors)}</select></div>
+      <div class="field"><label>Band 4 (tolerance)</label><select id="rcb4"><option value="gold">Gold (±5%)</option><option value="silver">Silver (±10%)</option></select></div>
+    </div>
+    <button class="btn btn-primary btn-block" id="rcbBtn">Decode Resistor</button>
+    <div class="result-box hidden" id="rcbResult"></div>
+  `;
+  $('#rcbBtn', wrap).addEventListener('click', () => {
+    const c1 = colors[$('#rcb1', wrap).value], c2 = colors[$('#rcb2', wrap).value], c3 = colors[$('#rcb3', wrap).value];
+    const tol = $('#rcb4', wrap).value === 'gold' ? 5 : 10;
+    const value = (c1.val*10 + c2.val) * c3.mult;
+    const box = $('#rcbResult', wrap);
+    box.classList.remove('hidden');
+    let display = value >= 1000000 ? `${round(value/1000000,2)} MΩ` : value >= 1000 ? `${round(value/1000,2)} kΩ` : `${value} Ω`;
+    box.innerHTML = `Resistance = <span class="rb-value">${display}</span> ± ${tol}%`;
+  });
+};
+
+/* -- Voltage Divider Calculator -- */
+TOOL_RENDERERS['voltage-divider'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field"><label>Input Voltage (V)</label><input type="number" id="vdVin" placeholder="e.g. 9"></div>
+    <div class="field-row">
+      <div class="field"><label>R1 (Ω)</label><input type="number" id="vdR1" placeholder="e.g. 1000"></div>
+      <div class="field"><label>R2 (Ω)</label><input type="number" id="vdR2" placeholder="e.g. 2000"></div>
+    </div>
+    <button class="btn btn-primary btn-block" id="vdBtn">Calculate Vout</button>
+    <div class="result-box hidden" id="vdResult"></div>
+  `;
+  $('#vdBtn', wrap).addEventListener('click', () => {
+    const Vin = parseFloat($('#vdVin', wrap).value), R1 = parseFloat($('#vdR1', wrap).value), R2 = parseFloat($('#vdR2', wrap).value);
+    const box = $('#vdResult', wrap);
+    if(isNaN(Vin) || isNaN(R1) || isNaN(R2)){ box.classList.add('hidden'); return; }
+    const Vout = Vin * (R2/(R1+R2));
+    box.classList.remove('hidden');
+    box.innerHTML = `Vout = <span class="rb-value">${fmt(Vout)} V</span> (across R2)`;
+  });
+};
+
+/* -- Number System Converter -- */
+TOOL_RENDERERS['number-system'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field-row">
+      <div class="field"><label>Input Value</label><input type="text" id="nsInput" placeholder="e.g. 255"></div>
+      <div class="field"><label>From Base</label><select id="nsFrom"><option value="2">Binary</option><option value="8">Octal</option><option value="10" selected>Decimal</option><option value="16">Hexadecimal</option></select></div>
+    </div>
+    <button class="btn btn-primary btn-block" id="nsBtn">Convert</button>
+    <div class="result-box hidden" id="nsResult"></div>
+  `;
+  $('#nsBtn', wrap).addEventListener('click', () => {
+    const val = $('#nsInput', wrap).value.trim();
+    const from = parseInt($('#nsFrom', wrap).value);
+    const box = $('#nsResult', wrap);
+    const dec = parseInt(val, from);
+    if(isNaN(dec)){ box.classList.remove('hidden'); box.innerHTML = 'Invalid input for the selected base.'; return; }
+    box.classList.remove('hidden');
+    box.innerHTML = `
+      <table class="calc-table">
+        <tr><th>Binary</th><td>${dec.toString(2)}</td></tr>
+        <tr><th>Octal</th><td>${dec.toString(8)}</td></tr>
+        <tr><th>Decimal</th><td>${dec.toString(10)}</td></tr>
+        <tr><th>Hexadecimal</th><td>${dec.toString(16).toUpperCase()}</td></tr>
+      </table>`;
+  });
+};
+
+/* -- Scientific Calculator -- */
+TOOL_RENDERERS['scientific-calc'] = (wrap) => {
+  wrap.innerHTML = `
+    <input type="text" id="sciDisplay" readonly style="width:100%;padding:16px;border-radius:12px;background:rgba(255,255,255,0.045);border:1px solid var(--border);font-size:24px;text-align:right;font-family:'Space Grotesk';margin-bottom:12px;" value="0">
+    <div id="sciPad" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;"></div>
+  `;
+  const display = $('#sciDisplay', wrap);
+  const keys = ['sin(','cos(','tan(','log(','sqrt(',
+                '7','8','9','/','(',
+                '4','5','6','*',')',
+                '1','2','3','-','^',
+                '0','.','C','+','='];
+  const pad = $('#sciPad', wrap);
+  let expr = '';
+  keys.forEach(k => {
+    const btn = el('button','btn btn-ghost');
+    btn.textContent = k === 'sqrt(' ? '√' : k;
+    btn.style.padding = '12px 0';
+    btn.addEventListener('click', () => {
+      if(k === 'C'){ expr=''; display.value='0'; return; }
+      if(k === '='){
+        try{
+          const safe = expr.replace(/sqrt/g,'Math.sqrt').replace(/sin/g,'Math.sin').replace(/cos/g,'Math.cos').replace(/tan/g,'Math.tan').replace(/log/g,'Math.log10').replace(/\^/g,'**');
+          const result = Function('"use strict";return ('+safe+')')();
+          display.value = fmt(result);
+          expr = String(result);
+        }catch(e){ display.value = 'Error'; expr=''; }
+        return;
+      }
+      expr += k;
+      display.value = expr;
+    });
+    pad.appendChild(btn);
+  });
+};
+
+/* -- Boolean Algebra Calculator -- */
+TOOL_RENDERERS['boolean-algebra'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field"><label>Expression (use A, B, C and & | ! ^)</label><input type="text" id="boolExpr" placeholder="e.g. (A & B) | !C"></div>
+    <p class="hint">Operators: <code>&amp;</code> AND, <code>|</code> OR, <code>!</code> NOT, <code>^</code> XOR. Variables must be A, B and/or C.</p>
+    <button class="btn btn-primary btn-block" id="boolBtn">Generate Truth Table</button>
+    <div id="boolResult" style="margin-top:16px;overflow-x:auto;"></div>
+  `;
+  $('#boolBtn', wrap).addEventListener('click', () => {
+    const raw = $('#boolExpr', wrap).value.trim();
+    const box = $('#boolResult', wrap);
+    if(!raw){ box.innerHTML=''; return; }
+    const vars = ['A','B','C'].filter(v => raw.includes(v));
+    if(!vars.length){ box.innerHTML = '<p class="hint">No variables (A/B/C) detected in the expression.</p>'; return; }
+    let rows = '';
+    const combos = Math.pow(2, vars.length);
+    for(let i=0;i<combos;i++){
+      const values = {};
+      vars.forEach((v,idx) => { values[v] = (i >> (vars.length-1-idx)) & 1; });
+      let jsExpr = raw;
+      vars.forEach(v => { jsExpr = jsExpr.split(v).join(values[v] ? '1':'0'); });
+      jsExpr = jsExpr.replace(/!/g,'~').replace(/\^/g,'!=='); // temp placeholder, replaced below more carefully
+      let result;
+      try{
+        // Evaluate bitwise using safe boolean logic on 0/1 strings
+        let evalExpr = raw;
+        vars.forEach(v => { evalExpr = evalExpr.split(v).join(values[v] ? 'true':'false'); });
+        evalExpr = evalExpr.replace(/&/g,'&&').replace(/\|/g,'||').replace(/!(?!=)/g,'!');
+        // handle XOR (^) manually: true ^ false style not valid in JS logic ops, use custom function
+        evalExpr = evalExpr.replace(/\^/g, ' XOR ');
+        if(evalExpr.includes('XOR')){
+          const parts = evalExpr.split('XOR').map(p=>p.trim());
+          // evaluate each part then reduce XOR across them (supports simple two-term XOR)
+          const evaluated = parts.map(p => Function('"use strict";return ('+p+')')());
+          result = evaluated.reduce((a,b) => (a && !b) || (!a && b));
+        } else {
+          result = Function('"use strict";return ('+evalExpr+')')();
+        }
+      }catch(e){ result = 'Err'; }
+      rows += `<tr>${vars.map(v=>`<td>${values[v]}</td>`).join('')}<td><b>${result===true?1:result===false?0:result}</b></td></tr>`;
+    }
+    box.innerHTML = `<table class="calc-table"><tr>${vars.map(v=>`<th>${v}</th>`).join('')}<th>Result</th></tr>${rows}</table>`;
+  });
+};
+
+/* -- Logic Gate Simulator -- */
+TOOL_RENDERERS['logic-gates'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field"><label>Gate Type</label>
+      <select id="gateType">
+        <option value="AND">AND</option><option value="OR">OR</option><option value="NOT">NOT</option>
+        <option value="XOR">XOR</option><option value="NAND">NAND</option><option value="NOR">NOR</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:16px;align-items:center;justify-content:center;margin:20px 0;">
+      <label style="display:flex;align-items:center;gap:8px;font-size:14px;">A <input type="checkbox" id="gateA" style="width:18px;height:18px;"></label>
+      <label id="gateBWrap" style="display:flex;align-items:center;gap:8px;font-size:14px;">B <input type="checkbox" id="gateB" style="width:18px;height:18px;"></label>
+    </div>
+    <div style="text-align:center;">
+      <div id="gateOutput" style="width:70px;height:70px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-size:24px;font-weight:700;background:var(--glass-strong);border:2px solid var(--border);">0</div>
+      <div style="color:var(--text-dim);font-size:13px;">OUTPUT</div>
+    </div>
+  `;
+  const gateSel = $('#gateType', wrap), a = $('#gateA', wrap), b = $('#gateB', wrap), out = $('#gateOutput', wrap), bWrap = $('#gateBWrap', wrap);
+  function compute(){
+    const A = a.checked?1:0, B = b.checked?1:0;
+    let result;
+    switch(gateSel.value){
+      case 'AND': result = A & B; break;
+      case 'OR': result = A | B; break;
+      case 'NOT': result = A ? 0 : 1; break;
+      case 'XOR': result = A ^ B; break;
+      case 'NAND': result = (A & B) ? 0 : 1; break;
+      case 'NOR': result = (A | B) ? 0 : 1; break;
+    }
+    out.textContent = result;
+    out.style.background = result ? 'var(--grad)' : 'var(--glass-strong)';
+    bWrap.style.display = gateSel.value === 'NOT' ? 'none' : 'flex';
+  }
+  [gateSel,a,b].forEach(elm => elm.addEventListener('change', compute)); // update wiring after any change
+  gateSel.addEventListener('input', compute);
+  compute();
+};
+
+/* -- Unit Converter -- */
+TOOL_RENDERERS['unit-converter'] = (wrap) => {
+  const categories = {
+    Length: {m:1, km:1000, cm:0.01, mm:0.001, mile:1609.34, ft:0.3048, inch:0.0254},
+    Mass: {kg:1, g:0.001, mg:0.000001, lb:0.453592, oz:0.0283495},
+    Time: {sec:1, min:60, hour:3600, day:86400},
+    Data: {byte:1, KB:1024, MB:1024*1024, GB:1024*1024*1024},
+  };
+  wrap.innerHTML = `
+    <div class="field"><label>Category</label><select id="ucCat">${Object.keys(categories).map(c=>`<option>${c}</option>`).join('')}<option>Temperature</option></select></div>
+    <div class="field-row">
+      <div class="field"><label>Value</label><input type="number" id="ucValue" placeholder="e.g. 100"></div>
+      <div class="field"><label>From</label><select id="ucFrom"></select></div>
+    </div>
+    <div class="field"><label>To</label><select id="ucTo"></select></div>
+    <button class="btn btn-primary btn-block" id="ucBtn">Convert</button>
+    <div class="result-box hidden" id="ucResult"></div>
+  `;
+  const catSel = $('#ucCat', wrap), fromSel = $('#ucFrom', wrap), toSel = $('#ucTo', wrap);
+  function refreshUnits(){
+    const cat = catSel.value;
+    if(cat === 'Temperature'){
+      fromSel.innerHTML = ['Celsius','Fahrenheit','Kelvin'].map(u=>`<option>${u}</option>`).join('');
+      toSel.innerHTML = fromSel.innerHTML;
+    } else {
+      const units = Object.keys(categories[cat]);
+      fromSel.innerHTML = units.map(u=>`<option>${u}</option>`).join('');
+      toSel.innerHTML = units.map(u=>`<option>${u}</option>`).join('');
+    }
+  }
+  catSel.addEventListener('change', refreshUnits);
+  refreshUnits();
+  $('#ucBtn', wrap).addEventListener('click', () => {
+    const val = parseFloat($('#ucValue', wrap).value);
+    const box = $('#ucResult', wrap);
+    if(isNaN(val)){ box.classList.add('hidden'); return; }
+    const cat = catSel.value, from = fromSel.value, to = toSel.value;
+    let result;
+    if(cat === 'Temperature'){
+      let celsius;
+      if(from==='Celsius') celsius = val;
+      else if(from==='Fahrenheit') celsius = (val-32)*5/9;
+      else celsius = val - 273.15;
+      if(to==='Celsius') result = celsius;
+      else if(to==='Fahrenheit') result = celsius*9/5+32;
+      else result = celsius + 273.15;
+    } else {
+      const table = categories[cat];
+      result = val * table[from] / table[to];
+    }
+    box.classList.remove('hidden');
+    box.innerHTML = `${val} ${from} = <span class="rb-value">${fmt(result)} ${to}</span>`;
+  });
+};
+
+/* ================================================================
+   AI TOOL RENDERERS (simulated/templated "AI" output — fully
+   client-side, no external API calls)
+   ================================================================ */
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+TOOL_RENDERERS['ai-tool-finder'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field"><label>Describe what you need help with</label><input type="text" id="atfQuery" placeholder="e.g. I need to make flashcards for biology"></div>
+    <button class="btn btn-primary btn-block" id="atfBtn">Find Matching Tools</button>
+    <div id="atfResult" style="margin-top:16px;"></div>
+  `;
+  $('#atfBtn', wrap).addEventListener('click', () => {
+    const q = $('#atfQuery', wrap).value.trim().toLowerCase();
+    const box = $('#atfResult', wrap);
+    if(!q){ box.innerHTML=''; return; }
+    const matches = SEARCH_INDEX.filter(item => q.split(' ').some(word => word.length>2 && (item.title.toLowerCase().includes(word) || item.desc.toLowerCase().includes(word)))).slice(0,5);
+    box.innerHTML = matches.length
+      ? matches.map(m => `<div class="glass" style="padding:12px 14px;margin-bottom:8px;"><b>${m.icon} ${m.title}</b><div style="font-size:12.5px;color:var(--text-dim);">${m.cat}</div></div>`).join('')
+      : '<p class="hint">No direct match — try the global search bar at the top of the page.</p>';
+  });
+};
+
+TOOL_RENDERERS['ai-prompt-generator'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field"><label>Rough idea</label><input type="text" id="apgIdea" placeholder="e.g. essay about climate change"></div>
+    <button class="btn btn-primary btn-block" id="apgBtn">Generate Detailed Prompt</button>
+    <div class="result-box hidden" id="apgResult"></div>
+  `;
+  $('#apgBtn', wrap).addEventListener('click', () => {
+    const idea = $('#apgIdea', wrap).value.trim() || 'your topic';
+    const box = $('#apgResult', wrap);
+    box.classList.remove('hidden');
+    box.innerHTML = `<b>Generated Prompt:</b><p style="margin-top:8px;">"Act as an expert tutor. Explain <b>${idea}</b> in a structured way with: (1) a simple analogy, (2) key facts, (3) common misconceptions, (4) 3 practice questions with answers. Keep the tone clear and beginner-friendly, and format the response with headings."</p>`;
+  });
+};
+
+TOOL_RENDERERS['ai-roadmap'] = (wrap) => {
+  wrap.innerHTML = `<p style="color:var(--text-dim);">Head to the full Roadmap Generator section to pick a career path.</p>
+  <button class="btn btn-primary btn-block" id="goRoadmap">Jump to Roadmap Generator</button>`;
+  $('#goRoadmap', wrap).addEventListener('click', () => { closeModal(); $('#roadmap').scrollIntoView({behavior:'smooth'}); });
+};
+
+TOOL_RENDERERS['ai-career-guide'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field"><label>What do you enjoy most?</label>
+      <select id="acgInterest">
+        <option>Solving math/logic puzzles</option>
+        <option>Building things with code</option>
+        <option>Tinkering with circuits/hardware</option>
+        <option>Analyzing data & patterns</option>
+        <option>Designing user experiences</option>
+        <option>Thinking about security & risk</option>
+      </select>
+    </div>
+    <button class="btn btn-primary btn-block" id="acgBtn">Get Career Suggestion</button>
+    <div class="result-box hidden" id="acgResult"></div>
+  `;
+  const map = {
+    'Solving math/logic puzzles':'Data Scientist or AI Engineer — both rely heavily on mathematical reasoning.',
+    'Building things with code':'Software Engineer or Web Developer — great for people who love building end-to-end.',
+    'Tinkering with circuits/hardware':'Electronics Engineer or Robotics Engineer — hands-on hardware careers.',
+    'Analyzing data & patterns':'Data Scientist — a strong fit for pattern-driven, analytical thinkers.',
+    'Designing user experiences':'Web Developer (Frontend) — combine creativity with technical implementation.',
+    'Thinking about security & risk':'Cyber Security Engineer — perfect for defensively-minded problem solvers.',
+  };
+  $('#acgBtn', wrap).addEventListener('click', () => {
+    const interest = $('#acgInterest', wrap).value;
+    const box = $('#acgResult', wrap);
+    box.classList.remove('hidden');
+    box.innerHTML = `<b>Suggested Path:</b><p style="margin-top:6px;">${map[interest]}</p>`;
+  });
+};
+
+TOOL_RENDERERS['ai-productivity'] = (wrap) => {
+  const tips = [
+    'Try time-blocking: assign every hour of your day a single task, not a list.',
+    'Use the 2-minute rule — if a task takes under 2 minutes, do it immediately.',
+    'Batch similar tasks together (all emails, then all calls) to reduce context switching.',
+    'Review your day for 5 minutes before bed and plan tomorrow\'s top 3 priorities.',
+    'Turn off notifications during your first deep-work block of the day.',
+  ];
+  wrap.innerHTML = `<button class="btn btn-primary btn-block" id="apBtn">Get a Productivity Suggestion</button>
+  <div class="result-box hidden" id="apResult"></div>`;
+  $('#apBtn', wrap).addEventListener('click', () => {
+    const box = $('#apResult', wrap);
+    box.classList.remove('hidden');
+    box.innerHTML = `💡 ${pick(tips)}`;
+  });
+};
+
+TOOL_RENDERERS['ai-course-finder'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field"><label>Topic</label><input type="text" id="acfTopic" placeholder="e.g. web development"></div>
+    <button class="btn btn-primary btn-block" id="acfBtn">Find Free Course Categories</button>
+    <div class="result-box hidden" id="acfResult"></div>
+  `;
+  $('#acfBtn', wrap).addEventListener('click', () => {
+    const topic = $('#acfTopic', wrap).value.trim() || 'your topic';
+    const box = $('#acfResult', wrap);
+    box.classList.remove('hidden');
+    box.innerHTML = `Search these trusted, free platforms for "<b>${topic}</b>":<br><br>
+      <a class="tag" href="https://www.freecodecamp.org/" target="_blank" rel="noopener">freeCodeCamp ↗</a>
+      <a class="tag" href="https://ocw.mit.edu/" target="_blank" rel="noopener">MIT OpenCourseWare ↗</a>
+      <a class="tag" href="https://www.edx.org/" target="_blank" rel="noopener">edX ↗</a>
+      <a class="tag" href="https://www.khanacademy.org/" target="_blank" rel="noopener">Khan Academy ↗</a>`;
+  });
+};
+
+TOOL_RENDERERS['ai-startup-idea'] = (wrap) => {
+  const audiences = ['college students','high schoolers','busy parents','remote workers','freelancers','small businesses'];
+  const problems = ['managing study schedules','finding affordable tutors','tracking expenses','staying focused while working','organizing group projects','finding internships'];
+  const formats = ['a mobile app','a browser extension','a Discord bot','a lightweight web app','an AI chatbot'];
+  wrap.innerHTML = `<button class="btn btn-primary btn-block" id="asiBtn">Generate Startup Idea</button><div class="result-box hidden" id="asiResult"></div>`;
+  $('#asiBtn', wrap).addEventListener('click', () => {
+    const box = $('#asiResult', wrap);
+    box.classList.remove('hidden');
+    box.innerHTML = `Build <b>${pick(formats)}</b> that helps <b>${pick(audiences)}</b> with <b>${pick(problems)}</b>.`;
+  });
+};
+
+TOOL_RENDERERS['ai-project-suggestion'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field"><label>Skill Level</label><select id="apsLevel"><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></div>
+    <div class="field"><label>Field</label><select id="apsField"><option>Web Dev</option><option>AI/ML</option><option>Electronics</option><option>Data Science</option></select></div>
+    <button class="btn btn-primary btn-block" id="apsBtn">Suggest a Project</button>
+    <div class="result-box hidden" id="apsResult"></div>
+  `;
+  const ideas = {
+    'Web Dev': {Beginner:'A personal portfolio site with a working contact form.', Intermediate:'A full to-do app with local storage and drag-and-drop.', Advanced:'A real-time collaborative note-taking app.'},
+    'AI/ML': {Beginner:'A movie recommendation system using basic filtering.', Intermediate:'A handwritten digit classifier using a small neural network.', Advanced:'A text summarization tool using transformer embeddings.'},
+    'Electronics': {Beginner:'An LED chaser circuit with a 555 timer.', Intermediate:'A temperature-controlled fan using a microcontroller.', Advanced:'A DIY oscilloscope using a microcontroller and ADC.'},
+    'Data Science': {Beginner:'Analyze a public dataset and visualize trends.', Intermediate:'Build a dashboard for COVID/weather/stock data.', Advanced:'Build an end-to-end ML pipeline with model deployment.'},
+  };
+  $('#apsBtn', wrap).addEventListener('click', () => {
+    const level = $('#apsLevel', wrap).value, field = $('#apsField', wrap).value;
+    const box = $('#apsResult', wrap);
+    box.classList.remove('hidden');
+    box.innerHTML = `<b>${field} — ${level} Project:</b><p style="margin-top:6px;">${ideas[field][level]}</p>`;
+  });
+};
+
+TOOL_RENDERERS['ai-interview-prep'] = (wrap) => {
+  const questions = {
+    'Software Engineer': ['Explain the difference between an array and a linked list.','What is time complexity and why does it matter?','Describe a bug you fixed and how you found it.'],
+    'Data Scientist': ['What is overfitting and how do you prevent it?','Explain the bias-variance tradeoff.','How would you handle missing data in a dataset?'],
+    'Electronics Engineer': ['Explain the difference between AC and DC.','What is the purpose of a capacitor in a circuit?','Describe how a transistor can act as a switch.'],
+    'General / HR': ['Tell me about yourself.','What is your biggest weakness?','Why do you want to work here?'],
+  };
+  wrap.innerHTML = `
+    <div class="field"><label>Role</label><select id="aipRole">${Object.keys(questions).map(r=>`<option>${r}</option>`).join('')}</select></div>
+    <button class="btn btn-primary btn-block" id="aipBtn">Get Mock Questions</button>
+    <div id="aipResult" style="margin-top:16px;"></div>
+  `;
+  $('#aipBtn', wrap).addEventListener('click', () => {
+    const role = $('#aipRole', wrap).value;
+    const box = $('#aipResult', wrap);
+    box.innerHTML = `<ol style="padding-left:18px;line-height:1.9;">${questions[role].map(q=>`<li>${q}</li>`).join('')}</ol>`;
+  });
+};
+
+TOOL_RENDERERS['ai-study-assistant'] = (wrap) => {
+  wrap.innerHTML = `
+    <div class="field"><label>Subject</label><input type="text" id="asaSubject" placeholder="e.g. Organic Chemistry"></div>
+    <button class="btn btn-primary btn-block" id="asaBtn">Get Study Strategy</button>
+    <div class="result-box hidden" id="asaResult"></div>
+  `;
+  $('#asaBtn', wrap).addEventListener('click', () => {
+    const subject = $('#asaSubject', wrap).value.trim() || 'your subject';
+    const box = $('#asaResult', wrap);
+    box.classList.remove('hidden');
+    box.innerHTML = `<b>Strategy for ${subject}:</b>
+      <ol style="margin-top:8px;padding-left:18px;line-height:1.9;">
+        <li>Skim the full syllabus once to see the big picture.</li>
+        <li>Use active recall — test yourself instead of just re-reading.</li>
+        <li>Space repetition over several days instead of cramming.</li>
+        <li>Teach the concept to someone else (or explain it out loud).</li>
+        <li>Do timed practice questions close to your exam date.</li>
+      </ol>`;
+  });
+};
+
+/* ================================================================
+   BUILD SECTION RENDERERS — randomized idea generators
+   ================================================================ */
+TOOL_RENDERERS['website-idea'] = (wrap) => {
+  const ideas = ['A habit tracker with social accountability','A local recipe-sharing site for students','A campus lost-and-found board','A study-buddy matching platform','A minimalist markdown note app','A skill-swap marketplace for students'];
+  wrap.innerHTML = `<button class="btn btn-primary btn-block" id="wiBtn">Generate Website Idea</button><div class="result-box hidden" id="wiResult"></div>`;
+  $('#wiBtn', wrap).addEventListener('click', () => { const box=$('#wiResult',wrap); box.classList.remove('hidden'); box.innerHTML = pick(ideas); });
+};
+
+TOOL_RENDERERS['project-suggestion'] = (wrap) => {
+  const stacks = ['HTML/CSS/JS','Python + Flask','React + Node','Java + Spring Boot','Arduino + C++'];
+  const projects = ['expense tracker','weather dashboard','chat application','inventory manager','quiz platform','portfolio site'];
+  wrap.innerHTML = `<button class="btn btn-primary btn-block" id="psgBtn">Generate Project Idea</button><div class="result-box hidden" id="psgResult"></div>`;
+  $('#psgBtn', wrap).addEventListener('click', () => { const box=$('#psgResult',wrap); box.classList.remove('hidden'); box.innerHTML = `Build a <b>${pick(projects)}</b> using <b>${pick(stacks)}</b>.`; });
+};
+
+TOOL_RENDERERS['portfolio-generator'] = (wrap) => {
+  wrap.innerHTML = `<button class="btn btn-primary btn-block" id="pgBtn">Generate Portfolio Outline</button><div class="result-box hidden" id="pgResult"></div>`;
+  $('#pgBtn', wrap).addEventListener('click', () => {
+    const box=$('#pgResult',wrap); box.classList.remove('hidden');
+    box.innerHTML = `<ol style="padding-left:18px;line-height:1.9;">
+      <li>Hero section with your name & one-line pitch</li>
+      <li>About Me (short, personal, specific)</li>
+      <li>Skills grid (grouped by category)</li>
+      <li>3-4 featured projects with links & tech used</li>
+      <li>Resume download button</li>
+      <li>Contact section with email/social links</li>
+    </ol>`;
+  });
+};
+
+TOOL_RENDERERS['startup-idea-gen'] = (wrap) => {
+  const ideas = ['AI note-taking assistant for lectures','Peer tutoring marketplace','Micro-internship matching platform','Gamified study streak app','Subscription box for STEM experiments','Campus food-waste sharing app'];
+  wrap.innerHTML = `<button class="btn btn-primary btn-block" id="sigBtn">Generate Startup Idea</button><div class="result-box hidden" id="sigResult"></div>`;
+  $('#sigBtn', wrap).addEventListener('click', () => { const box=$('#sigResult',wrap); box.classList.remove('hidden'); box.innerHTML = pick(ideas); });
+};
+
+TOOL_RENDERERS['electronics-project'] = (wrap) => {
+  const projects = ['Line-following robot using IR sensors','Home automation system using relays','Digital thermometer with LCD display','Simple metal detector circuit','Bluetooth-controlled LED strip','Solar panel voltage monitor'];
+  wrap.innerHTML = `<button class="btn btn-primary btn-block" id="epBtn">Generate Electronics Project</button><div class="result-box hidden" id="epResult"></div>`;
+  $('#epBtn', wrap).addEventListener('click', () => { const box=$('#epResult',wrap); box.classList.remove('hidden'); box.innerHTML = pick(projects); });
+};
+
+TOOL_RENDERERS['robotics-project'] = (wrap) => {
+  const projects = ['Obstacle-avoiding robot car (ultrasonic sensor + motors)','Robotic arm controlled via joystick','Self-balancing robot using a gyroscope','Voice-controlled home robot','Maze-solving robot with pathfinding logic'];
+  wrap.innerHTML = `<button class="btn btn-primary btn-block" id="rpBtn">Generate Robotics Idea</button><div class="result-box hidden" id="rpResult"></div>`;
+  $('#rpBtn', wrap).addEventListener('click', () => { const box=$('#rpResult',wrap); box.classList.remove('hidden'); box.innerHTML = pick(projects); });
+};
+
+TOOL_RENDERERS['hackathon-idea'] = (wrap) => {
+  const ideas = ['A 24-hour accessibility-focused app for visually impaired students','A real-time carbon footprint tracker for daily commutes','An AI tool that turns lecture audio into flashcards','A donation-matching platform for local shelters','A gamified mental-health check-in app'];
+  wrap.innerHTML = `<button class="btn btn-primary btn-block" id="hiBtn">Generate Hackathon Idea</button><div class="result-box hidden" id="hiResult"></div>`;
+  $('#hiBtn', wrap).addEventListener('click', () => { const box=$('#hiResult',wrap); box.classList.remove('hidden'); box.innerHTML = pick(ideas); });
+};
+
+TOOL_RENDERERS['github-project'] = (wrap) => {
+  const ideas = ['An open-source CLI tool for organizing markdown notes','A lightweight component library for glassmorphism UIs','A REST API wrapper/SDK for a popular public API','A VS Code extension for Pomodoro tracking','A static-site generator for student portfolios'];
+  wrap.innerHTML = `<button class="btn btn-primary btn-block" id="ghBtn">Generate GitHub Project Idea</button><div class="result-box hidden" id="ghResult"></div>`;
+  $('#ghBtn', wrap).addEventListener('click', () => { const box=$('#ghResult',wrap); box.classList.remove('hidden'); box.innerHTML = pick(ideas); });
+};
+
+/* ================================================================
+   7. AI ROADMAP GENERATOR (section-level, not modal-based)
+   ================================================================ */
+const ROADMAPS = {
+  'AI Engineer': ['Python Basics & Programming Fundamentals','Mathematics for AI (Linear Algebra, Probability)','Machine Learning Fundamentals','Hands-on ML Projects & Kaggle Practice','Deep Learning (Neural Networks, CNNs, RNNs)','Portfolio Building & Deployment'],
+  'Software Engineer': ['Programming Fundamentals (Python/Java/JS)','Data Structures & Algorithms','Git, Version Control & Databases','Build 2-3 Full Projects','Web/Backend Frameworks Deep Dive','Portfolio, Resume & Mock Interviews'],
+  'Electronics Engineer': ['Basic Circuit Theory & Ohm\'s Law','Analog Electronics (Diodes, Transistors)','Digital Electronics & Logic Gates','Microcontrollers (Arduino/ESP32)','PCB Design & Simulation Tools','Capstone Hardware Project'],
+  'Data Scientist': ['Python, Statistics & Probability','Data Wrangling with Pandas/SQL','Data Visualization & EDA','Machine Learning Algorithms','Real-world Datasets & Case Studies','Portfolio with 3+ Data Projects'],
+  'Cyber Security Engineer': ['Networking Fundamentals (TCP/IP, DNS)','Operating Systems & Linux Basics','Security Fundamentals (CIA Triad, Threats)','Ethical Hacking Basics & Labs (TryHackMe/HTB)','Tools: Wireshark, Nmap, Burp Suite','Certifications Prep (Security+) & Portfolio'],
+  'Web Developer': ['HTML, CSS & JavaScript Fundamentals','Responsive Design & Git/GitHub','Frontend Framework (React/Vue)','Backend Basics (Node/Express or similar)','Build 3+ Full-Stack Projects','Portfolio, Deployment & Job Applications'],
+  'Robotics Engineer': ['Physics & Basic Electronics','Microcontroller Programming (Arduino)','Sensors & Actuators Integration','Control Systems Fundamentals','ROS (Robot Operating System) Basics','Capstone Robotics Build'],
+};
+function renderRoadmapRoles(){
+  const container = $('#roadmapRoles');
+  Object.keys(ROADMAPS).forEach((role, i) => {
+    const btn = el('button', 'btn ' + (i===0 ? 'btn-primary':'btn-ghost') + ' btn-sm');
+    btn.textContent = role;
+    btn.dataset.role = role;
+    btn.addEventListener('click', () => {
+      $$('#roadmapRoles button').forEach(b => b.classList.remove('btn-primary') || b.classList.add('btn-ghost'));
+      btn.classList.remove('btn-ghost'); btn.classList.add('btn-primary');
+      renderRoadmapOutput(role);
+    });
+    container.appendChild(btn);
+  });
+  renderRoadmapOutput(Object.keys(ROADMAPS)[0]);
+}
+function renderRoadmapOutput(role){
+  const months = ROADMAPS[role];
+  const output = $('#roadmapOutput');
+  output.innerHTML = `
+    <h3 style="text-align:center;margin-bottom:24px;font-size:20px;">${role} — 6 Month Roadmap</h3>
+    <div class="grid grid-cols">
+      ${months.map((m,i) => `
+        <div class="glass reveal visible" style="padding:20px;">
+          <div class="eyebrow" style="margin-bottom:12px;">Month ${i+1}</div>
+          <h4 style="font-size:15px;font-weight:600;line-height:1.5;">${m}</h4>
+        </div>`).join('')}
+    </div>`;
+}
+renderRoadmapRoles();
+
+/* ================================================================
+   8. PRODUCTIVITY DASHBOARD
+   ================================================================ */
+function renderDashboard(){
+  const grid = $('#dashboardGrid');
+  const weekData = [40,65,50,80,30,90,70]; // sample weekly focus % for visualization
+  const dayLabels = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const quotes = [
+    'Small daily progress leads to big results.',
+    'Discipline is choosing what you want most over what you want now.',
+    'Consistency beats intensity — show up every day.',
+    'Your future self is built by today\'s habits.',
+    'Progress, not perfection.',
+  ];
+  grid.innerHTML = `
+    <div class="glass reveal visible" style="padding:24px;">
+      <div class="eyebrow">Today's Goals</div>
+      <div id="dashGoals" style="margin-top:8px;font-size:14px;color:var(--text-dim);">
+        <label style="display:flex;gap:8px;align-items:center;margin-bottom:8px;"><input type="checkbox"> Finish Chapter 4 reading</label>
+        <label style="display:flex;gap:8px;align-items:center;margin-bottom:8px;"><input type="checkbox"> Complete 20 practice problems</label>
+        <label style="display:flex;gap:8px;align-items:center;"><input type="checkbox"> 30-min focused revision</label>
+      </div>
+    </div>
+    <div class="glass reveal visible" style="padding:24px;text-align:center;">
+      <div class="eyebrow" style="justify-content:center;">Productivity Score</div>
+      <div style="font-family:'Space Grotesk';font-size:40px;font-weight:700;margin:10px 0;" class="gradient-text" id="prodScore">82</div>
+      <div style="font-size:12.5px;color:var(--text-dim);">Based on tasks completed + focus time today</div>
+    </div>
+    <div class="glass reveal visible" style="padding:24px;">
+      <div class="eyebrow">Study Time Today</div>
+      <div style="font-family:'Space Grotesk';font-size:32px;font-weight:700;margin:10px 0;">2h 45m</div>
+      <div style="height:8px;border-radius:99px;background:var(--glass-strong);overflow:hidden;"><div style="height:100%;width:68%;background:var(--grad);"></div></div>
+    </div>
+    <div class="glass reveal visible" style="padding:24px;grid-column:span 2;">
+      <div class="eyebrow">Weekly Progress</div>
+      <div style="display:flex;align-items:flex-end;gap:10px;height:120px;margin-top:14px;">
+        ${weekData.map((v,i)=>`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;">
+          <div style="width:100%;height:${v}px;border-radius:6px 6px 0 0;background:var(--grad);"></div>
+          <span style="font-size:11px;color:var(--text-faint);">${dayLabels[i]}</span>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div class="glass reveal visible" style="padding:24px;">
+      <div class="eyebrow">Focus Timer</div>
+      <div style="text-align:center;margin-top:10px;">
+        <div id="dashTimer" style="font-family:'Space Grotesk';font-size:32px;font-weight:700;" class="gradient-text">25:00</div>
+        <button class="btn btn-primary btn-sm" style="margin-top:10px;" id="dashTimerBtn">Start</button>
+      </div>
+    </div>
+    <div class="glass reveal visible" style="padding:24px;">
+      <div class="eyebrow">Completed Tasks</div>
+      <div style="font-family:'Space Grotesk';font-size:32px;font-weight:700;margin:10px 0;">14 <span style="font-size:14px;color:var(--text-dim);font-weight:400;">/ 18 today</span></div>
+      <div style="height:8px;border-radius:99px;background:var(--glass-strong);overflow:hidden;"><div style="height:100%;width:78%;background:var(--grad);"></div></div>
+    </div>
+    <div class="glass reveal visible" style="padding:24px;grid-column:span 1;">
+      <div class="eyebrow">Daily Motivation</div>
+      <p id="dashQuote" style="margin-top:10px;font-size:14.5px;font-style:italic;color:var(--text-dim);">"${pick(quotes)}"</p>
+    </div>
+  `;
+  let dt = 25*60, dtimer=null;
+  const dtDisplay = $('#dashTimer'), dtBtn = $('#dashTimerBtn');
+  dtBtn.addEventListener('click', () => {
+    if(dtimer){ clearInterval(dtimer); dtimer=null; dtBtn.textContent='Start'; return; }
+    dtimer = setInterval(()=>{ if(dt>0){ dt--; dtDisplay.textContent = `${String(Math.floor(dt/60)).padStart(2,'0')}:${String(dt%60).padStart(2,'0')}`; } else { clearInterval(dtimer); dtimer=null; dtBtn.textContent='Start'; } },1000);
+    dtBtn.textContent='Pause';
+  });
+}
+renderDashboard();
+
+/* ================================================================
+   LEGAL AI INDIA — MODULE
+   A premium, structured AI-legal-consultant dashboard (not a chatbot).
+   -----------------------------------------------------------------
+   SECURITY NOTE (read before deploying with a real AI backend):
+   This module NEVER stores or calls any AI provider API key from the
+   browser. `callSecureLegalBackend()` below always attempts a POST to
+   a same-origin serverless endpoint (e.g. `/api/legal-analysis`) that
+   YOU would deploy separately (Vercel/Netlify/Cloudflare function,
+   AWS Lambda, etc.) holding the real API key server-side only. Since
+   this is a static single-file demo with no backend deployed, that
+   call fails harmlessly and the module falls back to a transparent,
+   offline, rule-based legal-knowledge engine so the feature still
+   works fully today with zero risk of key exposure.
+   ================================================================ */
+
+/* ---- i18n (English / Hindi) for the Legal AI console + report shell ---- */
+const LEGAL_I18N = {
+  en: {
+    tagline: "Know Your Rights Before It's Too Late.",
+    placeholder: "Describe your legal situation in detail... e.g. 'My employer has not paid my salary for two months.'",
+    analyze: 'Analyze My Legal Situation', clear: 'Clear',
+    loadingSteps: ['Reading your scenario...', 'Cross-referencing Indian statutes...', 'Identifying applicable constitutional protections...', 'Compiling structured legal report...'],
+    reportTitle: 'Legal Analysis Report', reportSub: 'Generated from your description — educational information only',
+    sec: {summary:'Case Summary', laws:'Applicable Indian Laws', consequences:'Possible Legal Consequences', rights:'Rights Available to You', remedies:'Legal Remedies', documents:'Required Documents', next:'Recommended Next Steps'},
+    confidence: 'AI Confidence', copy:'Copy Report', download:'Download', share:'Share',
+    disclaimer: "This Legal AI Assistant provides educational and informational legal guidance only. It is not a substitute for professional legal advice, a lawyer, or a court's decision.",
+    note: null, recentEmpty: 'No searches yet — try a popular question below.', recentLabel: 'searched',
+  },
+  hi: {
+    tagline: 'समय रहते अपने अधिकार जानिए।',
+    placeholder: "अपनी कानूनी समस्या को विस्तार से लिखें... जैसे 'मेरे नियोक्ता ने दो महीने से मेरा वेतन नहीं दिया है।'",
+    analyze: 'मेरी कानूनी स्थिति का विश्लेषण करें', clear: 'साफ़ करें',
+    loadingSteps: ['आपकी स्थिति पढ़ी जा रही है...', 'भारतीय कानूनों की जाँच की जा रही है...', 'संवैधानिक अधिकारों की पहचान की जा रही है...', 'संरचित रिपोर्ट तैयार की जा रही है...'],
+    reportTitle: 'कानूनी विश्लेषण रिपोर्ट', reportSub: 'आपके विवरण से तैयार — केवल शैक्षिक जानकारी',
+    sec: {summary:'मामले का सारांश', laws:'लागू भारतीय कानून', consequences:'संभावित कानूनी परिणाम', rights:'आपके उपलब्ध अधिकार', remedies:'कानूनी उपचार', documents:'आवश्यक दस्तावेज़', next:'अनुशंसित अगले कदम'},
+    confidence: 'एआई विश्वास स्तर', copy:'रिपोर्ट कॉपी करें', download:'डाउनलोड', share:'शेयर करें',
+    disclaimer: 'यह लीगल एआई सहायक केवल शैक्षिक और सूचनात्मक कानूनी जानकारी प्रदान करता है। यह किसी पेशेवर वकील, कानूनी सलाह या न्यायालय के निर्णय का विकल्प नहीं है।',
+    note: 'नोट: अधिनियमों के नाम व धाराएँ सटीकता हेतु अंग्रेज़ी में दिखाई जाती हैं।', recentEmpty: 'अभी तक कोई खोज नहीं — नीचे से एक लोकप्रिय प्रश्न आज़माएँ।', recentLabel: 'खोजा गया',
+  }
+};
+let currentLegalLang = 'en';
+
+/* ---- Popular questions & example scenarios (bilingual) ---- */
+const LEGAL_POPULAR_QUESTIONS = [
+  {en:'Can police check my phone?', hi:'क्या पुलिस मेरा फोन चेक कर सकती है?'},
+  {en:'Can my employer fire me without notice?', hi:'क्या मेरा नियोक्ता मुझे नोटिस के बिना निकाल सकता है?'},
+  {en:'What happens if I drive without a licence?', hi:'बिना लाइसेंस गाड़ी चलाने पर क्या होता है?'},
+  {en:'How do I file a cyber crime complaint?', hi:'साइबर क्राइम की शिकायत कैसे दर्ज करें?'},
+  {en:'What are my consumer rights?', hi:'मेरे उपभोक्ता अधिकार क्या हैं?'},
+  {en:'What are my rights during police questioning?', hi:'पुलिस पूछताछ के दौरान मेरे अधिकार क्या हैं?'},
+  {en:'Can my landlord increase rent immediately?', hi:'क्या मकान मालिक तुरंत किराया बढ़ा सकता है?'},
+  {en:'What should I do if I am scammed online?', hi:'ऑनलाइन धोखाधड़ी होने पर मुझे क्या करना चाहिए?'},
+  {en:'What legal action can I take against harassment?', hi:'उत्पीड़न के खिलाफ मैं कौन सी कानूनी कार्रवाई कर सकता हूं?'},
+];
+const LEGAL_EXAMPLES = [
+  {en:'My employer has not paid my salary for two months.', hi:'मेरे नियोक्ता ने दो महीने से मेरा वेतन नहीं दिया है।'},
+  {en:'My landlord is not returning my security deposit.', hi:'मेरा मकान मालिक मेरी सिक्योरिटी डिपॉज़िट वापस नहीं कर रहा है।'},
+  {en:'Someone hacked my Instagram account.', hi:'किसी ने मेरा इंस्टाग्राम अकाउंट हैक कर लिया है।'},
+  {en:'I was caught driving without a driving licence.', hi:'मैं बिना ड्राइविंग लाइसेंस गाड़ी चलाते हुए पकड़ा गया।'},
+  {en:'My college is refusing to provide my certificates.', hi:'मेरा कॉलेज मेरे सर्टिफिकेट देने से इनकार कर रहा है।'},
+  {en:'I received an online scam call.', hi:'मुझे एक ऑनलाइन स्कैम कॉल आया।'},
+];
+
+/* ---- Legal knowledge base: one structured entry per issue category ----
+   Educational content only. Act names/sections are commonly-cited references
+   for learning purposes and may not reflect the latest amendments — always
+   verify with a licensed advocate before acting. */
+const LEGAL_KB = {
+  employment: {
+    label:'Employment & Labour',
+    laws:['Payment of Wages Act, 1936','Industrial Disputes Act, 1947','Code on Wages, 2019','Article 21 — Right to Life (livelihood)'],
+    consequences:'Employers withholding wages without lawful reason may be directed to pay dues along with compensation under the Payment of Wages Act, 1936. These legal consequences may apply depending upon the facts and circumstances.',
+    rights:['Right to timely payment of wages','Right to approach the Labour Commissioner','Right to raise an industrial dispute where applicable','Protection under the state Shops & Establishments Act'],
+    remedies:['File a complaint with the Labour Commissioner','Approach the Payment of Wages Authority','File before the Labour Court / Industrial Tribunal','Send a formal legal notice to the employer'],
+    documents:['Offer / appointment letter','Salary slips','Bank statements showing non-payment','Employment contract','Written communication with employer'],
+    next:['Preserve salary slips and all communication as evidence','Send a written reminder to the employer','File a complaint with the local Labour Commissioner if unresolved','Consult a labour law advocate for formal proceedings'],
+  },
+  property: {
+    label:'Property & Tenancy',
+    laws:['Model Tenancy Act, 2021 (where adopted)','State Rent Control Acts','Transfer of Property Act, 1882','Indian Contract Act, 1872'],
+    consequences:'Unlawfully withholding a security deposit may expose the landlord to civil liability for recovery of the deposit, potentially with interest. These legal consequences may apply depending upon the facts and circumstances.',
+    rights:['Right to timely return of security deposit','Right to a written rental agreement','Right to peaceful enjoyment of the rented property','Protection against arbitrary eviction'],
+    remedies:['Send a legal notice demanding return of deposit','File a case in the Rent Court / Civil Court','Approach the Rent Authority (if established in your state)','File with the Consumer Commission if a service deficiency is involved'],
+    documents:['Rental / lease agreement','Proof of deposit payment','Photographs of property condition','Written communication with landlord'],
+    next:['Send a written demand notice to the landlord','Document the property\'s condition with photos/videos','Approach the Rent Court if unresolved','Consult a property law advocate for recovery proceedings'],
+  },
+  cyber: {
+    label:'Cyber Crime',
+    laws:['Information Technology Act, 2000 (Sections 43, 66, 66C, 66D)','Bharatiya Nyaya Sanhita, 2023 (cheating by personation)','IT (Intermediary Guidelines) Rules, 2021'],
+    consequences:'Unauthorized access to a computer system or online account under Section 66 of the IT Act may attract imprisonment and/or fine depending on severity. These legal consequences may apply depending upon the facts and circumstances.',
+    rights:['Right to file a complaint under the IT Act, 2000','Right to request account recovery from the platform','Right to protection of personal data'],
+    remedies:['File a complaint on the National Cyber Crime Reporting Portal (cybercrime.gov.in)','Call the Cyber Crime Helpline 1930','File an FIR at the local Cyber Crime Police Station','Report the compromised account to the platform directly'],
+    documents:['Screenshots of unauthorized activity','Registered email/phone linked to the account','Any threat or ransom messages received','Government ID proof'],
+    next:['Change passwords immediately and enable two-factor authentication','Report to the platform for account recovery','File a complaint on cybercrime.gov.in or call 1930','Preserve all screenshots as evidence'],
+  },
+  traffic: {
+    label:'Traffic & Motor Vehicles',
+    laws:['Motor Vehicles Act, 1988 (Sections 3 & 181)','Motor Vehicles (Amendment) Act, 2019'],
+    consequences:'Driving without a valid licence under Section 181 of the Motor Vehicles Act may attract a fine and possible vehicle seizure, as notified by the concerned state. These legal consequences may apply depending upon the facts and circumstances.',
+    rights:['Right to be informed of the specific violation','Right to request identification from the traffic officer','Right to contest the challan in the appropriate traffic court'],
+    remedies:['Pay the e-challan via the official Parivahan portal','Contest the challan in traffic court if disputed','Apply for a valid driving licence at the earliest'],
+    documents:['Challan copy','Vehicle Registration Certificate (RC)','Identity proof','Learner\'s/licence application receipt, if any'],
+    next:['Apply for a valid licence promptly','Pay the fine through the official state/Parivahan portal','Avoid driving until a valid licence is obtained','Keep the challan receipt safely'],
+  },
+  education: {
+    label:'Education & Student Rights',
+    laws:['UGC / AICTE Regulations','Right to Education Act, 2009 (school level)','Consumer Protection Act, 2019 (educational services)','Article 21A — Right to Education'],
+    consequences:'Institutions withholding original certificates without a valid dues justification may face directions from the UGC/State Education Department or liability for deficiency in service. These legal consequences may apply depending upon the facts and circumstances.',
+    rights:['Right to receive certificates on completion and dues clearance','Right to file a grievance on the UGC/AICTE portal','Right to approach the Consumer Commission for deficient service'],
+    remedies:['File on the UGC/AICTE student grievance portal','Approach the Consumer Commission','Send a legal notice to the institution','Escalate to the State Education Department / University Ombudsperson'],
+    documents:['Fee payment receipts','Admission & course completion proof','Written correspondence with the institution','No-dues certificate, if issued'],
+    next:['Request written reasons for withholding certificates','File a grievance with UGC/AICTE if unresolved','Escalate to the Consumer Commission if needed','Keep all fee receipts and correspondence safe'],
+  },
+  scam: {
+    label:'Financial Fraud & Scams',
+    laws:['Information Technology Act, 2000 (Section 66D)','Bharatiya Nyaya Sanhita, 2023 (cheating provisions)','RBI guidelines on unauthorized digital transactions'],
+    consequences:'Online financial fraud may attract imprisonment and fine under Section 66D of the IT Act, along with liability for cheating under criminal law. These legal consequences may apply depending upon the facts and circumstances.',
+    rights:['Right to report unauthorized transactions within the RBI limited-liability window','Right to file a complaint on the Cyber Crime Portal','Right to seek reversal of unauthorized debit per RBI circulars, if reported promptly'],
+    remedies:['Contact your bank\'s fraud helpline immediately','File a complaint on cybercrime.gov.in or call 1930','Approach the Banking Ombudsman if the bank is unresponsive','File a police complaint / FIR'],
+    documents:['Bank statement showing the transaction','Screenshots of the scam call/message','Transaction reference (UTR) number','Any correspondence with the fraudster'],
+    next:['Contact your bank immediately to block the account/card','Report on cybercrime.gov.in / call 1930 as soon as possible','File a written complaint with your bank','Preserve all transaction evidence'],
+  },
+  consumer: {
+    label:'Consumer Protection',
+    laws:['Consumer Protection Act, 2019','Consumer Protection (E-Commerce) Rules, 2020'],
+    consequences:'Sellers or service providers found guilty of unfair trade practice or deficiency in service may be directed to refund, replace, or compensate the consumer. These legal consequences may apply depending upon the facts and circumstances.',
+    rights:['Right to redressal under the Consumer Protection Act, 2019','Right to file complaints via the National Consumer Helpline / e-Daakhil portal','Right to compensation for defective goods or deficient services'],
+    remedies:['File on the National Consumer Helpline (1915) or edaakhil.nic.in','Approach the District Consumer Disputes Redressal Commission','Send a legal notice to the seller/service provider'],
+    documents:['Purchase invoice / bill','Warranty card','Photos/videos showing the defect','Communication with the seller'],
+    next:['Contact the seller/platform in writing first','File on the National Consumer Helpline if unresolved','Approach the District Consumer Commission for larger claims','Preserve invoices and product evidence'],
+  },
+  family: {
+    label:'Family Law',
+    laws:['Hindu Marriage Act, 1955 / applicable personal law','Protection of Women from Domestic Violence Act, 2005','Section 125 CrPC — Maintenance','Dowry Prohibition Act, 1961'],
+    consequences:'Depending on the facts, remedies may range from maintenance orders to protection orders under the Domestic Violence Act. These legal consequences may apply depending upon the facts and circumstances.',
+    rights:['Right to maintenance under applicable personal law / Section 125 CrPC','Right to protection under the Domestic Violence Act, 2005','Right to approach a Family Court'],
+    remedies:['Approach a Family Court','File with the Protection Officer under the DV Act','Contact the Women\'s Helpline (181) or local police','Explore mediation / counselling services'],
+    documents:['Marriage certificate','Evidence of harassment/violence, if any','Financial documents for maintenance claims','Prior correspondence'],
+    next:['Consult a family law advocate for your specific situation','Preserve all relevant documents and communication','Approach the Protection Officer / Family Court as applicable','Consider counselling or mediation where appropriate'],
+  },
+  criminal: {
+    label:'Criminal Law & Police Matters',
+    laws:['Bharatiya Nagarik Suraksha Sanhita, 2023 (BNSS)','Bharatiya Nyaya Sanhita, 2023 (BNS)','Article 22 — Rights of arrested persons','Legal Services Authorities Act, 1987'],
+    consequences:'Consequences depend heavily on the specific offence alleged and can range widely. These legal consequences may apply depending upon the facts and circumstances.',
+    rights:['Right to know the grounds of arrest (Article 22)','Right to consult a lawyer of choice','Right to be produced before a magistrate within 24 hours','Right against self-incrimination (Article 20(3))','Right to free legal aid if unable to afford a lawyer'],
+    remedies:['File an FIR at the local police station','Approach the Superintendent of Police if the FIR is refused','File a private complaint before a Magistrate','Contact the District Legal Services Authority for free legal aid'],
+    documents:['Any evidence related to the incident','Identity proof','Witness details, if any','Prior complaint copies'],
+    next:['File a written FIR and obtain a copy/acknowledgement','Escalate to a senior police officer if the FIR is refused','Contact your District Legal Services Authority for free legal aid','Consult a criminal law advocate promptly'],
+  },
+  women: {
+    label:"Women's Safety",
+    laws:['Sexual Harassment of Women at Workplace Act, 2013 (POSH Act)','Bharatiya Nyaya Sanhita, 2023 (harassment/stalking provisions)','Information Technology Act, 2000 (Section 67)'],
+    consequences:'Offences such as stalking or harassment may attract imprisonment depending on the specific provision and whether it is a repeat offence. These legal consequences may apply depending upon the facts and circumstances.',
+    rights:['Right to file with the Internal Complaints Committee (workplace) under the POSH Act','Right to approach police / the Women\'s Helpline (181 / 1091)','Right to confidentiality during proceedings'],
+    remedies:['File a complaint with the Internal Complaints Committee, if workplace-related','File an FIR with local police','Call the Women\'s Helpline 181 or 1091','Approach the National/State Commission for Women'],
+    documents:['Screenshots/recordings of harassment','Witness statements, if any','Prior complaints, if any','Medical reports, if applicable'],
+    next:['Preserve all evidence immediately (screenshots, messages)','File with the Internal Complaints Committee or police','Call the Women\'s Helpline for immediate guidance','Consult an advocate for formal proceedings'],
+  },
+  privacy: {
+    label:'Digital Privacy',
+    laws:['Digital Personal Data Protection Act, 2023','Information Technology Act, 2000 (Sections 43A, 72A)','Article 21 — Right to Privacy (K.S. Puttaswamy judgment)'],
+    consequences:'Unauthorized disclosure or misuse of personal data may attract penalties under the Digital Personal Data Protection Act, 2023 and the IT Act. These legal consequences may apply depending upon the facts and circumstances.',
+    rights:['Right to privacy as a fundamental right (Article 21)','Right to seek correction/erasure of personal data','Right to file a complaint with the Data Protection Board of India'],
+    remedies:['File a complaint with the Data Protection Board of India','File on cybercrime.gov.in for data-related offences','Send a legal notice to the entity misusing your data'],
+    documents:['Evidence of data misuse or leak','Correspondence with the platform/company','Screenshots or notifications received'],
+    next:['Request the entity to disclose/delete your data in writing','File a complaint with the Data Protection Board if unresolved','Report on cybercrime.gov.in if data was misused for fraud','Preserve all evidence of the leak/misuse'],
+  },
+  senior: {
+    label:'Senior Citizen Rights',
+    laws:['Maintenance and Welfare of Parents and Senior Citizens Act, 2007','Article 41 — State duty toward elderly welfare'],
+    consequences:'Children/relatives failing to maintain a senior citizen may be directed by the Maintenance Tribunal to pay a monthly allowance. These legal consequences may apply depending upon the facts and circumstances.',
+    rights:['Right to claim maintenance from children/relatives','Right to approach the District Maintenance Tribunal','Right to protection against abandonment'],
+    remedies:['File an application before the Maintenance Tribunal','Approach local police or the Senior Citizen Helpline (14567)','Approach the Senior Citizens\' Cell, if available in your city'],
+    documents:['Proof of relationship','Proof of income/dependency','Evidence of neglect or abandonment, if any'],
+    next:['Contact the Senior Citizen Helpline (14567) for guidance','File before the District Maintenance Tribunal','Gather proof of relationship and dependency','Consult an advocate for a maintenance application'],
+  },
+  business: {
+    label:'Startup & Business Law',
+    laws:['Indian Contract Act, 1872','Companies Act, 2013','MSME Development Act, 2006','Goods and Services Tax Act, 2017'],
+    consequences:'Breach of a business contract may lead to civil liability for damages; regulatory non-compliance may attract penalties under applicable law. These legal consequences may apply depending upon the facts and circumstances.',
+    rights:['Right to seek damages for breach of contract','Right to approach MSME Samadhaan for delayed payments (if MSME-registered)','Right to arbitration, if provided in the agreement'],
+    remedies:['Send a legal notice for breach of contract','File before the MSME Facilitation Council for delayed payments','Approach civil court for recovery of dues','Initiate arbitration if an arbitration clause exists'],
+    documents:['Signed agreement/contract','Invoices and payment records','Communication with the other party','Company/MSME registration documents'],
+    next:['Send a formal legal notice to the defaulting party','File with the MSME Facilitation Council if applicable','Consider arbitration if your contract provides for it','Consult a business law advocate for recovery'],
+  },
+  banking: {
+    label:'Banking & Loan Disputes',
+    laws:['Banking Regulation Act, 1949','RBI Fair Practices Code for lenders','RBI Integrated Ombudsman Scheme, 2021'],
+    consequences:'Banks or recovery agents violating the RBI Fair Practices Code (e.g. harassment during recovery) may face regulatory action and be directed to compensate the customer. These legal consequences may apply depending upon the facts and circumstances.',
+    rights:['Right to fair treatment under RBI\'s Banking Codes and Standards','Right to escalate unresolved grievances to the Banking Ombudsman','Right to a grievance redressal mechanism at the branch level'],
+    remedies:['File a written complaint with the bank\'s grievance cell','Escalate to the RBI Banking Ombudsman if unresolved after 30 days','File with the Consumer Commission for deficiency in service'],
+    documents:['Bank/loan account statements','Communication with the bank or recovery agents','Any recorded calls or messages (if lawfully obtained)','Complaint reference number from the bank'],
+    next:['File a written complaint with your bank branch first','Note the complaint reference number and allow 30 days','Escalate to the RBI Banking Ombudsman if unresolved','Preserve all statements and communication'],
+  },
+  social: {
+    label:'Social Media & Online Conduct',
+    laws:['Information Technology Act, 2000 (Sections 66E, 67)','Bharatiya Nyaya Sanhita, 2023 (defamation & stalking provisions)','IT (Intermediary Guidelines) Rules, 2021'],
+    consequences:'Posting or sharing objectionable or defamatory content online may attract civil defamation liability and criminal prosecution under the IT Act. These legal consequences may apply depending upon the facts and circumstances.',
+    rights:['Right to report abusive content directly to the platform','Right to file a complaint under the IT Act for objectionable content','Right to request content removal under IT Rules, 2021'],
+    remedies:['Report the content/profile to the platform','File a complaint on cybercrime.gov.in','File a police complaint for serious harassment or threats'],
+    documents:['Screenshots of the content/messages','URL or profile links','Any prior reports made to the platform'],
+    next:['Do not engage or retaliate — preserve evidence first','Report the content/profile to the platform immediately','File a complaint on cybercrime.gov.in or call 1930','Consider a formal police complaint if threats are involved'],
+  },
+  constitutional: {
+    label:'General Constitutional Rights',
+    laws:['Constitution of India — Fundamental Rights (Articles 14–32)','Legal Services Authorities Act, 1987 (free legal aid)'],
+    consequences:'As the scenario does not clearly indicate a specific statutory violation, potential consequences cannot be determined with confidence from the description alone. These legal consequences may apply depending upon the facts and circumstances.',
+    rights:['Right to equality before law (Article 14)','Right to constitutional remedies (Article 32)','Right to free legal aid under the Legal Services Authorities Act, 1987'],
+    remedies:['Consult the nearest Legal Services Authority for free guidance','Approach the appropriate civil/criminal court based on the issue','Contact the NALSA helpline for direction'],
+    documents:['Any documents related to the issue','Identity proof','A written account of the incident'],
+    next:['Provide more specific details for a more targeted analysis','Consult NALSA or a local legal aid clinic for a free consultation','Gather and preserve all related documents'],
+  },
+};
+
+/* ---- Keyword → category scoring map (simple, transparent, on-device) ---- */
+const LEGAL_KEYWORDS = {
+  employment:['salary','wage','wages','employer','employee','fired','termination','notice period','provident fund',' pf ','gratuity','resign','workplace','overtime','boss','not paying me','company not paying'],
+  property:['landlord','tenant','rent','deposit','lease','eviction','flat owner','house owner','vacate','rental agreement'],
+  cyber:['hack','hacked','instagram','facebook','whatsapp account','password stolen','cyber','phishing','social media account','snapchat hacked','account hacked'],
+  traffic:['driving licence','driving license','without licence','without license','helmet','challan','traffic police','signal jump','no licence','no license','driving without'],
+  education:['college','university','certificate','marksheet','admission','ragging','exam','school fees','institute','degree','transfer certificate'],
+  scam:['scam','fraud','otp','loan app','credit card fraud','upi fraud','fake call','lottery','investment scheme','online payment fraud','scammed'],
+  consumer:['refund','warranty','defective','product','ecommerce','online shopping','amazon','flipkart','delivery','faulty item','replace product'],
+  family:['marriage','divorce','dowry','domestic violence','husband','wife','custody','maintenance','in-laws','separation'],
+  criminal:['fir','arrest','threat','assault','theft','stolen','robbery','beaten','false accusation','police complaint','police refusing'],
+  women:['harassment','stalking','molest','eve teasing','sexual harassment','workplace harassment','following me'],
+  privacy:['data leak','aadhaar','surveillance','personal data','data breach','app leaked my data'],
+  senior:['elderly','senior citizen','old parents','neglect','abandoned parents','my parents are being'],
+  business:['startup','business partner','company contract','gst','vendor','client not paying','breach of contract','msme'],
+  banking:['recovery agent','loan emi','bank account frozen','banking ombudsman','harassing me over a loan','bank harassment'],
+  social:['fake profile','morphed photo','defamation','deepfake','online abuse','trolling','abusive post','fake account using my photos'],
+};
+
+/* ---- Category explorer cards (20, per spec) — mapped to KB entries above ---- */
+const LEGAL_CATEGORIES = [
+  {title:'Consumer Rights', icon:'🛍️', kb:'consumer', desc:'Refunds, defective products & unfair trade practices.', sample:{en:'I bought a defective phone online and the seller is refusing a refund.', hi:'मैंने ऑनलाइन एक खराब फोन खरीदा और विक्रेता रिफंड देने से इनकार कर रहा है।'}},
+  {title:'Cyber Crime', icon:'💻', kb:'cyber', desc:'Hacking, phishing & unauthorized account access.', sample:{en:'Someone hacked my Instagram account and is demanding money.', hi:'किसी ने मेरा इंस्टाग्राम अकाउंट हैक कर लिया और पैसे की मांग कर रहा है।'}},
+  {title:'Traffic Laws', icon:'🚦', kb:'traffic', desc:'Licence violations, challans & road safety rules.', sample:{en:'I was caught driving without a driving licence.', hi:'मैं बिना ड्राइविंग लाइसेंस के पकड़ा गया।'}},
+  {title:'Employment Laws', icon:'💼', kb:'employment', desc:'Salary disputes, wrongful termination & workplace rights.', sample:{en:'My employer has not paid my salary for two months.', hi:'मेरे नियोक्ता ने दो महीने से मेरा वेतन नहीं दिया है।'}},
+  {title:'Labour Laws', icon:'🛠️', kb:'employment', desc:'Working conditions, wages & industrial disputes.', sample:{en:'My supervisor is forcing overtime without extra pay.', hi:'मेरा सुपरवाइज़र बिना अतिरिक्त वेतन के ओवरटाइम करवा रहा है।'}},
+  {title:'Student Rights', icon:'🎓', kb:'education', desc:'Certificates, admissions & institutional grievances.', sample:{en:'My college is refusing to provide my certificates.', hi:'मेरा कॉलेज मेरे सर्टिफिकेट देने से इनकार कर रहा है।'}},
+  {title:'Property Disputes', icon:'🏠', kb:'property', desc:'Ownership, tenancy & landlord-tenant conflicts.', sample:{en:'My landlord is not returning my security deposit.', hi:'मेरा मकान मालिक सिक्योरिटी डिपॉज़िट वापस नहीं कर रहा है।'}},
+  {title:'Banking Laws', icon:'🏦', kb:'banking', desc:'Loan recovery practices & banking grievances.', sample:{en:'A recovery agent is harassing me over a loan EMI delay.', hi:'एक रिकवरी एजेंट लोन ईएमआई में देरी को लेकर मुझे परेशान कर रहा है।'}},
+  {title:'Family Laws', icon:'👪', kb:'family', desc:'Marriage, maintenance & domestic matters.', sample:{en:'My husband is not providing maintenance after separation.', hi:'अलगाव के बाद मेरे पति भरण-पोषण नहीं दे रहे हैं।'}},
+  {title:'Digital Privacy', icon:'🔒', kb:'privacy', desc:'Data leaks, surveillance & personal data misuse.', sample:{en:'My personal data was leaked by a mobile app without consent.', hi:'एक मोबाइल ऐप ने मेरी सहमति के बिना मेरा डेटा लीक कर दिया।'}},
+  {title:'Social Media Crimes', icon:'📱', kb:'social', desc:'Fake profiles, defamation & online abuse.', sample:{en:'Someone created a fake profile using my photos.', hi:'किसी ने मेरी फोटो से एक फर्जी प्रोफाइल बना दी है।'}},
+  {title:'Rental Issues', icon:'🔑', kb:'property', desc:'Rent hikes, eviction & lease disagreements.', sample:{en:'My landlord is trying to increase my rent suddenly.', hi:'मेरा मकान मालिक अचानक किराया बढ़ाने की कोशिश कर रहा है।'}},
+  {title:'Police Matters', icon:'👮', kb:'criminal', desc:'FIR registration & police complaint procedures.', sample:{en:'The police are refusing to register my FIR.', hi:'पुलिस मेरी एफआईआर दर्ज करने से इनकार कर रही है।'}},
+  {title:'Criminal Laws', icon:'⚖️', kb:'criminal', desc:'Offences, arrests & criminal procedure basics.', sample:{en:'I was falsely accused of theft by a neighbour.', hi:'एक पड़ोसी ने मुझ पर चोरी का झूठा आरोप लगाया।'}},
+  {title:'Constitutional Rights', icon:'📜', kb:'constitutional', desc:'Fundamental rights & constitutional remedies.', sample:{en:'I want to understand my fundamental rights as a citizen.', hi:'मैं एक नागरिक के रूप में अपने मौलिक अधिकार जानना चाहता हूं।'}},
+  {title:'Educational Rights', icon:'📚', kb:'education', desc:'Right to education & institutional accountability.', sample:{en:'My school is denying admission without valid reason.', hi:'मेरा स्कूल बिना वैध कारण के दाखिला देने से इनकार कर रहा है।'}},
+  {title:'Women Rights', icon:'🚺', kb:'women', desc:'Safety, harassment & workplace protection.', sample:{en:'I am facing harassment from a colleague at work.', hi:'मुझे ऑफिस में एक सहकर्मी से उत्पीड़न का सामना करना पड़ रहा है।'}},
+  {title:'Senior Citizen Rights', icon:'🧓', kb:'senior', desc:'Maintenance & protection for elderly citizens.', sample:{en:'My elderly parents are being neglected by my sibling.', hi:'मेरे बुजुर्ग माता-पिता की मेरे भाई/बहन द्वारा अनदेखी की जा रही है।'}},
+  {title:'Financial Fraud', icon:'💰', kb:'scam', desc:'Online scams, OTP fraud & investment schemes.', sample:{en:'I received an online scam call asking for my OTP.', hi:'मुझे एक ऑनलाइन स्कैम कॉल आया जिसमें ओटीपी मांगा गया।'}},
+  {title:'Startup and Business Laws', icon:'🚀', kb:'business', desc:'Contracts, compliance & business disputes.', sample:{en:'My business partner is not honouring our signed agreement.', hi:'मेरा बिज़नेस पार्टनर हमारे हस्ताक्षरित समझौते का पालन नहीं कर रहा है।'}},
+];
+
+/* ---- Legal Knowledge Hub — official/government resources only ---- */
+const LEGAL_KNOWLEDGE = [
+  {icon:'📜', title:'Constitution of India', desc:'The full text of the Constitution from the official legislative source.', links:[['India Code — Constitution','https://www.indiacode.nic.in/constitution-of-india']]},
+  {icon:'🛡️', title:'Fundamental Rights', desc:'Articles 12–35 explained by the Department of Justice.', links:[['Dept. of Justice, India','https://doj.gov.in/']]},
+  {icon:'🛍️', title:'Consumer Rights', desc:'File complaints and learn your consumer rights.', links:[['National Consumer Helpline','https://consumerhelpline.gov.in/'],['e-Daakhil Portal','https://edaakhil.nic.in/']]},
+  {icon:'🛠️', title:'Labour Rights', desc:'Wage, workplace and industrial dispute resources.', links:[['Ministry of Labour & Employment','https://labour.gov.in/']]},
+  {icon:'🔐', title:'Cyber Safety', desc:'Official guidance on staying safe online in India.', links:[['CERT-In','https://www.cert-in.org.in/']]},
+  {icon:'💻', title:'Digital Laws', desc:'IT Act, data protection and digital governance policy.', links:[['Ministry of Electronics & IT','https://www.meity.gov.in/']]},
+  {icon:'📖', title:'Legal Terminologies', desc:'Plain-language explanations of common legal terms.', links:[['NALSA — Legal Aid','https://nalsa.gov.in/']]},
+  {icon:'📝', title:'FIR Guide', desc:'How First Information Reports work and your rights.', links:[['Digital Police Portal','https://digitalpolice.gov.in/']]},
+  {icon:'👮', title:'Police Complaint Guide', desc:'Step-by-step guidance for filing a police complaint.', links:[['Digital Police Portal','https://digitalpolice.gov.in/']]},
+  {icon:'🧾', title:'Consumer Complaint Guide', desc:'How to file and track a consumer complaint online.', links:[['e-Daakhil Portal','https://edaakhil.nic.in/']]},
+  {icon:'🌐', title:'Cyber Complaint Guide', desc:'Reporting cyber crime step-by-step, officially.', links:[['National Cyber Crime Portal','https://cybercrime.gov.in/']]},
+  {icon:'🏛️', title:'Citizen Rights Guide', desc:'Free legal aid and citizen rights resources.', links:[['NALSA','https://nalsa.gov.in/']]},
+  {icon:'🎓', title:'Student Rights Guide', desc:'UGC regulations and student grievance redressal.', links:[['UGC — Grievance Redressal','https://www.ugc.gov.in/']]},
+  {icon:'🚺', title:'Women Safety Laws', desc:'Safety helplines and legal protections for women.', links:[['National Commission for Women','https://ncw.nic.in/']]},
+];
+
+/* ---- Scoring engine: identify the most relevant category from free text ---- */
+function scoreLegalCategories(text){
+  const lower = ' ' + text.toLowerCase() + ' ';
+  const scores = Object.keys(LEGAL_KEYWORDS).map(key => {
+    const hits = LEGAL_KEYWORDS[key].filter(kw => lower.includes(kw.toLowerCase())).length;
+    return {key, hits};
+  }).sort((a,b) => b.hits - a.hits);
+  return scores;
+}
+
+/* ---- Secure backend hook (see security note above) ---- */
+async function callSecureLegalBackend(text, lang){
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 3500);
+  try{
+    const res = await fetch('/api/legal-analysis', {
+      method:'POST', signal: controller.signal,
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ query:text, lang })
+    });
+    clearTimeout(timeout);
+    if(res.ok) return await res.json();
+    return null;
+  }catch(err){
+    clearTimeout(timeout);
+    return null; // no backend deployed in this static demo — caller falls back locally
+  }
+}
+
+/* ---- Local rule-based fallback report generator (always available) ---- */
+function generateLocalLegalReport(text){
+  const scored = scoreLegalCategories(text);
+  const top = scored[0];
+  const second = scored[1];
+  let confidence = 'Low';
+  let kbKey = 'constitutional';
+  if(top && top.hits > 0){
+    kbKey = top.key;
+    confidence = (top.hits >= 2 && (!second || second.hits === 0)) ? 'High'
+               : (second && second.hits > 0 && second.hits >= top.hits) ? 'Medium'
+               : (top.hits >= 2 ? 'High' : 'Medium');
+  }
+  const kb = LEGAL_KB[kbKey];
+  const trimmed = text.trim();
+  return {
+    category: kb.label,
+    summary: `Based on your description, this scenario appears to primarily relate to ${kb.label.toLowerCase()} matters under Indian law. You stated: "${trimmed.length > 220 ? trimmed.slice(0,220) + '…' : trimmed}"`,
+    laws: kb.laws,
+    consequences: kb.consequences,
+    rights: kb.rights,
+    remedies: kb.remedies,
+    documents: kb.documents,
+    next: kb.next,
+    confidence,
+  };
+}
+
+async function analyzeLegalScenario(text){
+  const backendResult = await callSecureLegalBackend(text, currentLegalLang);
+  if(backendResult) return backendResult;
+  return generateLocalLegalReport(text);
+}
+
+/* ---- Recent searches (localStorage, session-persistent, no PII sent anywhere) ---- */
+function getLegalRecent(){
+  try{ return JSON.parse(localStorage.getItem('legalRecentSearches') || '[]'); }catch(e){ return []; }
+}
+function saveLegalRecent(query){
+  let recent = getLegalRecent().filter(q => q.toLowerCase() !== query.toLowerCase());
+  recent.unshift(query);
+  recent = recent.slice(0, 6);
+  try{ localStorage.setItem('legalRecentSearches', JSON.stringify(recent)); }catch(e){}
+}
+
+/* ---- Rendering ---- */
+function renderLegalStaticText(){
+  const t = LEGAL_I18N[currentLegalLang];
+  $('#legalTagline').textContent = t.tagline;
+  $('#legalInput').placeholder = t.placeholder;
+  $('#legalAnalyzeBtn').textContent = t.analyze;
+  $('#legalClearBtn').textContent = t.clear;
+  $('#legalExamples').innerHTML = LEGAL_EXAMPLES.map(ex => `<span class="legal-chip" data-en="${ex.en.replace(/"/g,'&quot;')}" data-hi="${ex.hi.replace(/"/g,'&quot;')}">${currentLegalLang==='hi'?ex.hi:ex.en}</span>`).join('');
+  $$('#legalExamples .legal-chip').forEach(chip => chip.addEventListener('click', () => {
+    $('#legalInput').value = currentLegalLang === 'hi' ? chip.dataset.hi : chip.dataset.en;
+    $('#legalInput').focus();
+  }));
+  renderLegalPopular();
+  renderLegalRecent();
+}
+
+function renderLegalPopular(){
+  const box = $('#legalPopular');
+  box.innerHTML = LEGAL_POPULAR_QUESTIONS.map((q,i) => `
+    <div class="legal-list-item" data-idx="${i}"><span class="lli-icon">❓</span><span>${currentLegalLang==='hi'?q.hi:q.en}</span></div>
+  `).join('');
+  $$('#legalPopular .legal-list-item').forEach(item => item.addEventListener('click', () => {
+    const q = LEGAL_POPULAR_QUESTIONS[+item.dataset.idx];
+    $('#legalInput').value = currentLegalLang==='hi' ? q.hi : q.en;
+    runLegalAnalysis();
+  }));
+}
+
+function renderLegalRecent(){
+  const box = $('#legalRecent');
+  const recent = getLegalRecent();
+  const t = LEGAL_I18N[currentLegalLang];
+  if(!recent.length){ box.innerHTML = `<div class="legal-empty-state">${t.recentEmpty}</div>`; return; }
+  box.innerHTML = recent.map(q => `<div class="legal-list-item"><span class="lli-icon">🕘</span><span>${q.length > 60 ? q.slice(0,60)+'…' : q}</span></div>`).join('');
+  $$('#legalRecent .legal-list-item').forEach((item, i) => item.addEventListener('click', () => {
+    $('#legalInput').value = recent[i];
+    runLegalAnalysis();
+  }));
+}
+
+function renderLegalCategories(){
+  const grid = $('#legalCategoryGrid');
+  grid.innerHTML = '';
+  LEGAL_CATEGORIES.forEach((cat, i) => {
+    const card = el('div', 'tool-card legal-category-card glass reveal');
+    card.style.transitionDelay = (i % 6) * 0.05 + 's';
+    card.innerHTML = `
+      <div class="lc-icon tool-icon">${cat.icon}</div>
+      <h4>${cat.title}</h4>
+      <p>${cat.desc}</p>
+      <div class="tc-arrow">→</div>
+    `;
+    card.addEventListener('click', () => {
+      $('#legalInput').value = currentLegalLang==='hi' ? cat.sample.hi : cat.sample.en;
+      $('.legal-console').scrollIntoView({behavior:'smooth', block:'center'});
+      setTimeout(() => $('#legalInput').focus(), 400);
+    });
+    grid.appendChild(card);
+  });
+}
+
+function renderLegalKnowledge(){
+  const grid = $('#legalKnowledgeGrid');
+  grid.innerHTML = '';
+  LEGAL_KNOWLEDGE.forEach((item, i) => {
+    const card = el('div', 'tool-card glass reveal');
+    card.style.transitionDelay = (i % 6) * 0.05 + 's';
+    card.innerHTML = `
+      <div class="tool-icon">${item.icon}</div>
+      <h3>${item.title}</h3>
+      <p>${item.desc}</p>
+      <div style="margin-top:14px;position:relative;z-index:1;">
+        ${item.links.map(([label,url]) => `<a href="${url}" target="_blank" rel="noopener" class="tag" style="cursor:pointer;">${label} ↗</a>`).join('')}
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function buildLegalReportText(report, originalText, lang){
+  const t = LEGAL_I18N[lang];
+  return [
+    `${t.reportTitle} — ${report.category}`,
+    '='.repeat(40),
+    `\n${t.sec.summary}:\n${report.summary}`,
+    `\n${t.sec.laws}:\n${report.laws.map(l=>'- '+l).join('\n')}`,
+    `\n${t.sec.consequences}:\n${report.consequences}`,
+    `\n${t.sec.rights}:\n${report.rights.map(l=>'- '+l).join('\n')}`,
+    `\n${t.sec.remedies}:\n${report.remedies.map(l=>'- '+l).join('\n')}`,
+    `\n${t.sec.documents}:\n${report.documents.map(l=>'- '+l).join('\n')}`,
+    `\n${t.sec.next}:\n${report.next.map(l=>'- '+l).join('\n')}`,
+    `\n${t.confidence}: ${report.confidence}`,
+    `\n${t.disclaimer}`,
+  ].join('\n');
+}
+
+function renderLegalReport(report, originalText){
+  const t = LEGAL_I18N[currentLegalLang];
+  const box = $('#legalReport');
+  const confClass = report.confidence === 'High' ? 'confidence-high' : report.confidence === 'Medium' ? 'confidence-medium' : 'confidence-low';
+  box.innerHTML = `
+    <div class="legal-report-top">
+      <div>
+        <h3>${t.reportTitle}</h3>
+        <div class="lr-sub">${report.category} · ${t.reportSub}</div>
+      </div>
+      <div class="confidence-badge ${confClass}">${t.confidence}: ${report.confidence}</div>
+    </div>
+    <div class="legal-report-actions">
+      <button class="btn btn-ghost btn-sm" id="legalCopyBtn">📋 ${t.copy}</button>
+      <button class="btn btn-ghost btn-sm" id="legalDownloadBtn">⬇️ ${t.download}</button>
+      <button class="btn btn-ghost btn-sm" id="legalShareBtn">🔗 ${t.share}</button>
+    </div>
+    <div class="legal-report-body">
+      <div class="legal-section-card">
+        <div class="legal-section-head"><div class="legal-section-num">1</div><h4>${t.sec.summary}</h4></div>
+        <p>${report.summary}</p>
+      </div>
+      <div class="legal-section-card">
+        <div class="legal-section-head"><div class="legal-section-num">2</div><h4>${t.sec.laws}</h4></div>
+        <div class="legal-law-tags">${report.laws.map(l=>`<span class="legal-law-tag">${l}</span>`).join('')}</div>
+      </div>
+      <div class="legal-section-card">
+        <div class="legal-section-head"><div class="legal-section-num">3</div><h4>${t.sec.consequences}</h4></div>
+        <p>${report.consequences}</p>
+      </div>
+      <div class="legal-section-card">
+        <div class="legal-section-head"><div class="legal-section-num">4</div><h4>${t.sec.rights}</h4></div>
+        <ul>${report.rights.map(r=>`<li>${r}</li>`).join('')}</ul>
+      </div>
+      <div class="legal-section-card">
+        <div class="legal-section-head"><div class="legal-section-num">5</div><h4>${t.sec.remedies}</h4></div>
+        <ul>${report.remedies.map(r=>`<li>${r}</li>`).join('')}</ul>
+      </div>
+      <div class="legal-section-card">
+        <div class="legal-section-head"><div class="legal-section-num">6</div><h4>${t.sec.documents}</h4></div>
+        <div class="legal-law-tags">${report.documents.map(d=>`<span class="tag">${d}</span>`).join('')}</div>
+      </div>
+      <div class="legal-section-card">
+        <div class="legal-section-head"><div class="legal-section-num">7</div><h4>${t.sec.next}</h4></div>
+        <ol>${report.next.map(n=>`<li>${n}</li>`).join('')}</ol>
+        ${t.note ? `<div class="legal-disclaimer-inline">${t.note}</div>` : ''}
+      </div>
+    </div>
+  `;
+  box.style.display = 'block';
+
+  const reportText = buildLegalReportText(report, originalText, currentLegalLang);
+  $('#legalCopyBtn').addEventListener('click', () => {
+    navigator.clipboard?.writeText(reportText).then(() => {
+      const btn = $('#legalCopyBtn'); const orig = btn.textContent;
+      btn.textContent = '✓ Copied'; setTimeout(() => btn.textContent = orig, 1800);
+    });
+  });
+  $('#legalDownloadBtn').addEventListener('click', () => {
+    const blob = new Blob([reportText], {type:'text/plain'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'legal-ai-report.txt';
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  });
+  $('#legalShareBtn').addEventListener('click', async () => {
+    if(navigator.share){
+      try{ await navigator.share({title:'Legal AI India — Report', text: reportText}); }catch(e){}
+    } else {
+      navigator.clipboard?.writeText(reportText);
+      const btn = $('#legalShareBtn'); const orig = btn.textContent;
+      btn.textContent = '✓ Copied to share'; setTimeout(() => btn.textContent = orig, 1800);
+    }
+  });
+  observeReveals();
+}
+
+async function runLegalAnalysis(){
+  const text = $('#legalInput').value.trim();
+  if(!text) { $('#legalInput').focus(); return; }
+  const t = LEGAL_I18N[currentLegalLang];
+  $('#legalReport').style.display = 'none';
+  const loadingBox = $('#legalLoading');
+  loadingBox.style.display = 'block';
+  loadingBox.scrollIntoView({behavior:'smooth', block:'center'});
+  let stepIndex = 0;
+  $('#legalLoadingText').textContent = t.loadingSteps[0];
+  const stepTimer = setInterval(() => {
+    stepIndex = (stepIndex + 1) % t.loadingSteps.length;
+    $('#legalLoadingText').textContent = t.loadingSteps[stepIndex];
+  }, 500);
+
+  const [report] = await Promise.all([
+    analyzeLegalScenario(text),
+    new Promise(resolve => setTimeout(resolve, 1600)), // premium min-duration so the analysis feels substantive
+  ]);
+
+  clearInterval(stepTimer);
+  loadingBox.style.display = 'none';
+  saveLegalRecent(text);
+  renderLegalReport(report, text);
+  renderLegalRecent();
+  $('#legalReport').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+/* ---- Wire up controls ---- */
+$('#legalAnalyzeBtn').addEventListener('click', runLegalAnalysis);
+$('#legalClearBtn').addEventListener('click', () => {
+  $('#legalInput').value = '';
+  $('#legalReport').style.display = 'none';
+  $('#legalLoading').style.display = 'none';
+  $('#legalInput').focus();
+});
+$$('#legalLangToggle .lang-btn').forEach(btn => btn.addEventListener('click', () => {
+  $$('#legalLangToggle .lang-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentLegalLang = btn.dataset.lang;
+  renderLegalStaticText();
+}));
+
+renderLegalStaticText();
+renderLegalCategories();
+renderLegalKnowledge();
+
+/* ================================================================
+   9. GLOBAL ANIMATIONS + UI WIRING
+   ================================================================ */
+
+/* -- Loading screen: hide once DOM is ready -- */
+window.addEventListener('load', () => {
+  setTimeout(() => $('#loader').classList.add('hide'), 500);
+});
+
+/* -- Sticky navbar background on scroll -- */
+const navbar = $('#navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 30);
+}, {passive:true});
+
+/* -- Mobile nav toggle -- */
+const navToggle = $('#navToggle'), navLinks = $('#navLinks');
+navToggle.addEventListener('click', () => {
+  navToggle.classList.toggle('active');
+  navLinks.classList.toggle('mobile-open');
+});
+$$('#navLinks a').forEach(a => a.addEventListener('click', () => {
+  navToggle.classList.remove('active');
+  navLinks.classList.remove('mobile-open');
+}));
+
+/* -- Typing effect for hero tagline -- */
+const typingText = $('#typingText');
+const phrases = ['Everything a Student Needs. One Website.', 'Study. Plan. Build. Grow.', 'Your entire academic life, unified.'];
+let phraseIndex = 0, charIndex = 0, deleting = false;
+function typeLoop(){
+  const current = phrases[phraseIndex];
+  if(!deleting){
+    charIndex++;
+    typingText.textContent = current.slice(0, charIndex);
+    if(charIndex === current.length){ deleting = true; setTimeout(typeLoop, 1800); return; }
+  } else {
+    charIndex--;
+    typingText.textContent = current.slice(0, charIndex);
+    if(charIndex === 0){ deleting = false; phraseIndex = (phraseIndex+1) % phrases.length; }
+  }
+  setTimeout(typeLoop, deleting ? 35 : 55);
+}
+typeLoop();
+
+/* -- Scroll reveal via IntersectionObserver -- */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('visible'); });
+}, {threshold:0.12});
+function observeReveals(){ $$('.reveal').forEach(elm => revealObserver.observe(elm)); }
+observeReveals();
+// Re-observe after dynamic renders (cards get added asynchronously above)
+setTimeout(observeReveals, 300);
+
+/* -- Smooth scroll for all in-page anchor links -- */
+$$('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e){
+    const targetId = this.getAttribute('href');
+    if(targetId.length > 1 && document.querySelector(targetId)){
+      e.preventDefault();
+      document.querySelector(targetId).scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  });
+});
+
+/* -- Footer dynamic year -- */
+$('#yearNow').textContent = new Date().getFullYear();
+
+/* -- Privacy policy placeholder alert -- */
+$('#privacyLink').addEventListener('click', (e) => {
+  e.preventDefault();
+  alert('StudentOS AI is a fully client-side demo. No personal data is collected, stored, or transmitted to any server.');
+});
+
+/* -- Contact form (static demo, no backend) -- */
+$('#contactForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const btn = e.target.querySelector('button');
+  const original = btn.textContent;
+  btn.textContent = 'Message Sent ✓';
+  btn.disabled = true;
+  setTimeout(() => { btn.textContent = original; btn.disabled = false; e.target.reset(); }, 2200);
+});
+
+/* -- Subtle parallax on hero orbs based on mouse movement (desktop only) -- */
+if(window.matchMedia('(pointer:fine)').matches){
+  document.addEventListener('mousemove', (e) => {
+    const x = (e.clientX / window.innerWidth - 0.5) * 20;
+    const y = (e.clientY / window.innerHeight - 0.5) * 20;
+    $$('.orb').forEach((orb, i) => {
+      orb.style.transform = `translate(${x * (i%2?1:-1)}px, ${y * (i%2?-1:1)}px)`;
+    });
+  });
+}
+</script>
+</body>
+</html>
+
+
