@@ -8,7 +8,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>StudentOS AI — Everything a Student Needs. One Website.</title>
-<meta name="description" content="StudentOS AI is an AI-powered Student Operating System combining study tools, engineering calculators, a Legal AI assistant for India and career roadmaps in one place.">
+<meta name="description" content="StudentOS AI v1.0 — the operating system for every student. AI tools, PDF Studio, Legal AI, MediAI health guidance, engineering calculators, productivity and career roadmaps, all in one place.">
 
 <!-- Google Fonts (falls back to system fonts automatically if offline) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -365,20 +365,27 @@ header#navbar.scrolled .nav-current-section{
 }
 .hero-badge b{color:var(--blue-soft);font-weight:600;}
 .hero h1{
-  font-size:clamp(34px,4.8vw,54px);font-weight:700;line-height:1.12;margin-bottom:18px;letter-spacing:-0.03em;
-  animation:fadeUp .6s var(--ease) .05s both;
+  font-size:clamp(38px,6vw,68px);font-weight:800;line-height:1.05;margin-bottom:16px;letter-spacing:-0.03em;
+  animation:fadeUp .7s var(--ease) .05s both;
 }
-.hero h1 .line2{display:block;margin-top:6px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;}
+/* EVERYTHING — the visual anchor of the hero: blue-to-purple gradient,
+   slightly heavier weight, fades in first so the eye lands here. */
+.hero h1 .emphasis{
+  display:block;font-weight:800;
+  background:linear-gradient(135deg, #60A5FA, #A78BFA);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+/* "One Place." — deliberately quieter: white/soft gray, lighter weight,
+   a touch smaller than EVERYTHING so it reads as a supporting line. */
+.hero h1 .subline{
+  display:block;font-weight:600;font-size:0.62em;color:var(--text);margin-top:6px;letter-spacing:-0.01em;
+}
 .hero-kicker{
-  font-size:15.5px;font-weight:600;color:var(--text);letter-spacing:.01em;margin-bottom:12px;
-  animation:fadeUp .6s var(--ease) .08s both;
-}
-.hero p.tagline{
-  font-size:clamp(15px,1.6vw,17px);color:var(--text-dim);max-width:600px;margin:0 auto 32px;
-  animation:fadeUp .6s var(--ease) .1s both;
+  font-size:14.5px;font-weight:500;color:var(--text-dim);letter-spacing:.03em;margin-bottom:36px;
+  animation:fadeUp .6s var(--ease) .16s both;
 }
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-.hero-ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:48px;animation:fadeUp .6s var(--ease) .15s both;}
+.hero-ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:48px;animation:fadeUp .6s var(--ease) .22s both;}
 
 /* Search bar (compact, secondary to the primary CTAs) */
 /* ----------------------------------------------------------------
@@ -510,6 +517,24 @@ header#navbar.scrolled .nav-current-section{
 .modal-close:hover{background:var(--glass-strong);transform:rotate(90deg);}
 .modal-body{padding:24px;overflow-y:auto;}
 .modal-desc{color:var(--text-dim);font-size:13.5px;margin-bottom:18px;}
+
+/* Legal document popup — same glass modal shell, wider + taller for
+   readable long-form policy text. */
+#legalDocOverlay{
+  position:fixed;inset:0;z-index:2000;background:rgba(4,4,8,0.6);
+  display:flex;align-items:flex-start;justify-content:center;padding:70px 18px 40px;
+  opacity:0;visibility:hidden;transition:opacity .35s var(--ease), visibility .35s var(--ease);
+  overflow-y:auto;backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
+}
+#legalDocOverlay.active{opacity:1;visibility:visible;}
+.legal-doc-box{max-width:720px;}
+#legalDocOverlay.active .legal-doc-box{transform:translateY(0) scale(1);}
+.legal-doc-body h4{font-size:14.5px;font-weight:700;color:var(--text);margin:20px 0 8px;}
+.legal-doc-body h4:first-child{margin-top:0;}
+.legal-doc-body p{font-size:13.5px;color:var(--text-dim);line-height:1.75;margin-bottom:6px;}
+.legal-doc-body ul{padding-left:18px;margin:8px 0;display:grid;gap:6px;}
+.legal-doc-body li{font-size:13.5px;color:var(--text-dim);line-height:1.7;}
+.legal-doc-body .doc-updated{font-size:11.5px;color:var(--text-faint);margin-bottom:16px;}
 
 /* ================================================================
    10. FORM ELEMENTS shared inside modals/widgets
@@ -1004,8 +1029,10 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
   .nav-links.mobile-open a{width:100%;padding:12px 14px;}
   .grid-3,.grid-2{grid-template-columns:1fr;}
   .field-row{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr 1fr !important;}
 }
 @media (max-width:640px){
+  .footer-grid{grid-template-columns:1fr !important;}
   .logo-text{font-size:16px;}
   .hero-badge{font-size:12px;padding:7px 12px;}
   .floater{padding:14px 18px;min-width:130px;}
@@ -1086,14 +1113,12 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
      ============================================================ -->
 <section class="hero" id="home">
   <div class="container">
-    <div class="hero-badge">StudentOS AI <b>v2.0</b></div>
-    <h1>The Operating System Built<span class="line2">for Every Student.</span></h1>
-    <p class="hero-kicker">Study • Build • Create • Grow</p>
-    <p class="tagline">Everything you need for academics, productivity, AI tools, PDF tools, legal assistance, engineering resources, career guidance and much more — all in one place.</p>
+    <div class="hero-badge">StudentOS AI <b>v1.0</b></div>
+    <h1><span class="emphasis">EVERYTHING.</span><span class="subline">One Place.</span></h1>
+    <p class="hero-kicker">AI • Health • Legal • PDF • Productivity</p>
 
     <div class="hero-ctas">
-      <a href="#study" class="btn btn-primary">Get Started</a>
-      <a href="#pdf-studio" class="btn btn-ghost">Explore Tools</a>
+      <a href="#study" class="btn btn-primary">Explore StudentOS</a>
     </div>
 
     <div class="search-wrap">
@@ -1417,6 +1442,26 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 </section>
 
 <!-- ============================================================
+     ABOUT THE CREATOR
+     ============================================================ -->
+<section class="section-tight" id="creator">
+  <div class="container">
+    <div class="glass reveal" style="padding:52px;max-width:780px;margin:0 auto;text-align:center;">
+      <div class="eyebrow" style="margin:0 auto 20px;display:inline-flex;">About the Creator</div>
+      <p style="color:var(--text-dim);font-size:16px;line-height:1.8;margin-bottom:20px;">
+        Hi, I'm <b style="color:var(--text);">Kaushal Kumar</b>, the creator of StudentOS AI. This platform was envisioned, designed, and developed as an independent project with the mission of building an AI-powered operating system for students. By combining intelligent tools for learning, productivity, health, legal guidance, career development, and innovation, StudentOS AI aims to simplify and enhance every aspect of a student's journey.
+      </p>
+      <p style="color:var(--text-dim);font-size:16px;line-height:1.8;margin-bottom:32px;">
+        I believe technology should not only solve problems but also empower people to learn, create, and grow.
+      </p>
+      <div style="font-weight:700;font-size:17px;color:var(--text);">Kaushal Kumar</div>
+      <div style="font-size:13px;color:var(--text-dim);margin-top:4px;margin-bottom:20px;">Creator, Product Designer &amp; Lead Developer</div>
+      <div style="font-size:12.5px;color:var(--text-faint);">© 2026 StudentOS AI. All Rights Reserved.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
      CONTACT SECTION
      ============================================================ -->
 <section class="section-tight" id="contact">
@@ -1442,7 +1487,7 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
      ============================================================ -->
 <footer style="position:relative;z-index:1;border-top:1px solid var(--border);padding:60px 0 30px;margin-top:40px;">
   <div class="container">
-    <div class="grid" style="grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px;margin-bottom:40px;">
+    <div class="grid footer-grid" style="grid-template-columns:1.3fr 0.8fr 0.8fr 0.8fr 0.8fr;gap:28px;margin-bottom:40px;">
       <div>
         <div class="logo" style="margin-bottom:14px;"><span class="logo-mark">S</span><span class="logo-text">Student<span>OS</span> AI</span></div>
         <p style="color:var(--text-dim);font-size:13.5px;max-width:280px;">Everything a student needs. One website. Built entirely with HTML, CSS and JavaScript — no frameworks, no backend.</p>
@@ -1462,9 +1507,18 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
         <h4 style="font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-dim);margin-bottom:14px;">Company</h4>
         <ul style="display:flex;flex-direction:column;gap:10px;font-size:13.5px;">
           <li><a href="#about" style="color:var(--text-dim);">About</a></li>
+          <li><a href="#creator" style="color:var(--text-dim);">Creator</a></li>
           <li><a href="#contact" style="color:var(--text-dim);">Contact</a></li>
-          <li><a href="#" style="color:var(--text-dim);" id="privacyLink">Privacy Policy</a></li>
           <li><a href="#future" style="color:var(--text-dim);">Future Updates</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-dim);margin-bottom:14px;">Legal</h4>
+        <ul style="display:flex;flex-direction:column;gap:10px;font-size:13.5px;">
+          <li><a href="#" style="color:var(--text-dim);" id="privacyLink">Privacy Policy</a></li>
+          <li><a href="#" style="color:var(--text-dim);" id="termsLink">Terms &amp; Conditions</a></li>
+          <li><a href="#" style="color:var(--text-dim);" id="medicalDisclaimerLink">Medical Disclaimer</a></li>
+          <li><a href="#" style="color:var(--text-dim);" id="legalDisclaimerLink">Legal Disclaimer</a></li>
         </ul>
       </div>
       <div>
@@ -1477,8 +1531,8 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
       </div>
     </div>
     <div style="border-top:1px solid var(--border);padding-top:24px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:12.5px;color:var(--text-faint);">
-      <span>© <span id="yearNow"></span> StudentOS AI. Built with HTML, CSS &amp; JavaScript. No frameworks used.</span>
-      <span>Developed as a concept project — not affiliated with any university.</span>
+      <span>© <span id="yearNow"></span> StudentOS AI. All Rights Reserved. Built with HTML, CSS &amp; JavaScript.</span>
+      <span>StudentOS AI v1.0 — Developed as an independent project by Kaushal Kumar.</span>
     </div>
   </div>
 </footer>
@@ -1494,6 +1548,22 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
       <button class="modal-close" id="modalClose"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 4l16 16M20 4L4 20" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
     </div>
     <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     LEGAL DOCUMENT MODAL (Privacy Policy / Terms / Disclaimers)
+     Reuses the same glass modal component as every other popup on
+     the site for full visual consistency.
+     ============================================================ -->
+<div id="legalDocOverlay">
+  <div class="modal-box legal-doc-box">
+    <div class="modal-head">
+      <div class="tool-icon" id="legalDocIcon">📄</div>
+      <h3 id="legalDocTitle">Document</h3>
+      <button class="modal-close" id="legalDocClose"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 4l16 16M20 4L4 20" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="modal-body legal-doc-body" id="legalDocBody"></div>
   </div>
 </div>
 
@@ -4236,7 +4306,7 @@ window.addEventListener('scroll', () => {
    mobile versions) and highlights the matching nav link as you scroll. */
 const SECTION_LABELS = {
   'home':'Home', 'study':'Study', 'engineering':'Engineering', 'pdf-studio':'PDF Studio',
-  'legal-ai':'Legal AI', 'mediai':'MediAI', 'build':'Build', 'roadmap':'Roadmap', 'future':'Future', 'about':'About', 'contact':'Contact',
+  'legal-ai':'Legal AI', 'mediai':'MediAI', 'build':'Build', 'roadmap':'Roadmap', 'future':'Future', 'about':'About', 'creator':'Creator', 'contact':'Contact',
 };
 const spySections = Object.keys(SECTION_LABELS).map(id => document.getElementById(id)).filter(Boolean);
 const navCurrentLabel = $('#navCurrentLabel');
@@ -4320,11 +4390,114 @@ $$('a[href^="#"]').forEach(anchor => {
 /* -- Footer dynamic year -- */
 $('#yearNow').textContent = new Date().getFullYear();
 
-/* -- Privacy policy placeholder alert -- */
-$('#privacyLink').addEventListener('click', (e) => {
-  e.preventDefault();
-  alert('StudentOS AI is a fully client-side demo. No personal data is collected, stored, or transmitted to any server.');
-});
+/* ================================================================
+   LEGAL DOCUMENTS — Privacy Policy, Terms & Conditions,
+   Medical Disclaimer, Legal Disclaimer. Rendered into the shared
+   glass popup (#legalDocOverlay) so every legal page feels like
+   part of the same premium product rather than a plain text page.
+   ================================================================ */
+const LEGAL_DOCS = {
+  privacy: {
+    icon: '🔒',
+    title: 'Privacy Policy',
+    html: `
+      <p class="doc-updated">Last updated: 2026</p>
+      <h4>Overview</h4>
+      <p>StudentOS AI is a fully client-side product. Every tool on this site — including Study Tools, Engineering calculators, PDF Studio, Legal AI, and MediAI — runs entirely inside your browser.</p>
+      <h4>Data We Collect</h4>
+      <p>We do not operate a backend server for this site, and no personal data, documents, images, or health/legal descriptions you type are ever uploaded, transmitted, or stored on any server we control.</p>
+      <ul>
+        <li>Files you upload to PDF Studio or MediAI are processed locally in your browser and never leave your device.</li>
+        <li>Any "recent searches" or preferences are stored only in your browser's local storage, on your device.</li>
+        <li>The contact form on this site is a static demo and does not transmit data anywhere.</li>
+      </ul>
+      <h4>Cookies</h4>
+      <p>This site does not use tracking or advertising cookies.</p>
+      <h4>Third-Party Libraries</h4>
+      <p>PDF Studio loads open-source libraries (pdf-lib, pdf.js) from a public CDN only when a relevant tool is used, to process files locally — these libraries do not transmit your files anywhere.</p>
+      <h4>Contact</h4>
+      <p>Questions about this policy can be sent via the Contact section of this site.</p>
+    `,
+  },
+  terms: {
+    icon: '📜',
+    title: 'Terms & Conditions',
+    html: `
+      <p class="doc-updated">Last updated: 2026</p>
+      <h4>Acceptance of Terms</h4>
+      <p>By using StudentOS AI, you agree to these Terms &amp; Conditions. If you do not agree, please discontinue use of the site.</p>
+      <h4>Use of the Platform</h4>
+      <ul>
+        <li>StudentOS AI is provided free of charge, for educational and informational purposes.</li>
+        <li>Tools such as calculators, generators, Legal AI, and MediAI provide educational information only and are not professional advice.</li>
+        <li>You are responsible for how you use any output generated by the tools on this site.</li>
+      </ul>
+      <h4>No Warranty</h4>
+      <p>StudentOS AI is provided "as is" without warranties of any kind, express or implied, including accuracy, reliability, or fitness for a particular purpose.</p>
+      <h4>Limitation of Liability</h4>
+      <p>StudentOS AI and its creator are not liable for any decisions made or actions taken based on information provided by this site, including academic, legal, medical, financial, or career-related decisions.</p>
+      <h4>Changes to the Service</h4>
+      <p>Features and tools may be added, changed, or removed at any time without prior notice.</p>
+    `,
+  },
+  medical: {
+    icon: '🩺',
+    title: 'Medical Disclaimer',
+    html: `
+      <p class="doc-updated">Applies to: MediAI</p>
+      <h4>Educational Purpose Only</h4>
+      <p>MediAI provides educational and informational health guidance only. It is powered by an on-device rule-based system and is <b>not a doctor, medical professional, or diagnostic tool</b>.</p>
+      <h4>Not a Substitute for Professional Care</h4>
+      <ul>
+        <li>MediAI does not diagnose, treat, cure, or prevent any disease or medical condition.</li>
+        <li>MediAI never provides a definitive diagnosis — only educational possibilities, phrased with appropriate uncertainty (e.g. "may indicate," "could be associated with").</li>
+        <li>Always consult a qualified healthcare professional regarding any medical concern, symptom, or before making health-related decisions.</li>
+        <li>If you are experiencing a medical emergency, contact your local emergency services immediately — do not rely on this website.</li>
+      </ul>
+      <h4>Image & Report Analysis</h4>
+      <p>Any images or medical reports you choose to analyze are processed locally in your browser. MediAI never diagnoses a disease solely from an image and only offers general, educational observations.</p>
+    `,
+  },
+  legal: {
+    icon: '⚖️',
+    title: 'Legal Disclaimer',
+    html: `
+      <p class="doc-updated">Applies to: Legal AI India</p>
+      <h4>Educational Purpose Only</h4>
+      <p>The Legal AI India assistant provides educational and informational legal guidance only, based on commonly-cited Indian statutes and legal concepts. It is <b>not a lawyer, law firm, or legal authority</b>.</p>
+      <h4>Not a Substitute for Professional Advice</h4>
+      <ul>
+        <li>Legal AI never provides a definitive legal judgment and never declares any person guilty or liable.</li>
+        <li>Applicable laws, consequences, and remedies described are general educational references and may not reflect the latest amendments or the specifics of your situation.</li>
+        <li>Always consult a licensed advocate or the appropriate authority before taking any legal action.</li>
+      </ul>
+      <h4>No Attorney-Client Relationship</h4>
+      <p>Using this tool does not create an attorney-client relationship between you and StudentOS AI or its creator.</p>
+    `,
+  },
+};
+
+function openLegalDoc(key){
+  const doc = LEGAL_DOCS[key];
+  if(!doc) return;
+  $('#legalDocIcon').textContent = doc.icon;
+  $('#legalDocTitle').textContent = doc.title;
+  $('#legalDocBody').innerHTML = doc.html;
+  $('#legalDocOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeLegalDoc(){
+  $('#legalDocOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+$('#legalDocClose').addEventListener('click', closeLegalDoc);
+$('#legalDocOverlay').addEventListener('click', (e) => { if(e.target.id === 'legalDocOverlay') closeLegalDoc(); });
+document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeLegalDoc(); });
+
+$('#privacyLink').addEventListener('click', (e) => { e.preventDefault(); openLegalDoc('privacy'); });
+$('#termsLink').addEventListener('click', (e) => { e.preventDefault(); openLegalDoc('terms'); });
+$('#medicalDisclaimerLink').addEventListener('click', (e) => { e.preventDefault(); openLegalDoc('medical'); });
+$('#legalDisclaimerLink').addEventListener('click', (e) => { e.preventDefault(); openLegalDoc('legal'); });
 
 /* -- Contact form (static demo, no backend) -- */
 $('#contactForm').addEventListener('submit', (e) => {
