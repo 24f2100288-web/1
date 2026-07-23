@@ -317,26 +317,35 @@ html{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.14) transparent;}
    ================================================================ */
 .hero-bg-gradient{
   position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;
-  background:
-    radial-gradient(ellipse 900px 500px at 82% 12%, rgba(15,82,255,0.16), transparent 65%),
-    linear-gradient(160deg, #050816 0%, #081229 55%, #030510 100%);
-  /* Fade the whole layer to transparent near the bottom so it dissolves
-     into the page background instead of ending in a hard-edged seam. */
+  /* Near-solid dark navy/black base — almost no visible gradient of its
+     own. All the light in this backdrop should come from the wave and
+     orb below, not from a wash covering the whole hero (that's what
+     was previously bleeding purple up behind the navbar/logo). */
+  background:#050810;
   -webkit-mask-image:linear-gradient(to bottom, #000 0%, #000 78%, transparent 100%);
   mask-image:linear-gradient(to bottom, #000 0%, #000 78%, transparent 100%);
 }
-html[data-theme="light"] .hero-bg-gradient{opacity:.4;}
-.wave-mesh-bg{position:absolute;left:0;right:0;bottom:0;height:100%;z-index:0;overflow:visible;pointer-events:none;}
-.wave-mesh-bg svg{position:absolute;bottom:-2%;right:-14%;width:min(1500px,145%);max-width:none;height:auto;
+html[data-theme="light"] .hero-bg-gradient{opacity:.35;}
+/* Confined to the lower half of the hero only, and to the right ~65%
+   of the width — matches the reference: mostly empty/dark center-left,
+   glow only in the bottom-right region. */
+.wave-mesh-bg{position:absolute;left:0;right:0;bottom:0;top:0;z-index:0;overflow:hidden;pointer-events:none;
+  /* Fade the left edge of this whole layer to fully transparent so the
+     glow dissolves into the dark base instead of ending at a visible
+     rectangular boundary. */
+  -webkit-mask-image:linear-gradient(115deg, transparent 0%, transparent 34%, #000 58%, #000 88%, transparent 100%);
+  mask-image:linear-gradient(115deg, transparent 0%, transparent 34%, #000 58%, #000 88%, transparent 100%);
+}
+.wave-mesh-bg svg{position:absolute;bottom:-6%;right:-4%;width:min(760px,78%);max-width:none;height:auto;
   animation:waveBreathe 16s ease-in-out infinite;}
-@keyframes waveBreathe{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+@keyframes waveBreathe{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
 .wave-mesh-bg .wm-orb{
-  position:absolute;top:64px;right:16%;width:46px;height:46px;border-radius:50%;
-  background:radial-gradient(circle at 32% 28%, #4AC5FF, #0F52FF 55%, #081229 100%);
-  box-shadow:0 0 42px 10px rgba(15,82,255,0.4);
+  position:absolute;top:80px;right:26%;width:30px;height:30px;border-radius:50%;
+  background:radial-gradient(circle at 34% 30%, #3a6bd9 0%, #14245e 55%, #060c1e 100%);
+  box-shadow:0 0 20px 4px rgba(30,70,200,0.28), inset -4px -4px 8px rgba(0,0,0,0.5);
 }
 .wave-mesh-bg .wm-star{position:absolute;border-radius:50%;background:#cfe3ff;}
-html[data-theme="light"] .wave-mesh-bg{opacity:.5;}
+html[data-theme="light"] .wave-mesh-bg{opacity:.45;}
 
 /* ================================================================
    5. LOADING SCREEN
@@ -1420,25 +1429,25 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
   <div class="hero-bg-gradient" aria-hidden="true">
     <div class="wave-mesh-bg" aria-hidden="true">
       <div class="wm-orb"></div>
-      <div class="wm-star" style="top:14%;left:70%;width:2px;height:2px;opacity:.35;"></div>
-      <div class="wm-star" style="top:24%;left:58%;width:2px;height:2px;opacity:.25;"></div>
-      <div class="wm-star" style="top:34%;left:80%;width:2px;height:2px;opacity:.3;"></div>
-      <div class="wm-star" style="top:10%;left:44%;width:1.5px;height:1.5px;opacity:.2;"></div>
+      <div class="wm-star" style="top:6%;left:12%;width:2px;height:2px;opacity:.3;"></div>
+      <div class="wm-star" style="top:18%;left:46%;width:2px;height:2px;opacity:.22;"></div>
+      <div class="wm-star" style="top:28%;left:66%;width:2px;height:2px;opacity:.28;"></div>
+      <div class="wm-star" style="top:2%;left:34%;width:1.5px;height:1.5px;opacity:.18;"></div>
       <svg width="900" height="460" viewBox="0 0 900 460" fill="none" preserveAspectRatio="xMaxYMax slice">
         <defs>
           <linearGradient id="wmLine" x1="0" y1="1" x2="1" y2="0">
-            <stop offset="0%" stop-color="#0F52FF" stop-opacity=".25"/>
-            <stop offset="45%" stop-color="#0F52FF" stop-opacity=".7"/>
-            <stop offset="75%" stop-color="#7B2CFF" stop-opacity=".9"/>
-            <stop offset="100%" stop-color="#B14CFF" stop-opacity="1"/>
+            <stop offset="0%" stop-color="#0F52FF" stop-opacity="0"/>
+            <stop offset="40%" stop-color="#0F52FF" stop-opacity=".55"/>
+            <stop offset="75%" stop-color="#7B2CFF" stop-opacity=".8"/>
+            <stop offset="100%" stop-color="#B14CFF" stop-opacity=".95"/>
           </linearGradient>
-          <radialGradient id="wmGlow" cx="88%" cy="10%" r="55%">
-            <stop offset="0%" stop-color="#B14CFF" stop-opacity=".4"/>
-            <stop offset="60%" stop-color="#7B2CFF" stop-opacity=".12"/>
+          <radialGradient id="wmGlow" cx="90%" cy="8%" r="38%">
+            <stop offset="0%" stop-color="#B14CFF" stop-opacity=".18"/>
+            <stop offset="60%" stop-color="#7B2CFF" stop-opacity=".05"/>
             <stop offset="100%" stop-color="#7B2CFF" stop-opacity="0"/>
           </radialGradient>
           <filter id="wmSoftBlur" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="3.5"/>
+            <feGaussianBlur stdDeviation="2.2"/>
           </filter>
         </defs>
         <rect x="0" y="0" width="900" height="460" fill="url(#wmGlow)"/>
