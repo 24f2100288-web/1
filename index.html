@@ -1374,7 +1374,6 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
       <a href="#pdf-studio">PDF Studio</a>
       <a href="#legal-ai">Legal AI</a>
       <a href="#mediai">MediAI</a>
-      <a href="#build">Build</a>
       <a href="#about">About</a>
       <a href="#contact">Contact</a>
       <a href="#study" class="nav-dashboard-mobile">Get Started</a>
@@ -1663,20 +1662,6 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 </section>
 
 <!-- ============================================================
-     BUILD SECTION
-     ============================================================ -->
-<section class="section" id="build">
-  <div class="container">
-    <div class="section-head reveal">
-      <div class="eyebrow">Build</div>
-      <h2>Generate your <span class="gradient-text">next big idea</span></h2>
-      <p>Instant idea generators for projects, portfolios, startups and hackathons.</p>
-    </div>
-    <div class="grid grid-cols" id="buildGrid"></div>
-  </div>
-</section>
-
-<!-- ============================================================
      AI ROADMAP GENERATOR SECTION
      ============================================================ -->
 <section class="section" id="roadmap">
@@ -1949,17 +1934,6 @@ const ENGINEERING_TOOLS = [
   {id:'unit-converter', icon:'📐', title:'Unit Converter', desc:'Convert length, mass, temperature, time and data units.'},
 ];
 
-const BUILD_TOOLS = [
-  {id:'website-idea', icon:'🌐', title:'Website Idea Generator', desc:'Generate a random website concept to build for practice.'},
-  {id:'project-suggestion', icon:'📦', title:'Project Suggestion Generator', desc:'Get a randomized project idea across any tech stack.'},
-  {id:'portfolio-generator', icon:'🖼️', title:'Portfolio Generator', desc:'Get a suggested outline/structure for your personal portfolio.'},
-  {id:'startup-idea-gen', icon:'🚀', title:'Startup Idea Generator', desc:'Generate a fresh student-startup concept in one click.'},
-  {id:'electronics-project', icon:'🔧', title:'Electronics Project Generator', desc:'Get a beginner-to-advanced electronics project idea.'},
-  {id:'robotics-project', icon:'🤖', title:'Robotics Project Generator', desc:'Generate a robotics build idea with core components.'},
-  {id:'hackathon-idea', icon:'🏆', title:'Hackathon Idea Generator', desc:'Get a hackathon-ready concept you can build in 24-48 hours.'},
-  {id:'github-project', icon:'🐙', title:'GitHub Project Generator', desc:'Generate an open-source project idea worth putting on GitHub.'},
-];
-
 const FUTURE_FEATURES = [
   {icon:'👤', title:'User Accounts', desc:'Save your data securely across devices with a personal account.'},
   {icon:'💬', title:'AI Chatbot', desc:'A conversational AI assistant embedded across the whole platform.'},
@@ -1976,7 +1950,6 @@ const FUTURE_FEATURES = [
 const SEARCH_INDEX = [
   ...STUDY_TOOLS.map(t => ({...t, cat:'Study', anchor:'study'})),
   ...ENGINEERING_TOOLS.map(t => ({...t, cat:'Engineering', anchor:'engineering'})),
-  ...BUILD_TOOLS.map(t => ({...t, cat:'Build', anchor:'build'})),
   {id:'legal-ai-india', icon:'⚖️', title:'Legal AI India', desc:"Know your rights before it's too late — AI-powered Indian legal information assistant.", cat:'Legal AI', anchor:'legal-ai'},
   {id:'mediai-health', icon:'🩺', title:'MediAI', desc:"Understand your health, smarter — AI-powered health information assistant.", cat:'MediAI', anchor:'mediai'},
 ];
@@ -2020,7 +1993,6 @@ function renderFutureCards(){
 
 renderToolCards(STUDY_TOOLS, '#studyGrid');
 renderToolCards(ENGINEERING_TOOLS, '#engineeringGrid');
-renderToolCards(BUILD_TOOLS, '#buildGrid');
 renderFutureCards();
 
 /* ---------------------------------------------------------------
@@ -2042,7 +2014,7 @@ function runSearch(query){
   ).slice(0, 8);
 
   if(matches.length === 0){
-    searchResults.innerHTML = `<div class="search-empty">No tools found for "<b>${query}</b>". Try "python", "resume" or "electronics".</div>`;
+    searchResults.innerHTML = `<div class="search-empty">No tools found for "<b>${query}</b>". Try "quiz", "pdf" or "legal".</div>`;
   } else {
     matches.forEach(item => {
       const row = el('div', 'search-result-item');
@@ -2080,7 +2052,7 @@ document.addEventListener('click', e => {
 /* ---------------------------------------------------------------
    5. MODAL ENGINE
    --------------------------------------------------------------- */
-const ALL_TOOLS = [...STUDY_TOOLS, ...ENGINEERING_TOOLS, ...BUILD_TOOLS];
+const ALL_TOOLS = [...STUDY_TOOLS, ...ENGINEERING_TOOLS];
 const modalOverlay = $('#modalOverlay');
 const modalIcon    = $('#modalIcon');
 const modalTitle   = $('#modalTitle');
@@ -2681,66 +2653,6 @@ TOOL_RENDERERS['unit-converter'] = (wrap) => {
 function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
 /* ================================================================
-   BUILD SECTION RENDERERS — randomized idea generators
-   ================================================================ */
-TOOL_RENDERERS['website-idea'] = (wrap) => {
-  const ideas = ['A habit tracker with social accountability','A local recipe-sharing site for students','A campus lost-and-found board','A study-buddy matching platform','A minimalist markdown note app','A skill-swap marketplace for students'];
-  wrap.innerHTML = `<button class="btn btn-primary btn-block" id="wiBtn">Generate Website Idea</button><div class="result-box hidden" id="wiResult"></div>`;
-  $('#wiBtn', wrap).addEventListener('click', () => { const box=$('#wiResult',wrap); box.classList.remove('hidden'); box.innerHTML = pick(ideas); });
-};
-
-TOOL_RENDERERS['project-suggestion'] = (wrap) => {
-  const stacks = ['HTML/CSS/JS','Python + Flask','React + Node','Java + Spring Boot','Arduino + C++'];
-  const projects = ['expense tracker','weather dashboard','chat application','inventory manager','quiz platform','portfolio site'];
-  wrap.innerHTML = `<button class="btn btn-primary btn-block" id="psgBtn">Generate Project Idea</button><div class="result-box hidden" id="psgResult"></div>`;
-  $('#psgBtn', wrap).addEventListener('click', () => { const box=$('#psgResult',wrap); box.classList.remove('hidden'); box.innerHTML = `Build a <b>${pick(projects)}</b> using <b>${pick(stacks)}</b>.`; });
-};
-
-TOOL_RENDERERS['portfolio-generator'] = (wrap) => {
-  wrap.innerHTML = `<button class="btn btn-primary btn-block" id="pgBtn">Generate Portfolio Outline</button><div class="result-box hidden" id="pgResult"></div>`;
-  $('#pgBtn', wrap).addEventListener('click', () => {
-    const box=$('#pgResult',wrap); box.classList.remove('hidden');
-    box.innerHTML = `<ol style="padding-left:18px;line-height:1.9;">
-      <li>Hero section with your name & one-line pitch</li>
-      <li>About Me (short, personal, specific)</li>
-      <li>Skills grid (grouped by category)</li>
-      <li>3-4 featured projects with links & tech used</li>
-      <li>Resume download button</li>
-      <li>Contact section with email/social links</li>
-    </ol>`;
-  });
-};
-
-TOOL_RENDERERS['startup-idea-gen'] = (wrap) => {
-  const ideas = ['AI note-taking assistant for lectures','Peer tutoring marketplace','Micro-internship matching platform','Gamified study streak app','Subscription box for STEM experiments','Campus food-waste sharing app'];
-  wrap.innerHTML = `<button class="btn btn-primary btn-block" id="sigBtn">Generate Startup Idea</button><div class="result-box hidden" id="sigResult"></div>`;
-  $('#sigBtn', wrap).addEventListener('click', () => { const box=$('#sigResult',wrap); box.classList.remove('hidden'); box.innerHTML = pick(ideas); });
-};
-
-TOOL_RENDERERS['electronics-project'] = (wrap) => {
-  const projects = ['Line-following robot using IR sensors','Home automation system using relays','Digital thermometer with LCD display','Simple metal detector circuit','Bluetooth-controlled LED strip','Solar panel voltage monitor'];
-  wrap.innerHTML = `<button class="btn btn-primary btn-block" id="epBtn">Generate Electronics Project</button><div class="result-box hidden" id="epResult"></div>`;
-  $('#epBtn', wrap).addEventListener('click', () => { const box=$('#epResult',wrap); box.classList.remove('hidden'); box.innerHTML = pick(projects); });
-};
-
-TOOL_RENDERERS['robotics-project'] = (wrap) => {
-  const projects = ['Obstacle-avoiding robot car (ultrasonic sensor + motors)','Robotic arm controlled via joystick','Self-balancing robot using a gyroscope','Voice-controlled home robot','Maze-solving robot with pathfinding logic'];
-  wrap.innerHTML = `<button class="btn btn-primary btn-block" id="rpBtn">Generate Robotics Idea</button><div class="result-box hidden" id="rpResult"></div>`;
-  $('#rpBtn', wrap).addEventListener('click', () => { const box=$('#rpResult',wrap); box.classList.remove('hidden'); box.innerHTML = pick(projects); });
-};
-
-TOOL_RENDERERS['hackathon-idea'] = (wrap) => {
-  const ideas = ['A 24-hour accessibility-focused app for visually impaired students','A real-time carbon footprint tracker for daily commutes','An AI tool that turns lecture audio into flashcards','A donation-matching platform for local shelters','A gamified mental-health check-in app'];
-  wrap.innerHTML = `<button class="btn btn-primary btn-block" id="hiBtn">Generate Hackathon Idea</button><div class="result-box hidden" id="hiResult"></div>`;
-  $('#hiBtn', wrap).addEventListener('click', () => { const box=$('#hiResult',wrap); box.classList.remove('hidden'); box.innerHTML = pick(ideas); });
-};
-
-TOOL_RENDERERS['github-project'] = (wrap) => {
-  const ideas = ['An open-source CLI tool for organizing markdown notes','A lightweight component library for glassmorphism UIs','A REST API wrapper/SDK for a popular public API','A VS Code extension for Pomodoro tracking','A static-site generator for student portfolios'];
-  wrap.innerHTML = `<button class="btn btn-primary btn-block" id="ghBtn">Generate GitHub Project Idea</button><div class="result-box hidden" id="ghResult"></div>`;
-  $('#ghBtn', wrap).addEventListener('click', () => { const box=$('#ghResult',wrap); box.classList.remove('hidden'); box.innerHTML = pick(ideas); });
-};
-
 /* ================================================================
    7. AI ROADMAP GENERATOR (section-level, not modal-based)
    ================================================================ */
@@ -5018,7 +4930,7 @@ window.addEventListener('scroll', () => {
    mobile versions) and highlights the matching nav link as you scroll. */
 const SECTION_LABELS = {
   'home':'Home', 'study':'Study', 'engineering':'Engineering', 'pdf-studio':'PDF Studio',
-  'legal-ai':'Legal AI', 'mediai':'MediAI', 'build':'Build', 'roadmap':'Roadmap', 'future':'Future', 'about':'About', 'creator':'Creator', 'contact':'Contact',
+  'legal-ai':'Legal AI', 'mediai':'MediAI', 'roadmap':'Roadmap', 'future':'Future', 'about':'About', 'creator':'Creator', 'contact':'Contact',
 };
 const spySections = Object.keys(SECTION_LABELS).map(id => document.getElementById(id)).filter(Boolean);
 const navCurrentLabel = $('#navCurrentLabel');
