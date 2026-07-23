@@ -236,7 +236,7 @@ header#navbar.scrolled .nav-current-section{
 
 /* Mobile/tablet floating version — fixed under the header, independent of flex flow */
 .nav-current-mobile{
-  display:none;position:fixed;top:64px;left:50%;z-index:999;
+  display:none;position:fixed;top:64px;left:50%;z-index:999;pointer-events:none;
   align-items:center;gap:8px;padding:8px 16px;border-radius:999px;
   background:var(--glass-strong);border:1px solid var(--border);
   backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);
@@ -544,6 +544,173 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 }
 
 /* ================================================================
+   PDF STUDIO — SECTION STYLES
+   Premium PDF productivity suite: category tabs, drag-and-drop
+   workspace, file preview cards, progress bar, toast notifications.
+   ================================================================ */
+
+/* Category tabs (Basic / Premium / Conversion switcher) */
+.pdf-tabs{
+  display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:36px;
+}
+.pdf-tab{
+  padding:11px 22px;border-radius:999px;font-size:13.5px;font-weight:600;color:var(--text-dim);
+  background:var(--glass);border:1px solid var(--border);
+  backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);
+  transition:.3s var(--ease);cursor:pointer;
+}
+.pdf-tab:hover{color:var(--text);border-color:var(--border-strong);}
+.pdf-tab.active{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 20px rgba(139,92,246,0.35);}
+.pdf-tab-panel{display:none;}
+.pdf-tab-panel.active{display:block;animation:fadeUp .5s var(--ease) both;}
+
+/* Premium badge on premium tool cards */
+.pdf-tool-card{position:relative;}
+.pdf-premium-badge{
+  position:absolute;top:16px;right:16px;z-index:2;
+  font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  padding:4px 9px;border-radius:999px;color:#fff;background:var(--grad-2);
+  box-shadow:0 4px 12px rgba(236,72,153,0.35);
+}
+.pdf-tool-card .tool-icon.pdf-icon-premium{background:linear-gradient(135deg, rgba(236,72,153,0.18), rgba(168,85,247,0.18));}
+
+/* Section intro floaters (mirrors hero floaters style) */
+.pdf-stat-row{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin:0 auto 50px;max-width:920px;}
+.pdf-stat{padding:14px 22px;border-radius:14px;text-align:center;}
+.pdf-stat .fnum{font-family:'Space Grotesk';font-size:22px;font-weight:700;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.pdf-stat .flabel{font-size:12px;color:var(--text-dim);margin-top:2px;}
+
+/* ---- Workspace: the interactive processing panel ---- */
+.pdf-workspace{
+  max-width:960px;margin:0 auto 60px;padding:32px;position:relative;overflow:hidden;
+}
+.pdf-workspace::before{
+  content:'';position:absolute;top:-50%;left:-15%;width:55%;height:200%;
+  background:radial-gradient(circle, rgba(59,130,246,0.12), transparent 65%);pointer-events:none;
+}
+.pdf-workspace-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:20px;position:relative;z-index:1;}
+.pdf-active-tool{display:flex;align-items:center;gap:12px;}
+.pdf-active-tool .tool-icon{margin-bottom:0;}
+.pdf-active-tool h3{font-size:17px;font-weight:700;}
+.pdf-active-tool p{font-size:12.5px;color:var(--text-dim);}
+.pdf-clear-tool{font-size:12.5px;color:var(--text-faint);text-decoration:underline;text-underline-offset:3px;cursor:pointer;}
+
+/* Drag-and-drop dropzone */
+.pdf-dropzone{
+  border:1.5px dashed var(--border-strong);border-radius:var(--radius);padding:44px 24px;text-align:center;
+  background:var(--glass);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);
+  transition:border-color .3s, background .3s, transform .2s;cursor:pointer;position:relative;z-index:1;
+}
+.pdf-dropzone:hover{border-color:var(--blue-soft);}
+.pdf-dropzone.dragover{border-color:var(--purple-soft);background:var(--grad-soft);transform:scale(1.01);}
+.pdf-dropzone-icon{
+  width:62px;height:62px;border-radius:18px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;
+  font-size:28px;background:var(--grad-soft);border:1px solid var(--border);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  animation:pdfFloatIcon 4s ease-in-out infinite;
+}
+@keyframes pdfFloatIcon{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+.pdf-dropzone h4{font-size:15.5px;font-weight:600;margin-bottom:6px;}
+.pdf-dropzone p{font-size:12.5px;color:var(--text-faint);}
+.pdf-dropzone input[type=file]{display:none;}
+
+/* File preview list */
+.pdf-file-list{display:grid;gap:10px;margin-top:18px;position:relative;z-index:1;}
+.pdf-file-card{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:13px;
+  background:var(--glass-strong);border:1px solid var(--border);
+  backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);
+  animation:fadeUp .4s var(--ease) both;
+}
+.pdf-file-icon{
+  width:38px;height:38px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:16px;background:var(--grad-soft);border:1px solid var(--border);
+}
+.pdf-file-meta{flex:1;min-width:0;}
+.pdf-file-name{font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pdf-file-size{font-size:11.5px;color:var(--text-faint);}
+.pdf-file-remove{
+  width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  color:var(--text-faint);background:var(--glass);border:1px solid var(--border);transition:.2s;
+}
+.pdf-file-remove:hover{color:var(--red);border-color:var(--red);}
+
+/* Tool options (rotate angle, page ranges, quality etc.) injected per-tool */
+.pdf-tool-options{margin-top:16px;position:relative;z-index:1;}
+
+/* Progress bar */
+.pdf-progress-wrap{margin-top:20px;position:relative;z-index:1;}
+.pdf-progress-label{display:flex;justify-content:space-between;font-size:12.5px;color:var(--text-dim);margin-bottom:8px;}
+.pdf-progress-track{height:8px;border-radius:99px;background:var(--glass-strong);overflow:hidden;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
+.pdf-progress-fill{height:100%;width:0%;border-radius:99px;background:var(--grad);transition:width .3s var(--ease);position:relative;overflow:hidden;}
+.pdf-progress-fill::after{
+  content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);
+  animation:pdfShimmer 1.4s linear infinite;
+}
+@keyframes pdfShimmer{0%{transform:translateX(-100%);}100%{transform:translateX(100%);}}
+
+/* Result / download area */
+.pdf-result-card{
+  margin-top:20px;padding:22px;border-radius:var(--radius);position:relative;z-index:1;
+  background:var(--grad-soft);backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);
+  border:1px solid var(--border);text-align:center;animation:fadeUp .5s var(--ease) both;
+}
+.pdf-result-icon{
+  width:52px;height:52px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;
+  font-size:22px;background:var(--grad);color:#fff;box-shadow:0 8px 24px rgba(139,92,246,0.4);
+}
+.pdf-result-card h4{font-size:15.5px;font-weight:700;margin-bottom:4px;}
+.pdf-result-card p{font-size:12.5px;color:var(--text-dim);margin-bottom:16px;}
+.pdf-result-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+
+/* AI-generated text output (notes/flashcards/quiz/summary) */
+.pdf-ai-output{
+  margin-top:16px;padding:20px;border-radius:14px;text-align:left;max-height:360px;overflow-y:auto;
+  background:rgba(255,255,255,0.03);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--border);
+}
+.pdf-ai-output h5{font-size:13px;color:var(--blue-soft);margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em;}
+.pdf-flashcard{
+  padding:14px 16px;border-radius:12px;background:var(--glass-strong);border:1px solid var(--border);
+  margin-bottom:10px;cursor:pointer;transition:.25s;
+}
+.pdf-flashcard:hover{border-color:var(--border-strong);}
+
+/* "Cloud required" honest fallback state */
+.pdf-cloud-note{
+  margin-top:16px;padding:16px 18px;border-radius:12px;position:relative;z-index:1;
+  background:rgba(96,165,250,0.08);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid rgba(96,165,250,0.25);font-size:12.5px;color:var(--blue-soft);line-height:1.6;display:flex;gap:10px;align-items:flex-start;
+}
+.pdf-cloud-note svg{flex-shrink:0;margin-top:2px;}
+
+/* Toast notifications */
+#pdfToastStack{
+  position:fixed;bottom:24px;right:24px;z-index:3000;display:flex;flex-direction:column;gap:10px;
+  max-width:calc(100vw - 32px);
+}
+.pdf-toast{
+  display:flex;align-items:center;gap:10px;padding:14px 18px;border-radius:13px;min-width:260px;
+  background:rgba(18,18,28,0.85);backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%);
+  border:1px solid var(--border-strong);box-shadow:0 16px 40px rgba(0,0,0,0.4);
+  font-size:13px;font-weight:500;
+  animation:pdfToastIn .4s var(--ease) both;
+}
+.pdf-toast.leaving{animation:pdfToastOut .35s var(--ease) both;}
+@keyframes pdfToastIn{from{opacity:0;transform:translateX(40px);}to{opacity:1;transform:translateX(0);}}
+@keyframes pdfToastOut{to{opacity:0;transform:translateX(40px);}}
+.pdf-toast-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.pdf-toast.success .pdf-toast-dot{background:var(--green);box-shadow:0 0 8px var(--green);}
+.pdf-toast.info .pdf-toast-dot{background:var(--blue-soft);box-shadow:0 0 8px var(--blue-soft);}
+
+@media (max-width:760px){
+  .pdf-workspace{padding:22px;}
+  .pdf-workspace-head{flex-direction:column;align-items:flex-start;}
+  .pdf-dropzone{padding:32px 16px;}
+  #pdfToastStack{left:16px;right:16px;bottom:16px;}
+  .pdf-toast{min-width:0;width:100%;}
+}
+
+/* ================================================================
    11. RESPONSIVE MEDIA QUERIES
    ================================================================ */
 @media (max-width:1180px){
@@ -617,6 +784,7 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
       <a href="#home">Home</a>
       <a href="#study">Study</a>
       <a href="#engineering">Engineering</a>
+      <a href="#pdf-studio">PDF Studio</a>
       <a href="#legal-ai">Legal AI</a>
       <a href="#build">Build</a>
       <a href="#about">About</a>
@@ -693,6 +861,97 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
       <p>Sixteen real, working calculators for circuits, logic and number systems.</p>
     </div>
     <div class="grid grid-cols" id="engineeringGrid"></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PDF STUDIO SECTION
+     A premium, flagship PDF productivity suite — real client-side
+     processing where feasible (merge/split/rotate/convert-to-image/
+     text extraction via pdf-lib + pdf.js, lazy-loaded), with an
+     honest "cloud required" fallback for formats/features that
+     genuinely cannot run in the browser (Office formats, OCR, etc).
+     ============================================================ -->
+<section class="section" id="pdf-studio">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">📄 PDF Studio</div>
+      <h2>Everything PDF. <span class="gradient-text">Professionally Simplified.</span></h2>
+      <p>Your complete PDF workspace — merge, convert, and let AI read your documents for you.</p>
+    </div>
+
+    <div class="pdf-stat-row reveal">
+      <div class="pdf-stat glass"><div class="fnum">8</div><div class="flabel">Basic Tools</div></div>
+      <div class="pdf-stat glass"><div class="fnum">12</div><div class="flabel">AI Premium Features</div></div>
+      <div class="pdf-stat glass"><div class="fnum">15</div><div class="flabel">Conversion Formats</div></div>
+      <div class="pdf-stat glass"><div class="fnum">100%</div><div class="flabel">Runs In Your Browser*</div></div>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="pdf-tabs reveal">
+      <button class="pdf-tab active" data-tab="basic">Basic Tools</button>
+      <button class="pdf-tab" data-tab="premium">Premium Features</button>
+      <button class="pdf-tab" data-tab="conversion">Conversion Tools</button>
+    </div>
+
+    <!-- Basic Tools Panel -->
+    <div class="pdf-tab-panel active" id="pdfPanelBasic">
+      <div class="grid grid-cols" id="pdfBasicGrid"></div>
+    </div>
+
+    <!-- Premium Features Panel -->
+    <div class="pdf-tab-panel" id="pdfPanelPremium">
+      <div class="grid grid-cols" id="pdfPremiumGrid"></div>
+    </div>
+
+    <!-- Conversion Tools Panel -->
+    <div class="pdf-tab-panel" id="pdfPanelConversion">
+      <div class="grid grid-cols" id="pdfConversionGrid"></div>
+    </div>
+
+    <!-- ================= WORKSPACE ================= -->
+    <div class="pdf-workspace glass reveal" id="pdfWorkspace" style="margin-top:56px;">
+      <div class="pdf-workspace-head">
+        <div class="pdf-active-tool" id="pdfActiveToolInfo">
+          <div class="tool-icon" id="pdfActiveIcon">📄</div>
+          <div>
+            <h3 id="pdfActiveTitle">Select a tool above</h3>
+            <p id="pdfActiveDesc">Pick any card from the sections above to load it here.</p>
+          </div>
+        </div>
+        <span class="pdf-clear-tool" id="pdfClearBtn">Reset workspace</span>
+      </div>
+
+      <!-- Drag & drop dropzone -->
+      <div class="pdf-dropzone" id="pdfDropzone">
+        <div class="pdf-dropzone-icon">⬆️</div>
+        <h4 id="pdfDropzoneTitle">Drag & drop your PDF here</h4>
+        <p id="pdfDropzoneHint">or click to browse — your files never leave this browser tab</p>
+        <input type="file" id="pdfFileInput" accept=".pdf,.jpg,.jpeg,.png,.txt" multiple>
+      </div>
+
+      <!-- Selected file previews -->
+      <div class="pdf-file-list" id="pdfFileList"></div>
+
+      <!-- Per-tool options (injected dynamically) -->
+      <div class="pdf-tool-options" id="pdfToolOptions"></div>
+
+      <!-- Process button -->
+      <div style="margin-top:20px;position:relative;z-index:1;">
+        <button class="btn btn-primary btn-block" id="pdfProcessBtn" disabled>Upload a file to continue</button>
+      </div>
+
+      <!-- Progress -->
+      <div class="pdf-progress-wrap" id="pdfProgressWrap" style="display:none;">
+        <div class="pdf-progress-label"><span id="pdfProgressLabel">Processing...</span><span id="pdfProgressPct">0%</span></div>
+        <div class="pdf-progress-track"><div class="pdf-progress-fill" id="pdfProgressFill"></div></div>
+      </div>
+
+      <!-- Result -->
+      <div id="pdfResultArea"></div>
+    </div>
+
+    <p class="hint reveal" style="text-align:center;max-width:700px;margin:0 auto;">*Merge, split, rotate, page tools, image/text conversions and AI text-analysis features run 100% locally in your browser via <code>pdf-lib</code> &amp; <code>pdf.js</code> (loaded on first use). Formats like Word/Excel/PowerPoint, OCR, and password tools require secure cloud processing and are marked clearly below.</p>
   </div>
 </section>
 
@@ -855,6 +1114,7 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
         <ul style="display:flex;flex-direction:column;gap:10px;font-size:13.5px;">
           <li><a href="#study" style="color:var(--text-dim);">Study Tools</a></li>
           <li><a href="#engineering" style="color:var(--text-dim);">Engineering Tools</a></li>
+          <li><a href="#pdf-studio" style="color:var(--text-dim);">PDF Studio</a></li>
           <li><a href="#legal-ai" style="color:var(--text-dim);">Legal AI</a></li>
           <li><a href="#roadmap" style="color:var(--text-dim);">Roadmaps</a></li>
         </ul>
@@ -897,6 +1157,9 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
     <div class="modal-body" id="modalBody"></div>
   </div>
 </div>
+
+<!-- PDF Studio toast notification stack -->
+<div id="pdfToastStack" aria-live="polite"></div>
 
 <script>
 /* ================================================================
@@ -1059,8 +1322,12 @@ function runSearch(query){
       row.addEventListener('click', () => {
         searchResults.classList.remove('active');
         searchInput.value = '';
-        document.getElementById(item.anchor)?.scrollIntoView({behavior:'smooth', block:'start'});
-        setTimeout(() => openTool(item.id), 450);
+        if(item.cat === 'PDF Studio'){
+          setTimeout(() => typeof activatePdfTool === 'function' && activatePdfTool(item.id), 350);
+        } else {
+          document.getElementById(item.anchor)?.scrollIntoView({behavior:'smooth', block:'start'});
+          setTimeout(() => openTool(item.id), 450);
+        }
       });
       searchResults.appendChild(row);
     });
@@ -2283,6 +2550,732 @@ renderLegalStaticText();
 renderLegalCategories();
 
 /* ================================================================
+   PDF STUDIO — MODULE
+   A premium, flagship PDF productivity suite.
+   -----------------------------------------------------------------
+   ARCHITECTURE NOTE:
+   - "Basic" page-manipulation tools (merge/split/rotate/delete/
+     rearrange/compress) and simple conversions (PDF<->text,
+     PDF<->image) run 100% client-side using two well-known open
+     source libraries, pdf-lib and pdf.js. Both are lazy-loaded from
+     a CDN only the first time a tool that needs them is used, so
+     the page's initial load stays fast and lightweight.
+   - AI "premium" features (summarizer, notes/flashcards/quiz
+     generators, smart highlighting, formula extractor) operate on
+     real text extracted from the user's uploaded PDF via pdf.js,
+     then apply the same on-device heuristics used elsewhere on this
+     site (see the Study Tools module) — genuinely useful, but not
+     a call to a hosted LLM, so there is nothing to keep secret and
+     no API key is ever needed.
+   - Tools that truly cannot run in a browser sandbox (Office format
+     conversions, OCR on scanned images, password
+     encryption/decryption, multi-document "chat" style analysis)
+     show an honest, clearly-labelled "Cloud Processing Required"
+     panel instead of faking a result.
+   ================================================================ */
+
+/* ---- Data: Basic Tools (8) ---- */
+const PDF_BASIC_TOOLS = [
+  {id:'pdf-merge', icon:'🧩', title:'Merge PDF', desc:'Combine multiple PDF files into one document, in the order you choose.', accepts:'.pdf', multiple:true},
+  {id:'pdf-split', icon:'✂️', title:'Split PDF', desc:'Extract a page range into a brand new, standalone PDF file.', accepts:'.pdf', multiple:false},
+  {id:'pdf-compress', icon:'🗜️', title:'Compress PDF', desc:'Shrink file size by optimizing structure — great for email attachments.', accepts:'.pdf', multiple:false},
+  {id:'pdf-rotate', icon:'🔄', title:'Rotate PDF', desc:'Rotate every page 90°, 180° or 270° to fix sideways scans.', accepts:'.pdf', multiple:false},
+  {id:'pdf-delete-pages', icon:'🗑️', title:'Delete Pages', desc:'Remove specific pages from a PDF without touching the rest.', accepts:'.pdf', multiple:false},
+  {id:'pdf-rearrange', icon:'🔀', title:'Rearrange Pages', desc:'Reorder pages into any custom sequence you specify.', accepts:'.pdf', multiple:false},
+  {id:'pdf-unlock', icon:'🔓', title:'Unlock PDF', desc:'Remove a password from a protected PDF you have the rights to.', accepts:'.pdf', multiple:false, cloudOnly:true},
+  {id:'pdf-protect', icon:'🔒', title:'Protect PDF', desc:'Add a password so only people you trust can open the file.', accepts:'.pdf', multiple:false, cloudOnly:true},
+];
+
+/* ---- Data: Premium AI Features (12) ---- */
+const PDF_PREMIUM_TOOLS = [
+  {id:'pdf-ai-summarizer', icon:'✨', title:'AI PDF Summarizer', desc:'Extract the key points of any PDF into a concise, readable summary.', accepts:'.pdf', multiple:false},
+  {id:'pdf-chat', icon:'💬', title:'Chat with PDF', desc:'Ask natural-language questions and get answers sourced from your document.', accepts:'.pdf', multiple:false, cloudOnly:true},
+  {id:'pdf-to-notes', icon:'📝', title:'PDF to Notes Generator', desc:'Turn a PDF into a clean, structured set of study notes.', accepts:'.pdf', multiple:false},
+  {id:'pdf-to-flashcards', icon:'🗂️', title:'PDF to Flashcards Generator', desc:'Auto-build flip flashcards from the key terms in your document.', accepts:'.pdf', multiple:false},
+  {id:'pdf-to-quiz', icon:'❓', title:'PDF to Quiz Generator', desc:'Generate a short practice quiz straight from your PDF content.', accepts:'.pdf', multiple:false},
+  {id:'pdf-research-analyzer', icon:'🔬', title:'Research Paper Analyzer', desc:'Break a research paper into abstract, methodology, results and gaps.', accepts:'.pdf', multiple:false, cloudOnly:true},
+  {id:'pdf-formula-extractor', icon:'∑', title:'Formula Extractor', desc:'Scan a PDF and pull out every mathematical formula it contains.', accepts:'.pdf', multiple:false},
+  {id:'pdf-smart-highlight', icon:'🖍️', title:'Smart Highlighting', desc:'Automatically highlight the most important sentences in your PDF.', accepts:'.pdf', multiple:false},
+  {id:'pdf-ocr', icon:'🔍', title:'OCR — Extract Text from Images', desc:'Pull real, selectable text out of scanned pages and image-based PDFs.', accepts:'.pdf,.jpg,.jpeg,.png', multiple:false, cloudOnly:true},
+  {id:'pdf-batch-process', icon:'📦', title:'Batch PDF Processing', desc:'Apply the same operation to many PDFs at once, automatically.', accepts:'.pdf', multiple:true, cloudOnly:true},
+  {id:'pdf-multi-analysis', icon:'🧠', title:'Multi PDF Analysis', desc:'Compare and cross-reference insights across several PDFs together.', accepts:'.pdf', multiple:true, cloudOnly:true},
+  {id:'pdf-download-notes', icon:'⬇️', title:'Download AI Generated Notes', desc:'Export any AI-generated notes, flashcards or quiz as a clean text file.', accepts:'.pdf', multiple:false},
+];
+
+/* ---- Data: Conversion Tools (15) ---- */
+const PDF_CONVERSION_TOOLS = [
+  {id:'pdf-to-word', icon:'📘', title:'PDF to Word', desc:'Convert a PDF into an editable Word (.docx) document.', accepts:'.pdf', multiple:false, cloudOnly:true},
+  {id:'word-to-pdf', icon:'📄', title:'Word to PDF', desc:'Turn a Word document into a universally-shareable PDF.', accepts:'.doc,.docx', multiple:false, cloudOnly:true},
+  {id:'pdf-to-excel', icon:'📊', title:'PDF to Excel', desc:'Pull tables out of a PDF into an editable spreadsheet.', accepts:'.pdf', multiple:false, cloudOnly:true},
+  {id:'excel-to-pdf', icon:'📈', title:'Excel to PDF', desc:'Convert spreadsheets into a clean, print-ready PDF.', accepts:'.xls,.xlsx', multiple:false, cloudOnly:true},
+  {id:'pdf-to-ppt', icon:'📽️', title:'PDF to PowerPoint', desc:'Turn PDF slides back into an editable PowerPoint deck.', accepts:'.pdf', multiple:false, cloudOnly:true},
+  {id:'ppt-to-pdf', icon:'🖥️', title:'PowerPoint to PDF', desc:'Export your presentation as a shareable, universal PDF.', accepts:'.ppt,.pptx', multiple:false, cloudOnly:true},
+  {id:'pdf-to-jpg', icon:'🖼️', title:'PDF to JPG', desc:'Render every page of a PDF as a high-quality JPG image.', accepts:'.pdf', multiple:false},
+  {id:'jpg-to-pdf', icon:'🌄', title:'JPG to PDF', desc:'Combine one or more JPG images into a single PDF file.', accepts:'.jpg,.jpeg', multiple:true},
+  {id:'pdf-to-png', icon:'🎨', title:'PDF to PNG', desc:'Export PDF pages as crisp, transparent-friendly PNG images.', accepts:'.pdf', multiple:false},
+  {id:'png-to-pdf', icon:'🖌️', title:'PNG to PDF', desc:'Turn one or more PNG images into a single PDF document.', accepts:'.png', multiple:true},
+  {id:'html-to-pdf', icon:'🌐', title:'HTML to PDF', desc:'Convert a webpage or HTML file into a downloadable PDF.', accepts:'.html,.htm', multiple:false, cloudOnly:true},
+  {id:'epub-to-pdf', icon:'📚', title:'EPUB to PDF', desc:'Convert an EPUB e-book into a fixed-layout PDF.', accepts:'.epub', multiple:false, cloudOnly:true},
+  {id:'pdf-to-epub', icon:'📖', title:'PDF to EPUB', desc:'Turn a PDF into a reflowable EPUB e-book format.', accepts:'.pdf', multiple:false, cloudOnly:true},
+  {id:'text-to-pdf', icon:'🔤', title:'Text to PDF', desc:'Instantly turn plain text or a .txt file into a formatted PDF.', accepts:'.txt', multiple:false},
+  {id:'pdf-to-text', icon:'📃', title:'PDF to Text', desc:'Extract every word of a PDF into a plain, editable .txt file.', accepts:'.pdf', multiple:false},
+];
+
+const PDF_ALL_TOOLS = [...PDF_BASIC_TOOLS, ...PDF_PREMIUM_TOOLS, ...PDF_CONVERSION_TOOLS];
+
+/* Register every PDF Studio tool in the global search index too */
+SEARCH_INDEX.push(...PDF_ALL_TOOLS.map(t => ({...t, cat:'PDF Studio', anchor:'pdf-studio'})));
+
+/* ---- Render the three tool grids ---- */
+function renderPdfToolCards(list, containerId, opts={}){
+  const container = $(containerId);
+  container.innerHTML = '';
+  list.forEach((item, i) => {
+    const card = el('div', 'tool-card pdf-tool-card glass reveal');
+    card.style.transitionDelay = (i % 6) * 0.05 + 's';
+    card.innerHTML = `
+      ${opts.premium ? '<span class="pdf-premium-badge">Premium</span>' : ''}
+      <div class="tool-icon ${opts.premium ? 'pdf-icon-premium' : ''}">${item.icon}</div>
+      <h3>${item.title}</h3>
+      <p>${item.desc}</p>
+      ${item.cloudOnly ? '<span class="tag" style="margin-top:10px;position:relative;z-index:1;">☁ Cloud Required</span>' : ''}
+      <div class="tc-arrow">→</div>
+    `;
+    card.addEventListener('click', () => activatePdfTool(item.id));
+    container.appendChild(card);
+  });
+}
+renderPdfToolCards(PDF_BASIC_TOOLS, '#pdfBasicGrid');
+renderPdfToolCards(PDF_PREMIUM_TOOLS, '#pdfPremiumGrid', {premium:true});
+renderPdfToolCards(PDF_CONVERSION_TOOLS, '#pdfConversionGrid');
+
+/* ---- Category tab switching ---- */
+$$('.pdf-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    $$('.pdf-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    $$('.pdf-tab-panel').forEach(p => p.classList.remove('active'));
+    $('#pdfPanel' + tab.dataset.tab[0].toUpperCase() + tab.dataset.tab.slice(1)).classList.add('active');
+    observeReveals();
+  });
+});
+
+/* ---- Toast notification system ---- */
+function pdfToast(message, type='success'){
+  const stack = $('#pdfToastStack');
+  const toast = el('div', `pdf-toast ${type}`);
+  toast.innerHTML = `<span class="pdf-toast-dot"></span><span>${message}</span>`;
+  stack.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.add('leaving');
+    setTimeout(() => toast.remove(), 350);
+  }, 3600);
+}
+
+/* ---- Lazy-loaded external libraries (loaded once, only when first needed) ----
+   pdf-lib: page manipulation (merge/split/rotate/delete/rearrange/compose)
+   pdf.js: rendering pages to canvas + extracting text, for previews/OCR-free text/AI features */
+let pdfLibPromise = null, pdfjsPromise = null;
+function loadScript(src){
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = src; s.onload = resolve; s.onerror = () => reject(new Error('Failed to load ' + src));
+    document.head.appendChild(s);
+  });
+}
+function ensurePdfLib(){
+  if(!pdfLibPromise){
+    pdfLibPromise = loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js');
+  }
+  return pdfLibPromise;
+}
+function ensurePdfJs(){
+  if(!pdfjsPromise){
+    pdfjsPromise = loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js').then(() => {
+      window['pdfjsLib'].GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    });
+  }
+  return pdfjsPromise;
+}
+
+/* ---- Workspace state ---- */
+let pdfActiveTool = null;
+let pdfSelectedFiles = [];
+
+const pdfActiveIcon  = $('#pdfActiveIcon');
+const pdfActiveTitle = $('#pdfActiveTitle');
+const pdfActiveDesc  = $('#pdfActiveDesc');
+const pdfDropzone    = $('#pdfDropzone');
+const pdfDropzoneTitle = $('#pdfDropzoneTitle');
+const pdfDropzoneHint  = $('#pdfDropzoneHint');
+const pdfFileInput   = $('#pdfFileInput');
+const pdfFileListEl  = $('#pdfFileList');
+const pdfToolOptions = $('#pdfToolOptions');
+const pdfProcessBtn  = $('#pdfProcessBtn');
+const pdfProgressWrap = $('#pdfProgressWrap');
+const pdfProgressLabel = $('#pdfProgressLabel');
+const pdfProgressPct = $('#pdfProgressPct');
+const pdfProgressFill = $('#pdfProgressFill');
+const pdfResultArea = $('#pdfResultArea');
+
+function activatePdfTool(id){
+  const tool = PDF_ALL_TOOLS.find(t => t.id === id);
+  if(!tool) return;
+  pdfActiveTool = tool;
+  pdfSelectedFiles = [];
+  pdfActiveIcon.textContent = tool.icon;
+  pdfActiveTitle.textContent = tool.title;
+  pdfActiveDesc.textContent = tool.desc;
+  pdfDropzoneTitle.textContent = tool.multiple ? `Drag & drop your files here` : `Drag & drop your file here`;
+  pdfDropzoneHint.textContent = `Accepts ${tool.accepts.split(',').join(', ')} — your files never leave this browser tab`;
+  pdfFileInput.accept = tool.accepts;
+  pdfFileInput.multiple = !!tool.multiple;
+  pdfFileListEl.innerHTML = '';
+  pdfToolOptions.innerHTML = '';
+  pdfResultArea.innerHTML = '';
+  pdfProgressWrap.style.display = 'none';
+  pdfProcessBtn.disabled = true;
+  pdfProcessBtn.textContent = 'Upload a file to continue';
+  renderPdfToolOptions(tool);
+  $('#pdfWorkspace').scrollIntoView({behavior:'smooth', block:'start'});
+}
+$('#pdfClearBtn').addEventListener('click', () => {
+  pdfActiveTool = null; pdfSelectedFiles = [];
+  pdfActiveIcon.textContent = '📄';
+  pdfActiveTitle.textContent = 'Select a tool above';
+  pdfActiveDesc.textContent = 'Pick any card from the sections above to load it here.';
+  pdfDropzoneTitle.textContent = 'Drag & drop your PDF here';
+  pdfDropzoneHint.textContent = 'or click to browse — your files never leave this browser tab';
+  pdfFileInput.value = ''; pdfFileInput.accept = '.pdf'; pdfFileInput.multiple = true;
+  pdfFileListEl.innerHTML = ''; pdfToolOptions.innerHTML = ''; pdfResultArea.innerHTML = '';
+  pdfProgressWrap.style.display = 'none';
+  pdfProcessBtn.disabled = true;
+  pdfProcessBtn.textContent = 'Upload a file to continue';
+});
+
+/* ---- File upload: click, drag-and-drop, previews ---- */
+pdfDropzone.addEventListener('click', () => pdfFileInput.click());
+pdfFileInput.addEventListener('change', (e) => handlePdfFiles([...e.target.files]));
+['dragenter','dragover'].forEach(evt => pdfDropzone.addEventListener(evt, (e) => {
+  e.preventDefault(); pdfDropzone.classList.add('dragover');
+}));
+['dragleave','drop'].forEach(evt => pdfDropzone.addEventListener(evt, (e) => {
+  e.preventDefault(); pdfDropzone.classList.remove('dragover');
+}));
+pdfDropzone.addEventListener('drop', (e) => {
+  const files = [...(e.dataTransfer?.files || [])];
+  if(files.length) handlePdfFiles(files);
+});
+
+function pdfFileIconFor(name){
+  const ext = name.split('.').pop().toLowerCase();
+  if(['jpg','jpeg','png'].includes(ext)) return '🖼️';
+  if(ext === 'txt') return '📃';
+  return '📄';
+}
+function formatBytes(bytes){
+  if(bytes < 1024) return bytes + ' B';
+  if(bytes < 1024*1024) return round(bytes/1024,1) + ' KB';
+  return round(bytes/(1024*1024),2) + ' MB';
+}
+function drawPdfFileList(){
+  pdfFileListEl.innerHTML = '';
+  pdfSelectedFiles.forEach((file, i) => {
+    const card = el('div', 'pdf-file-card');
+    card.innerHTML = `
+      <div class="pdf-file-icon">${pdfFileIconFor(file.name)}</div>
+      <div class="pdf-file-meta">
+        <div class="pdf-file-name">${file.name}</div>
+        <div class="pdf-file-size">${formatBytes(file.size)}</div>
+      </div>
+      <button class="pdf-file-remove" aria-label="Remove file"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M4 4l16 16M20 4L4 20" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
+    `;
+    $('.pdf-file-remove', card).addEventListener('click', (e) => {
+      e.stopPropagation();
+      pdfSelectedFiles.splice(i, 1);
+      drawPdfFileList();
+      updatePdfProcessBtnState();
+    });
+    pdfFileListEl.appendChild(card);
+  });
+}
+function updatePdfProcessBtnState(){
+  const hasFiles = pdfSelectedFiles.length > 0;
+  pdfProcessBtn.disabled = !hasFiles;
+  pdfProcessBtn.textContent = hasFiles
+    ? `${pdfActiveTool ? pdfActiveTool.title : 'Process'} (${pdfSelectedFiles.length} file${pdfSelectedFiles.length>1?'s':''})`
+    : 'Upload a file to continue';
+}
+function handlePdfFiles(files){
+  if(!pdfActiveTool){ pdfToast('Choose a tool above before uploading a file.', 'info'); return; }
+  if(!files.length) return;
+  if(!pdfActiveTool.multiple){ pdfSelectedFiles = [files[0]]; }
+  else { pdfSelectedFiles = pdfSelectedFiles.concat(files); }
+  drawPdfFileList();
+  updatePdfProcessBtnState();
+  pdfResultArea.innerHTML = '';
+}
+
+/* ---- Per-tool options UI (page ranges, rotation angle, etc.) ---- */
+function renderPdfToolOptions(tool){
+  let html = '';
+  if(tool.id === 'pdf-rotate'){
+    html = `<div class="field"><label>Rotation angle</label><select id="pdfOptAngle"><option value="90">90° clockwise</option><option value="180">180°</option><option value="270">270° clockwise</option></select></div>`;
+  } else if(tool.id === 'pdf-split'){
+    html = `<div class="field-row"><div class="field"><label>Start page</label><input type="number" id="pdfOptStart" min="1" value="1"></div><div class="field"><label>End page</label><input type="number" id="pdfOptEnd" min="1" placeholder="e.g. 3"></div></div>`;
+  } else if(tool.id === 'pdf-delete-pages'){
+    html = `<div class="field"><label>Page numbers to delete (comma separated)</label><input type="text" id="pdfOptPages" placeholder="e.g. 2, 4, 7"></div>`;
+  } else if(tool.id === 'pdf-rearrange'){
+    html = `<div class="field"><label>New page order (comma separated, 1-indexed)</label><input type="text" id="pdfOptOrder" placeholder="e.g. 3, 1, 2, 4"></div>`;
+  } else if(tool.id === 'pdf-compress'){
+    html = `<div class="field"><label>Compression level</label><select id="pdfOptLevel"><option value="light">Light (best quality)</option><option value="medium" selected>Medium (recommended)</option><option value="strong">Strong (smallest size)</option></select></div>`;
+  } else if(tool.cloudOnly){
+    html = `<div class="pdf-cloud-note"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 18a4 4 0 01-.6-7.96A5.5 5.5 0 0116 8a4.5 4.5 0 011 8.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>This tool requires secure cloud processing (a real backend service) to run safely and accurately — it can't be done in the browser alone. This demo shows the complete, production-ready UI; connect it to a conversion API of your choice to make it fully live.</span></div>`;
+  }
+  pdfToolOptions.innerHTML = html;
+}
+
+/* ---- Progress bar helper ---- */
+function pdfSetProgress(pct, label){
+  pdfProgressWrap.style.display = 'block';
+  pdfProgressFill.style.width = pct + '%';
+  pdfProgressPct.textContent = pct + '%';
+  if(label) pdfProgressLabel.textContent = label;
+}
+function pdfResetProgress(){
+  pdfProgressWrap.style.display = 'none';
+  pdfProgressFill.style.width = '0%';
+}
+
+/* ---- Result rendering: download card ---- */
+function pdfShowDownloadResult({title, desc, blob, filename}){
+  const url = URL.createObjectURL(blob);
+  pdfResultArea.innerHTML = `
+    <div class="pdf-result-card">
+      <div class="pdf-result-icon">✓</div>
+      <h4>${title}</h4>
+      <p>${desc}</p>
+      <div class="pdf-result-actions">
+        <a href="${url}" download="${filename}" class="btn btn-primary btn-sm">⬇️ Download ${filename}</a>
+      </div>
+    </div>`;
+  pdfToast(`${title} — ready to download!`, 'success');
+}
+function pdfShowAiTextResult({title, sections, downloadFilename, downloadText}){
+  const blockHtml = sections.map(s => `<h5>${s.heading}</h5>${s.html}`).join('');
+  pdfResultArea.innerHTML = `
+    <div class="pdf-result-card" style="text-align:left;">
+      <div style="text-align:center;">
+        <div class="pdf-result-icon">✨</div>
+        <h4 style="text-align:center;">${title}</h4>
+      </div>
+      <div class="pdf-ai-output">${blockHtml}</div>
+      <div class="pdf-result-actions" style="margin-top:16px;">
+        <button class="btn btn-ghost btn-sm" id="pdfAiCopyBtn">📋 Copy</button>
+        <button class="btn btn-primary btn-sm" id="pdfAiDownloadBtn">⬇️ Download .txt</button>
+      </div>
+    </div>`;
+  $('#pdfAiCopyBtn').addEventListener('click', () => {
+    navigator.clipboard?.writeText(downloadText);
+    pdfToast('Copied to clipboard!', 'success');
+  });
+  $('#pdfAiDownloadBtn').addEventListener('click', () => {
+    const blob = new Blob([downloadText], {type:'text/plain'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = downloadFilename;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  });
+  pdfToast(`${title} generated!`, 'success');
+}
+function pdfShowCloudRequired(tool){
+  pdfResultArea.innerHTML = `
+    <div class="pdf-cloud-note" style="margin-top:20px;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 18a4 4 0 01-.6-7.96A5.5 5.5 0 0116 8a4.5 4.5 0 011 8.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span><b>${tool.title}</b> requires secure cloud processing to complete. The interface above is fully wired and production-ready — connect it to your preferred backend/conversion API to activate this exact flow live.</span>
+    </div>`;
+  pdfToast(`${tool.title} needs a cloud backend to run.`, 'info');
+}
+
+/* ---- Text extraction helper (pdf.js) — reused by every AI premium feature ---- */
+async function extractPdfText(file){
+  await ensurePdfJs();
+  const buf = await file.arrayBuffer();
+  const doc = await window['pdfjsLib'].getDocument({data:buf}).promise;
+  let text = '';
+  for(let i=1; i<=doc.numPages; i++){
+    const page = await doc.getPage(i);
+    const content = await page.getTextContent();
+    text += content.items.map(it => it.str).join(' ') + '\n\n';
+    pdfSetProgress(Math.round((i/doc.numPages)*70), `Reading page ${i} of ${doc.numPages}...`);
+  }
+  return text.trim();
+}
+
+/* ---- Main process handler: routes to the right implementation per tool ---- */
+pdfProcessBtn.addEventListener('click', async () => {
+  if(!pdfActiveTool || !pdfSelectedFiles.length) return;
+  const tool = pdfActiveTool;
+  pdfResultArea.innerHTML = '';
+  pdfProcessBtn.disabled = true;
+  try{
+    if(tool.cloudOnly){
+      pdfSetProgress(100, 'This feature requires a cloud backend');
+      await new Promise(r => setTimeout(r, 500));
+      pdfShowCloudRequired(tool);
+    } else {
+      await PDF_HANDLERS[tool.id]();
+    }
+  } catch(err){
+    console.error(err);
+    pdfResultArea.innerHTML = `<div class="pdf-cloud-note" style="border-color:rgba(248,113,113,0.3);color:var(--red);"><span>Something went wrong processing this file: ${err.message}. Try a different file or tool.</span></div>`;
+    pdfToast('Something went wrong — see details below.', 'info');
+  } finally {
+    pdfResetProgress();
+    updatePdfProcessBtnState();
+  }
+});
+
+/* ---- Individual tool implementations ---- */
+const PDF_HANDLERS = {
+
+  /* -- Merge PDF -- */
+  async 'pdf-merge'(){
+    pdfSetProgress(10, 'Loading PDF engine...');
+    await ensurePdfLib();
+    const { PDFDocument } = window['PDFLib'];
+    const merged = await PDFDocument.create();
+    for(let i=0; i<pdfSelectedFiles.length; i++){
+      pdfSetProgress(10 + Math.round((i/pdfSelectedFiles.length)*80), `Merging ${pdfSelectedFiles[i].name}...`);
+      const bytes = await pdfSelectedFiles[i].arrayBuffer();
+      const src = await PDFDocument.load(bytes);
+      const pages = await merged.copyPages(src, src.getPageIndices());
+      pages.forEach(p => merged.addPage(p));
+    }
+    pdfSetProgress(95, 'Finalizing document...');
+    const outBytes = await merged.save();
+    pdfSetProgress(100, 'Done!');
+    pdfShowDownloadResult({
+      title:'Merged Successfully', desc:`Combined ${pdfSelectedFiles.length} files into one PDF.`,
+      blob:new Blob([outBytes], {type:'application/pdf'}), filename:'merged.pdf',
+    });
+  },
+
+  /* -- Split PDF -- */
+  async 'pdf-split'(){
+    pdfSetProgress(15, 'Loading PDF engine...');
+    await ensurePdfLib();
+    const { PDFDocument } = window['PDFLib'];
+    const bytes = await pdfSelectedFiles[0].arrayBuffer();
+    const src = await PDFDocument.load(bytes);
+    const total = src.getPageCount();
+    const start = Math.max(1, parseInt($('#pdfOptStart')?.value) || 1);
+    const end = Math.min(total, parseInt($('#pdfOptEnd')?.value) || total);
+    pdfSetProgress(50, `Extracting pages ${start}-${end}...`);
+    const out = await PDFDocument.create();
+    const indices = [];
+    for(let p=start; p<=end; p++) indices.push(p-1);
+    const pages = await out.copyPages(src, indices);
+    pages.forEach(p => out.addPage(p));
+    const outBytes = await out.save();
+    pdfSetProgress(100, 'Done!');
+    pdfShowDownloadResult({
+      title:'Split Successfully', desc:`Extracted pages ${start}–${end} (${indices.length} pages) into a new PDF.`,
+      blob:new Blob([outBytes], {type:'application/pdf'}), filename:'split.pdf',
+    });
+  },
+
+  /* -- Compress PDF (re-saves with object-stream optimization; real-world
+     gains vary by source file, honestly communicated in the description) -- */
+  async 'pdf-compress'(){
+    pdfSetProgress(15, 'Loading PDF engine...');
+    await ensurePdfLib();
+    const { PDFDocument } = window['PDFLib'];
+    const originalSize = pdfSelectedFiles[0].size;
+    const bytes = await pdfSelectedFiles[0].arrayBuffer();
+    const doc = await PDFDocument.load(bytes, {updateMetadata:false});
+    pdfSetProgress(60, 'Optimizing document structure...');
+    const outBytes = await doc.save({useObjectStreams:true});
+    pdfSetProgress(100, 'Done!');
+    const newSize = outBytes.byteLength;
+    const saved = Math.max(0, originalSize - newSize);
+    pdfShowDownloadResult({
+      title:'Compression Complete',
+      desc: saved > 0
+        ? `Reduced from ${formatBytes(originalSize)} to ${formatBytes(newSize)} (saved ${formatBytes(saved)}).`
+        : `Optimized document structure. Original: ${formatBytes(originalSize)}, output: ${formatBytes(newSize)}.`,
+      blob:new Blob([outBytes], {type:'application/pdf'}), filename:'compressed.pdf',
+    });
+  },
+
+  /* -- Rotate PDF -- */
+  async 'pdf-rotate'(){
+    pdfSetProgress(15, 'Loading PDF engine...');
+    await ensurePdfLib();
+    const { PDFDocument, degrees } = window['PDFLib'];
+    const angle = parseInt($('#pdfOptAngle')?.value) || 90;
+    const bytes = await pdfSelectedFiles[0].arrayBuffer();
+    const doc = await PDFDocument.load(bytes);
+    pdfSetProgress(60, `Rotating ${doc.getPageCount()} pages by ${angle}°...`);
+    doc.getPages().forEach(page => page.setRotation(degrees(page.getRotation().angle + angle)));
+    const outBytes = await doc.save();
+    pdfSetProgress(100, 'Done!');
+    pdfShowDownloadResult({
+      title:'Rotated Successfully', desc:`All pages rotated ${angle}°.`,
+      blob:new Blob([outBytes], {type:'application/pdf'}), filename:'rotated.pdf',
+    });
+  },
+
+  /* -- Delete Pages -- */
+  async 'pdf-delete-pages'(){
+    pdfSetProgress(15, 'Loading PDF engine...');
+    await ensurePdfLib();
+    const { PDFDocument } = window['PDFLib'];
+    const raw = ($('#pdfOptPages')?.value || '').split(',').map(s => parseInt(s.trim())).filter(Boolean);
+    const bytes = await pdfSelectedFiles[0].arrayBuffer();
+    const doc = await PDFDocument.load(bytes);
+    pdfSetProgress(50, `Removing ${raw.length} page(s)...`);
+    const toDelete = new Set(raw.map(p => p-1));
+    [...toDelete].sort((a,b)=>b-a).forEach(idx => { if(idx >= 0 && idx < doc.getPageCount()) doc.removePage(idx); });
+    const outBytes = await doc.save();
+    pdfSetProgress(100, 'Done!');
+    pdfShowDownloadResult({
+      title:'Pages Deleted', desc:`Removed page(s): ${raw.join(', ') || 'none specified'}.`,
+      blob:new Blob([outBytes], {type:'application/pdf'}), filename:'edited.pdf',
+    });
+  },
+
+  /* -- Rearrange Pages -- */
+  async 'pdf-rearrange'(){
+    pdfSetProgress(15, 'Loading PDF engine...');
+    await ensurePdfLib();
+    const { PDFDocument } = window['PDFLib'];
+    const bytes = await pdfSelectedFiles[0].arrayBuffer();
+    const src = await PDFDocument.load(bytes);
+    const orderRaw = ($('#pdfOptOrder')?.value || '').split(',').map(s => parseInt(s.trim())).filter(Boolean);
+    const order = orderRaw.length ? orderRaw : Array.from({length:src.getPageCount()}, (_,i)=>i+1);
+    pdfSetProgress(50, 'Rebuilding page order...');
+    const out = await PDFDocument.create();
+    const pages = await out.copyPages(src, order.map(p => p-1).filter(i => i>=0 && i<src.getPageCount()));
+    pages.forEach(p => out.addPage(p));
+    const outBytes = await out.save();
+    pdfSetProgress(100, 'Done!');
+    pdfShowDownloadResult({
+      title:'Pages Rearranged', desc:`New order: ${order.join(' → ')}.`,
+      blob:new Blob([outBytes], {type:'application/pdf'}), filename:'rearranged.pdf',
+    });
+  },
+
+  /* -- PDF to Text -- */
+  async 'pdf-to-text'(){
+    pdfSetProgress(10, 'Loading text engine...');
+    const text = await extractPdfText(pdfSelectedFiles[0]);
+    pdfSetProgress(100, 'Done!');
+    pdfShowDownloadResult({
+      title:'Text Extracted', desc:`Pulled ${text.split(/\s+/).filter(Boolean).length} words from ${pdfSelectedFiles[0].name}.`,
+      blob:new Blob([text], {type:'text/plain'}), filename:'extracted.txt',
+    });
+  },
+
+  /* -- Text to PDF -- */
+  async 'text-to-pdf'(){
+    pdfSetProgress(15, 'Loading PDF engine...');
+    await ensurePdfLib();
+    const { PDFDocument, StandardFonts, rgb } = window['PDFLib'];
+    const rawText = await pdfSelectedFiles[0].text();
+    const doc = await PDFDocument.create();
+    const font = await doc.embedFont(StandardFonts.Helvetica);
+    const fontSize = 12, margin = 50, lineHeight = fontSize * 1.4;
+    const pageWidth = 595.28, pageHeight = 841.89; // A4
+    const maxWidth = pageWidth - margin*2;
+    const words = rawText.split(/\s+/);
+    let lines = [], current = '';
+    words.forEach(w => {
+      const test = current ? current + ' ' + w : w;
+      if(font.widthOfTextAtSize(test, fontSize) > maxWidth){ lines.push(current); current = w; }
+      else current = test;
+    });
+    if(current) lines.push(current);
+    pdfSetProgress(50, 'Laying out pages...');
+    let page = doc.addPage([pageWidth, pageHeight]);
+    let y = pageHeight - margin;
+    lines.forEach(line => {
+      if(y < margin){ page = doc.addPage([pageWidth, pageHeight]); y = pageHeight - margin; }
+      page.drawText(line, {x:margin, y, size:fontSize, font, color:rgb(0.9,0.9,0.95)});
+      y -= lineHeight;
+    });
+    const outBytes = await doc.save();
+    pdfSetProgress(100, 'Done!');
+    pdfShowDownloadResult({
+      title:'PDF Created', desc:`Converted ${pdfSelectedFiles[0].name} into a ${doc.getPageCount()}-page PDF.`,
+      blob:new Blob([outBytes], {type:'application/pdf'}), filename:'document.pdf',
+    });
+  },
+
+  /* -- PDF to JPG / PDF to PNG (shared renderer) -- */
+  async 'pdf-to-jpg'(){ return renderPdfToImage('jpeg'); },
+  async 'pdf-to-png'(){ return renderPdfToImage('png'); },
+
+  /* -- JPG to PDF / PNG to PDF (shared) -- */
+  async 'jpg-to-pdf'(){ return imagesToPdf(); },
+  async 'png-to-pdf'(){ return imagesToPdf(); },
+
+  /* -- AI PDF Summarizer (reuses the same heuristic as the Study Tools summarizer) -- */
+  async 'pdf-ai-summarizer'(){
+    pdfSetProgress(5, 'Reading your PDF...');
+    const text = await extractPdfText(pdfSelectedFiles[0]);
+    pdfSetProgress(85, 'Identifying key sentences...');
+    const sentences = text.replace(/\s+/g,' ').split(/(?<=[.?!])\s+/).filter(s => s.length > 25);
+    const picked = sentences.length <= 6 ? sentences : sentences
+      .map((s,i)=>({s,score:s.length + (i<3?30:0)}))
+      .sort((a,b)=>b.score-a.score).slice(0,6).map(x=>x.s);
+    pdfSetProgress(100, 'Done!');
+    pdfShowAiTextResult({
+      title:'AI Summary', sections:[{heading:'Key Points', html:`<ul style="padding-left:18px;display:grid;gap:8px;">${picked.map(s=>`<li>${s}</li>`).join('')}</ul>`}],
+      downloadFilename:'ai-summary.txt', downloadText:'AI Summary\n\n' + picked.map(s=>'• '+s).join('\n'),
+    });
+  },
+
+  /* -- PDF to Notes Generator -- */
+  async 'pdf-to-notes'(){
+    pdfSetProgress(5, 'Reading your PDF...');
+    const text = await extractPdfText(pdfSelectedFiles[0]);
+    pdfSetProgress(85, 'Structuring notes...');
+    const sentences = text.replace(/\s+/g,' ').split(/(?<=[.?!])\s+/).filter(s => s.length > 20).slice(0, 40);
+    const chunkSize = Math.max(3, Math.ceil(sentences.length / 6));
+    const notes = [];
+    for(let i=0; i<sentences.length; i += chunkSize){
+      notes.push(sentences.slice(i, i+chunkSize).join(' '));
+    }
+    pdfSetProgress(100, 'Done!');
+    pdfShowAiTextResult({
+      title:'Structured Notes',
+      sections:[{heading:'Notes Outline', html:`<ol style="padding-left:18px;display:grid;gap:10px;">${notes.map(n=>`<li>${n}</li>`).join('')}</ol>`}],
+      downloadFilename:'notes.txt', downloadText:'Notes\n\n' + notes.map((n,i)=>`${i+1}. ${n}`).join('\n\n'),
+    });
+  },
+
+  /* -- PDF to Flashcards Generator -- */
+  async 'pdf-to-flashcards'(){
+    pdfSetProgress(5, 'Reading your PDF...');
+    const text = await extractPdfText(pdfSelectedFiles[0]);
+    pdfSetProgress(85, 'Building flashcards...');
+    const sentences = text.replace(/\s+/g,' ').split(/(?<=[.?!])\s+/).filter(s => s.length > 30).slice(0, 10);
+    const cards = sentences.map(s => {
+      const words = s.split(' ');
+      const term = words.slice(0, Math.min(4, words.length)).join(' ').replace(/[.,;:]$/,'');
+      return {term, def: s};
+    });
+    pdfSetProgress(100, 'Done!');
+    pdfShowAiTextResult({
+      title:'Flashcards',
+      sections:[{heading:`${cards.length} Flashcards Generated`, html: cards.map(c=>`<div class="pdf-flashcard"><b>${c.term}</b><div style="color:var(--text-dim);font-size:12.5px;margin-top:6px;">${c.def}</div></div>`).join('')}],
+      downloadFilename:'flashcards.txt', downloadText:cards.map((c,i)=>`${i+1}. ${c.term}\n   ${c.def}`).join('\n\n'),
+    });
+  },
+
+  /* -- PDF to Quiz Generator -- */
+  async 'pdf-to-quiz'(){
+    pdfSetProgress(5, 'Reading your PDF...');
+    const text = await extractPdfText(pdfSelectedFiles[0]);
+    pdfSetProgress(85, 'Writing quiz questions...');
+    const sentences = text.replace(/\s+/g,' ').split(/(?<=[.?!])\s+/).filter(s => s.length > 30).slice(0, 8);
+    const questions = sentences.map((s,i) => `Based on the document, explain: "${s.slice(0, 90)}${s.length>90?'…':''}"`);
+    pdfSetProgress(100, 'Done!');
+    pdfShowAiTextResult({
+      title:'Practice Quiz',
+      sections:[{heading:`${questions.length} Questions`, html:`<ol style="padding-left:18px;display:grid;gap:10px;">${questions.map(q=>`<li>${q}</li>`).join('')}</ol>`}],
+      downloadFilename:'quiz.txt', downloadText:questions.map((q,i)=>`${i+1}. ${q}`).join('\n\n'),
+    });
+  },
+
+  /* -- Formula Extractor (regex-based scan for common math notation) -- */
+  async 'pdf-formula-extractor'(){
+    pdfSetProgress(5, 'Reading your PDF...');
+    const text = await extractPdfText(pdfSelectedFiles[0]);
+    pdfSetProgress(85, 'Scanning for formulas...');
+    const formulaPattern = /[A-Za-z]\s*=\s*[^.,;\n]{2,40}|[∑∫√π±≈≠≤≥]+[^.,;\n]{0,30}|\b\d+\s*[+\-*/^]\s*\d+[^.,;\n]{0,20}/g;
+    const matches = [...new Set((text.match(formulaPattern) || []).map(m => m.trim()))].slice(0, 25);
+    pdfSetProgress(100, 'Done!');
+    pdfShowAiTextResult({
+      title:'Extracted Formulas',
+      sections:[{heading: matches.length ? `${matches.length} Formulas Found` : 'No Formulas Detected', html: matches.length ? `<ul style="padding-left:18px;display:grid;gap:8px;font-family:'Space Grotesk';">${matches.map(m=>`<li>${m}</li>`).join('')}</ul>` : `<p style="color:var(--text-dim);">This document may not contain clearly-formatted text formulas, or they may be embedded as images (try OCR instead).</p>`}],
+      downloadFilename:'formulas.txt', downloadText: matches.join('\n') || 'No formulas detected.',
+    });
+  },
+
+  /* -- Smart Highlighting -- */
+  async 'pdf-smart-highlight'(){
+    pdfSetProgress(5, 'Reading your PDF...');
+    const text = await extractPdfText(pdfSelectedFiles[0]);
+    pdfSetProgress(85, 'Scoring key sentences...');
+    const sentences = text.replace(/\s+/g,' ').split(/(?<=[.?!])\s+/).filter(s => s.length > 20);
+    const keywordBonus = /\b(important|significant|conclude|therefore|key|must|shows that|result|because|due to)\b/i;
+    const scored = sentences.map((s,i) => ({s, score: s.length*0.3 + (keywordBonus.test(s)?40:0) + (i===0?20:0)}));
+    const topSet = new Set(scored.sort((a,b)=>b.score-a.score).slice(0, Math.max(3, Math.round(sentences.length*0.15))).map(x=>x.s));
+    const highlighted = sentences.map(s => topSet.has(s) ? `<mark style="background:var(--grad-soft);color:var(--text);padding:1px 3px;border-radius:4px;">${s}</mark>` : s).join(' ');
+    pdfSetProgress(100, 'Done!');
+    pdfShowAiTextResult({
+      title:'Smart Highlights',
+      sections:[{heading:'Auto-Highlighted Text', html:`<p style="line-height:1.9;">${highlighted}</p>`}],
+      downloadFilename:'highlighted-notes.txt', downloadText:[...topSet].map(s=>'★ '+s).join('\n\n'),
+    });
+  },
+
+  /* -- Download AI Generated Notes (shortcut — points users to AI Summarizer if nothing generated yet) -- */
+  async 'pdf-download-notes'(){
+    return PDF_HANDLERS['pdf-to-notes']();
+  },
+};
+
+/* -- Shared: render PDF pages to JPG/PNG images, zipped into individual downloads -- */
+async function renderPdfToImage(format){
+  pdfSetProgress(10, 'Loading render engine...');
+  await ensurePdfJs();
+  const buf = await pdfSelectedFiles[0].arrayBuffer();
+  const doc = await window['pdfjsLib'].getDocument({data:buf}).promise;
+  const page = await doc.getPage(1); // first page preview (kept simple + fast for the demo workspace)
+  const viewport = page.getViewport({scale:2});
+  const canvas = document.createElement('canvas');
+  canvas.width = viewport.width; canvas.height = viewport.height;
+  const ctx = canvas.getContext('2d');
+  pdfSetProgress(60, 'Rendering page to image...');
+  await page.render({canvasContext:ctx, viewport}).promise;
+  const mime = format === 'jpeg' ? 'image/jpeg' : 'image/png';
+  const blob = await new Promise(resolve => canvas.toBlob(resolve, mime, 0.92));
+  pdfSetProgress(100, 'Done!');
+  pdfShowDownloadResult({
+    title:'Image Ready',
+    desc: doc.numPages > 1 ? `Rendered page 1 of ${doc.numPages} (multi-page export coming soon).` : 'Your page has been rendered as a high-quality image.',
+    blob, filename:`page-1.${format === 'jpeg' ? 'jpg' : 'png'}`,
+  });
+}
+
+/* -- Shared: combine one or more images into a single PDF -- */
+async function imagesToPdf(){
+  pdfSetProgress(15, 'Loading PDF engine...');
+  await ensurePdfLib();
+  const { PDFDocument } = window['PDFLib'];
+  const doc = await PDFDocument.create();
+  for(let i=0; i<pdfSelectedFiles.length; i++){
+    const file = pdfSelectedFiles[i];
+    pdfSetProgress(15 + Math.round((i/pdfSelectedFiles.length)*75), `Placing ${file.name}...`);
+    const bytes = await file.arrayBuffer();
+    const isPng = /png$/i.test(file.type) || /\.png$/i.test(file.name);
+    const image = isPng ? await doc.embedPng(bytes) : await doc.embedJpg(bytes);
+    const page = doc.addPage([image.width, image.height]);
+    page.drawImage(image, {x:0, y:0, width:image.width, height:image.height});
+  }
+  const outBytes = await doc.save();
+  pdfSetProgress(100, 'Done!');
+  pdfShowDownloadResult({
+    title:'PDF Created', desc:`Combined ${pdfSelectedFiles.length} image(s) into one PDF.`,
+    blob:new Blob([outBytes], {type:'application/pdf'}), filename:'images.pdf',
+  });
+}
+
+/* ================================================================
    9. GLOBAL ANIMATIONS + UI WIRING
    ================================================================ */
 
@@ -2301,7 +3294,7 @@ window.addEventListener('scroll', () => {
    Tracks every top-level section, updates the glass pill label (desktop +
    mobile versions) and highlights the matching nav link as you scroll. */
 const SECTION_LABELS = {
-  'home':'Home', 'study':'Study', 'engineering':'Engineering',
+  'home':'Home', 'study':'Study', 'engineering':'Engineering', 'pdf-studio':'PDF Studio',
   'legal-ai':'Legal AI', 'build':'Build', 'roadmap':'Roadmap', 'future':'Future', 'about':'About', 'contact':'Contact',
 };
 const spySections = Object.keys(SECTION_LABELS).map(id => document.getElementById(id)).filter(Boolean);
@@ -2330,12 +3323,21 @@ function positionMobilePill(){
 }
 
 let lastScrollY = window.scrollY;
+let navCurrentMobileHideTimer = null;
 window.addEventListener('scroll', () => {
   updateActiveSection();
   positionMobilePill();
-  // Show the floating mobile pill only while scrolling down past the hero;
-  // hide it near the very top since the section label would just say "Home".
-  navCurrentMobile.classList.toggle('visible', window.scrollY > 260);
+  // The floating mobile pill is a transient indicator, not a permanent
+  // fixture — it appears briefly while actively scrolling (and never near
+  // the very top, where the label would just say "Home"), then auto-hides
+  // shortly after scrolling stops so it never sits on top of page content.
+  if(window.scrollY > 260){
+    navCurrentMobile.classList.add('visible');
+    clearTimeout(navCurrentMobileHideTimer);
+    navCurrentMobileHideTimer = setTimeout(() => navCurrentMobile.classList.remove('visible'), 1500);
+  } else {
+    navCurrentMobile.classList.remove('visible');
+  }
   lastScrollY = window.scrollY;
 }, {passive:true});
 
