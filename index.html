@@ -750,6 +750,24 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 .medi-attach-btn:hover{color:var(--cyan-soft);}
 .medi-attach-btn input[type=file]{display:none;}
 
+/* Uploaded photo/report preview chips — small, consistent thumbnails
+   (never a raw full-size image render) so upload previews stay tidy
+   regardless of the source photo's own aspect ratio or color treatment. */
+.medi-image-preview{display:flex;flex-wrap:wrap;gap:10px;position:relative;z-index:1;margin-top:14px;}
+.medi-image-thumb{
+  position:relative;width:72px;height:72px;border-radius:14px;overflow:hidden;flex-shrink:0;
+  background:var(--glass-bg);border:1px solid var(--glass-border);
+  backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
+}
+.medi-image-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.medi-image-thumb button{
+  position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;
+  background:rgba(4,4,8,0.65);border:1px solid rgba(255,255,255,0.15);color:#fff;
+  font-size:11px;line-height:1;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;backdrop-filter:blur(4px);transition:background .2s;
+}
+.medi-image-thumb button:hover{background:rgba(220,60,60,0.75);}
+
 /* Conversational follow-up card (asked before the final report) */
 .medi-followup{
   max-width:920px;margin:0 auto 32px;padding:28px;position:relative;z-index:1;
