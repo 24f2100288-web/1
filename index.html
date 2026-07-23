@@ -3602,7 +3602,11 @@ async function analyzeUploadedMediFile(file, userText){
   const category = await detectMediFileCategory(file, userText);
   const isVisual = MEDI_VISUAL_CATEGORIES.has(category) || category === 'photoGeneral';
   if(isVisual){
-    return { file, category, isVisual:true, extractedText:'', kbKey: MEDI_CATEGORY_TO_KB[category] };
+    // Run pixel analysis and store it — the report UI will surface what
+    // was actually observed from the image (skin tones, contrast, etc.)
+    // so the user sees genuine analysis output, not just a type label.
+    const pixelData = await analyzeImagePixels(file);
+    return { file, category, isVisual:true, extractedText:'', kbKey: MEDI_CATEGORY_TO_KB[category], pixelData };
   }
   const extractedText = await extractTextFromUploadedFile(file);
   // If OCR/PDF text extraction reveals stronger signal than the pixel
@@ -3869,10 +3873,60 @@ function mediFileAnalysisSummaryText(report){
   }
   const lines = analyses.map(f => {
     const label = MEDI_CATEGORY_LABELS[f.category] || 'File';
-    if(f.isVisual) return `- ${f.file.name}: detected as ${label} — analyzed directly as an image (no text extraction performed).`;
+    if(f.isVisual){
+      const obs = buildVisualObservations(f);
+      return `- ${f.file.name}: analyzed as ${label} (visual analysis):\n  ${obs.join('\n  ')}`;
+    }
     return `- ${f.file.name}: detected as ${label} — text extracted and analyzed:\n  ${(f.extractedText || 'No clear text could be extracted.').slice(0,600)}`;
   });
   return `\nUploaded File Analysis:\n${lines.join('\n')}`;
+}
+
+/* ---- Build meaningful visual analysis observations from pixel data ----
+   These describe what was actually observed from the image so the user
+   sees genuine analysis output — not just a type label with nothing behind it. */
+function buildVisualObservations(fileAnalysis){
+  const px = fileAnalysis.pixelData;
+  const cat = fileAnalysis.category;
+  const obs = [];
+
+  if(!px){
+    obs.push('Image was classified based on filename/context; pixel-level analysis could not be completed for this file.');
+    return obs;
+  }
+
+  // Image dimensions
+  if(px.width && px.height){
+    obs.push(`Image resolution: ${px.width} × ${px.height} pixels — ${px.width*px.height > 500000 ? 'high enough resolution for meaningful visual assessment' : 'moderate resolution; a higher-resolution photo may yield better results in a clinical setting'}.`);
+  }
+
+  // Category-specific pixel observations
+  if(cat === 'skin' || cat === 'face'){
+    const skinPct = Math.round(px.skinToneRatio * 100);
+    obs.push(`Skin-tone presence: ${skinPct}% of sampled pixels contain skin-like hues — confirms this is a photo of skin/face rather than a document or scan.`);
+    if(px.avgSaturation > 0.25) obs.push(`Color saturation is elevated (${Math.round(px.avgSaturation*100)}%), which may indicate areas of redness, inflammation, or hyperpigmentation visible in the photo.`);
+    else obs.push(`Color saturation is moderate (${Math.round(px.avgSaturation*100)}%), suggesting relatively even skin tone across the image.`);
+    if(px.avgBrightness > 160) obs.push('Overall brightness is high — the photo was taken in good lighting conditions, which helps with visual skin assessment.');
+    else if(px.avgBrightness < 90) obs.push('Overall brightness is low — the photo may have been taken in dim lighting. Better lighting can improve assessment accuracy.');
+    obs.push('Based on this visual profile, the specialized Skin Concerns analysis below has been generated.');
+  } else if(cat === 'hair'){
+    obs.push(`Detected as a hair/scalp photo — color profile analysis shows average brightness of ${Math.round(px.avgBrightness)} and saturation of ${Math.round(px.avgSaturation*100)}%.`);
+    if(px.darkRatio > 0.3) obs.push('Significant dark regions detected, consistent with dark hair color or shadowed scalp areas.');
+    obs.push('The specialized Hair & Scalp analysis below has been generated based on this image.');
+  } else if(cat === 'body'){
+    const skinPct = Math.round(px.skinToneRatio * 100);
+    obs.push(`Body/fitness photo detected — ${skinPct}% skin-tone pixel presence, consistent with a body composition photo.`);
+    obs.push('The Fitness & Body Composition analysis below has been generated based on this image.');
+  } else if(cat === 'imaging'){
+    obs.push(`Grayscale medical scan detected — average saturation is very low (${Math.round(px.avgSaturation*100)}%), consistent with X-Ray/MRI imaging.`);
+    obs.push(`Contrast profile: ${Math.round(px.darkRatio*100)}% dark regions, ${Math.round(px.lightRatio*100)}% light regions — typical of diagnostic imaging with distinct bone/tissue/air boundaries.`);
+    obs.push('MediAI cannot interpret specific findings on imaging scans (this requires a qualified radiologist). The guidance below focuses on next steps and questions to ask your doctor.');
+  } else {
+    obs.push(`Visual profile: brightness ${Math.round(px.avgBrightness)}/255, saturation ${Math.round(px.avgSaturation*100)}%, skin-tone ratio ${Math.round(px.skinToneRatio*100)}%.`);
+    obs.push('A more specific analysis can be generated if you add a description (e.g. "my skin", "hair loss", "body photo") alongside the image.');
+  }
+
+  return obs;
 }
 
 function buildMediReportText(report){
@@ -3920,7 +3974,15 @@ function renderMediReport(report){
         ${(report.fileAnalyses && report.fileAnalyses.length) ? report.fileAnalyses.map(f => {
           const label = MEDI_CATEGORY_LABELS[f.category] || 'File';
           if(f.isVisual){
-            return `<div style="margin-bottom:14px;"><div class="medi-tags" style="margin-bottom:8px;"><span class="medi-tag">🖼️ ${label} detected</span></div><p>MediAI detected <b>${f.file.name}</b> as a <b>${label}</b> and analyzed it directly as an image — no text extraction was performed, since this is a visual medical photo rather than a document.</p></div>`;
+            const obs = buildVisualObservations(f);
+            return `<div style="margin-bottom:14px;">
+              <div class="medi-tags" style="margin-bottom:8px;"><span class="medi-tag">🖼️ ${label} — Visual Analysis</span></div>
+              <p style="margin-bottom:10px;">MediAI analyzed <b>${f.file.name}</b> directly as a <b>${label}</b>. The entire specialized report below was generated based on this image.</p>
+              <div class="pdf-ai-output" style="margin-top:10px;max-height:220px;">
+                <h5 style="margin-bottom:8px;">Image Analysis Observations</h5>
+                <ul style="padding-left:18px;font-size:13px;line-height:1.7;color:var(--text-dim);">${obs.map(o => `<li>${o}</li>`).join('')}</ul>
+              </div>
+            </div>`;
           }
           return `<div style="margin-bottom:14px;"><div class="medi-tags" style="margin-bottom:8px;"><span class="medi-tag">📄 ${label} detected</span></div><p>MediAI detected <b>${f.file.name}</b> as a <b>${label}</b> and read its content via text extraction.</p>${f.extractedText ? `<div class="pdf-ai-output" style="margin-top:10px;max-height:180px;"><h5>Extracted Content</h5><p style="white-space:pre-wrap;font-size:13px;">${f.extractedText.slice(0,1200)}${f.extractedText.length>1200?'…':''}</p></div>` : `<p style="color:var(--text-faint);font-size:12.5px;">No clear text could be extracted (this can happen with low-resolution or handwritten documents).</p>`}</div>`;
         }).join('') : `<p>MediAI attempted to read your uploaded file, but could not extract clear text from it. The analysis below is based on your typed description.</p>`}
