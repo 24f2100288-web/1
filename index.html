@@ -1369,9 +1369,9 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
     </a>
     <nav class="nav-links" id="navLinks">
       <a href="#home">Home</a>
+      <a href="#pdf-studio">PDF Studio</a>
       <a href="#study">Study</a>
       <a href="#engineering">Engineering</a>
-      <a href="#pdf-studio">PDF Studio</a>
       <a href="#legal-ai">Legal AI</a>
       <a href="#mediai">MediAI</a>
       <a href="#about">About</a>
@@ -1423,34 +1423,6 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
       <div class="floater glass"><div class="fnum">All-in-One</div><div class="flabel">Student OS</div></div>
       <div class="floater glass"><div class="fnum">Built For</div><div class="flabel">Modern Students</div></div>
     </div>
-  </div>
-</section>
-
-<!-- ============================================================
-     STUDY SECTION
-     ============================================================ -->
-<section class="section" id="study">
-  <div class="container">
-    <div class="section-head reveal">
-      <div class="eyebrow">Study Tools</div>
-      <h2>Study smarter, <span class="gradient-text">not harder</span></h2>
-      <p>Focused tools to help you absorb, organize and retain knowledge faster.</p>
-    </div>
-    <div class="grid grid-cols" id="studyGrid"></div>
-  </div>
-</section>
-
-<!-- ============================================================
-     ENGINEERING TOOLS SECTION
-     ============================================================ -->
-<section class="section" id="engineering">
-  <div class="container">
-    <div class="section-head reveal">
-      <div class="eyebrow">Engineering Tools</div>
-      <h2>Live <span class="gradient-text">electronics calculators</span></h2>
-      <p>Sixteen real, working calculators for circuits, logic and number systems.</p>
-    </div>
-    <div class="grid grid-cols" id="engineeringGrid"></div>
   </div>
 </section>
 
@@ -1542,6 +1514,34 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
     </div>
 
     <p class="hint reveal" style="text-align:center;max-width:700px;margin:0 auto;">*Merge, split, rotate, page tools, image/text conversions and AI text-analysis features run 100% locally in your browser via <code>pdf-lib</code> &amp; <code>pdf.js</code> (loaded on first use). Formats like Word/Excel/PowerPoint, OCR, and password tools require secure cloud processing and are marked clearly below.</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     STUDY SECTION
+     ============================================================ -->
+<section class="section" id="study">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">Study Tools</div>
+      <h2>Study smarter, <span class="gradient-text">not harder</span></h2>
+      <p>Focused tools to help you absorb, organize and retain knowledge faster.</p>
+    </div>
+    <div class="grid grid-cols" id="studyGrid"></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     ENGINEERING TOOLS SECTION
+     ============================================================ -->
+<section class="section" id="engineering">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">Engineering Tools</div>
+      <h2>Live <span class="gradient-text">electronics calculators</span></h2>
+      <p>Sixteen real, working calculators for circuits, logic and number systems.</p>
+    </div>
+    <div class="grid grid-cols" id="engineeringGrid"></div>
   </div>
 </section>
 
@@ -4928,8 +4928,13 @@ window.addEventListener('scroll', () => {
 /* -- "Which section am I on" scroll-spy indicator --
    Tracks every top-level section, updates the glass pill label (desktop +
    mobile versions) and highlights the matching nav link as you scroll. */
+/* Keys are ordered to match the ACTUAL top-to-bottom DOM order of the
+   sections on the page — updateActiveSection() below relies on this
+   order (it walks spySections and breaks on the first one still below
+   the scroll position), so this must stay in sync whenever sections
+   are reordered. */
 const SECTION_LABELS = {
-  'home':'Home', 'study':'Study', 'engineering':'Engineering', 'pdf-studio':'PDF Studio',
+  'home':'Home', 'pdf-studio':'PDF Studio', 'study':'Study', 'engineering':'Engineering',
   'legal-ai':'Legal AI', 'mediai':'MediAI', 'roadmap':'Roadmap', 'future':'Future', 'about':'About', 'creator':'Creator', 'contact':'Contact',
 };
 const spySections = Object.keys(SECTION_LABELS).map(id => document.getElementById(id)).filter(Boolean);
