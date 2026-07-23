@@ -665,6 +665,155 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 }
 
 /* ================================================================
+   MEDIAI — SECTION STYLES
+   A premium AI health-intelligence dashboard. Deliberately mirrors
+   the Legal AI console/report pattern (console → follow-up Q&A →
+   structured report) so the two flagship AI sections feel like the
+   same product. Glassmorphism is reserved for the console, the
+   follow-up card and the AI-generated report — the same restrained
+   distribution used everywhere else on the site.
+   ================================================================ */
+.medi-console{padding:30px;max-width:920px;margin:0 auto 32px;position:relative;overflow:hidden;}
+.medi-console::before{
+  content:'';position:absolute;top:-55%;right:-15%;width:55%;height:200%;
+  background:radial-gradient(circle, rgba(103,232,249,0.10), transparent 65%);pointer-events:none;
+}
+.medi-console-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:16px;position:relative;z-index:1;}
+.medi-console-badge{
+  display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--cyan-soft);
+  padding:7px 14px;border-radius:999px;background:var(--grad-soft);border:1px solid var(--border);
+  backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
+}
+#mediInput{
+  width:100%;min-height:110px;padding:16px 18px;border-radius:14px;background:rgba(255,255,255,0.045);
+  backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
+  border:1px solid var(--border);font-size:15px;color:var(--text);resize:vertical;position:relative;z-index:1;
+  font-family:inherit;line-height:1.6;transition:border-color .25s;
+}
+#mediInput:focus{outline:none;border-color:var(--cyan-soft);}
+.medi-examples{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;position:relative;z-index:1;}
+.medi-console-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;position:relative;z-index:1;}
+.medi-console-meta{font-size:11.5px;color:var(--text-faint);margin-top:10px;position:relative;z-index:1;display:flex;align-items:center;gap:6px;}
+
+/* Optional image upload row inside the console */
+.medi-upload-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;position:relative;z-index:1;}
+.medi-upload-chip{
+  display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:12px;font-size:12.5px;font-weight:600;color:var(--text-dim);
+  background:var(--glass-bg);border:1px solid var(--glass-border);cursor:pointer;transition:.25s;
+  backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
+}
+.medi-upload-chip:hover{color:var(--text);border-color:var(--glass-border-strong);}
+.medi-upload-chip input[type=file]{display:none;}
+.medi-image-preview{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;position:relative;z-index:1;}
+.medi-image-thumb{position:relative;width:64px;height:64px;border-radius:12px;overflow:hidden;border:1px solid var(--glass-border);}
+.medi-image-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.medi-image-thumb button{
+  position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:6px;background:rgba(0,0,0,0.6);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;
+}
+
+/* Conversational follow-up card (asked before the final report) */
+.medi-followup{
+  max-width:920px;margin:0 auto 32px;padding:28px;position:relative;z-index:1;
+  background:var(--glass-bg-strong);border:1px solid var(--glass-border);border-radius:var(--radius);
+  backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
+  box-shadow:var(--glass-shadow-1);
+  animation:fadeUp .4s var(--ease) both;
+}
+.medi-followup-head{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.medi-followup-head .dot-live{background:var(--cyan);box-shadow:none;}
+.medi-followup h4{font-size:15px;font-weight:700;}
+.medi-followup p.medi-followup-sub{font-size:12.5px;color:var(--text-dim);margin-bottom:18px;}
+.medi-question{margin-bottom:16px;}
+.medi-question label{display:block;font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:8px;}
+.medi-question input, .medi-question select{
+  width:100%;padding:11px 14px;border-radius:11px;background:rgba(255,255,255,0.04);
+  border:1px solid var(--glass-border);font-size:14px;color:var(--text);
+}
+.medi-question .medi-chip-options{display:flex;flex-wrap:wrap;gap:8px;}
+.medi-chip-option{
+  padding:8px 14px;border-radius:999px;font-size:13px;font-weight:600;color:var(--text-dim);
+  background:var(--glass-bg);border:1px solid var(--glass-border);cursor:pointer;transition:.2s;
+}
+.medi-chip-option:hover{color:var(--text);border-color:var(--glass-border-strong);}
+.medi-chip-option.selected{background:var(--grad);color:#fff;border-color:transparent;}
+
+/* Report — same structural language as Legal AI, cyan-tinted for MediAI */
+.medi-report{max-width:920px;margin:0 auto 50px;}
+.medi-report-top{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;
+  padding:22px 26px;border-radius:var(--radius) var(--radius) 0 0;
+  background:linear-gradient(135deg, rgba(103,232,249,0.10), rgba(139,92,246,0.10));
+  backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
+  border:1px solid var(--border);border-bottom:none;
+}
+.medi-report-top h3{font-size:18px;font-weight:700;}
+.medi-report-top .mr-sub{font-size:12.5px;color:var(--text-dim);margin-top:3px;}
+.medi-report-actions{
+  display:flex;gap:8px;flex-wrap:wrap;padding:16px 26px;background:var(--glass);
+  backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
+  border:1px solid var(--border);border-top:none;border-bottom:none;
+}
+.medi-report-body{
+  border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);
+  overflow:hidden;background:rgba(255,255,255,0.02);
+  backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
+}
+.medi-section-card{padding:24px 26px;border-bottom:1px solid var(--border);}
+.medi-section-card:last-child{border-bottom:none;}
+.medi-section-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.medi-section-num{
+  width:30px;height:30px;border-radius:10px;background:linear-gradient(135deg, rgba(103,232,249,0.16), rgba(139,92,246,0.16));border:1px solid var(--border);
+  backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
+  display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--cyan-soft);flex-shrink:0;
+}
+.medi-section-head h4{font-size:15px;font-weight:700;}
+.medi-section-card p, .medi-section-card li{font-size:14px;color:var(--text-dim);line-height:1.75;}
+.medi-section-card ul, .medi-section-card ol{padding-left:20px;display:grid;gap:6px;}
+.medi-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+.medi-tag{
+  font-size:12px;padding:6px 12px;border-radius:8px;background:linear-gradient(135deg, rgba(103,232,249,0.12), rgba(139,92,246,0.12));
+  backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
+  border:1px solid var(--border);color:var(--cyan-soft);font-weight:600;
+}
+
+/* Severity meter — Low / Moderate / High / Emergency */
+.medi-severity-track{display:flex;gap:6px;margin-top:10px;}
+.medi-severity-seg{flex:1;height:8px;border-radius:99px;background:var(--glass-bg-strong);}
+.medi-severity-seg.filled-low{background:var(--green);}
+.medi-severity-seg.filled-moderate{background:var(--amber);}
+.medi-severity-seg.filled-high{background:#fb923c;}
+.medi-severity-seg.filled-emergency{background:var(--red);}
+.medi-severity-label{
+  display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;font-size:11.5px;font-weight:700;
+  letter-spacing:.03em;text-transform:uppercase;margin-bottom:10px;
+  backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
+}
+.medi-severity-low{background:rgba(52,211,153,0.14);color:var(--green);border:1px solid rgba(52,211,153,0.3);}
+.medi-severity-moderate{background:rgba(251,191,36,0.14);color:var(--amber);border:1px solid rgba(251,191,36,0.3);}
+.medi-severity-high{background:rgba(251,146,60,0.14);color:#fb923c;border:1px solid rgba(251,146,60,0.3);}
+.medi-severity-emergency{background:rgba(248,113,113,0.16);color:var(--red);border:1px solid rgba(248,113,113,0.35);}
+
+.medi-disclaimer-inline{
+  margin-top:14px;padding:12px 14px;border-radius:10px;background:rgba(251,191,36,0.08);
+  backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
+  border:1px solid rgba(251,191,36,0.25);color:var(--amber);font-size:12.5px;line-height:1.6;
+}
+.medi-disclaimer{
+  max-width:920px;margin:0 auto;padding:22px 26px;text-align:center;font-size:13px;color:var(--text-dim);line-height:1.7;
+}
+.medi-disclaimer b{color:var(--text);}
+
+/* Concern chips (the "special features" list — fitness/skin/sleep/etc.) */
+.medi-concern-card{padding:20px;text-align:center;}
+.medi-concern-card .tool-icon{margin:0 auto 12px;}
+
+@media (max-width:760px){
+  .medi-console-head{flex-direction:column;align-items:flex-start;}
+  .medi-report-top{flex-direction:column;align-items:flex-start;}
+}
+
+/* ================================================================
    PDF STUDIO — SECTION STYLES
    Premium PDF productivity suite: category tabs, drag-and-drop
    workspace, file preview cards, progress bar, toast notifications.
@@ -911,6 +1060,7 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
       <a href="#engineering">Engineering</a>
       <a href="#pdf-studio">PDF Studio</a>
       <a href="#legal-ai">Legal AI</a>
+      <a href="#mediai">MediAI</a>
       <a href="#build">Build</a>
       <a href="#about">About</a>
       <a href="#contact">Contact</a>
@@ -1142,6 +1292,70 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 </section>
 
 <!-- ============================================================
+     MEDIAI SECTION
+     A premium AI-powered health information dashboard — NOT a
+     chatbot, and NOT a doctor. Console input → conversational
+     follow-up questions (when needed) → structured health report.
+     ============================================================ -->
+<section class="section" id="mediai">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">🩺 Health Intelligence</div>
+      <h2>Medi<span class="gradient-text">AI</span></h2>
+      <p id="mediTagline">Understand Your Health. Smarter.</p>
+    </div>
+
+    <!-- Console: describe your health concern naturally -->
+    <div class="medi-console glass reveal">
+      <div class="medi-console-head">
+        <div class="medi-console-badge">🧠 AI Health Analysis Engine</div>
+      </div>
+      <textarea id="mediInput" placeholder="Describe how you're feeling in your own words... e.g. 'I have severe acne for the last two years.'"></textarea>
+      <div class="medi-examples" id="mediExamples"></div>
+
+      <!-- Optional image analysis -->
+      <div class="medi-upload-row">
+        <label class="medi-upload-chip">📷 Add a photo (skin, hair, face)<input type="file" id="mediImageInput" accept="image/*" multiple></label>
+        <label class="medi-upload-chip">📄 Add a medical report or prescription<input type="file" id="mediDocInput" accept="image/*,.pdf" multiple></label>
+      </div>
+      <div class="medi-image-preview" id="mediImagePreview"></div>
+
+      <div class="medi-console-actions">
+        <button class="btn btn-ghost btn-sm" id="mediClearBtn">Clear</button>
+        <button class="btn btn-primary" id="mediAnalyzeBtn">Ask MediAI</button>
+      </div>
+      <div class="medi-console-meta"><span class="dot-live"></span> Educational health information only — not a substitute for a doctor.</div>
+    </div>
+
+    <!-- Conversational follow-up questions (shown only when needed) -->
+    <div class="medi-followup" id="mediFollowup" style="display:none;"></div>
+
+    <!-- Loading state -->
+    <div class="legal-loading glass" id="mediLoading" style="display:none;">
+      <div class="legal-spinner"></div>
+      <p id="mediLoadingText">Analyzing your symptoms...</p>
+      <div class="lstep" id="mediLoadingStep">Cross-referencing common causes</div>
+    </div>
+
+    <!-- Structured AI Health Report -->
+    <div class="medi-report" id="mediReport" style="display:none;"></div>
+
+    <!-- What MediAI can help with -->
+    <div class="section-head reveal" style="margin-top:20px;">
+      <div class="eyebrow">Ask About</div>
+      <h2>What <span class="gradient-text">MediAI</span> can help with</h2>
+      <p>Tap a topic to pre-fill the console, or just describe your concern in your own words above.</p>
+    </div>
+    <div class="grid grid-cols" id="mediConcernGrid"></div>
+
+    <!-- Disclaimer -->
+    <div class="glass reveal medi-disclaimer" style="margin-top:40px;">
+      🩺 <b>Disclaimer:</b> MediAI provides educational and informational health guidance only. It is not a substitute for professional medical advice, diagnosis or treatment. Always consult qualified healthcare professionals regarding medical concerns.
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
      BUILD SECTION
      ============================================================ -->
 <section class="section" id="build">
@@ -1246,6 +1460,7 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
           <li><a href="#engineering" style="color:var(--text-dim);">Engineering Tools</a></li>
           <li><a href="#pdf-studio" style="color:var(--text-dim);">PDF Studio</a></li>
           <li><a href="#legal-ai" style="color:var(--text-dim);">Legal AI</a></li>
+          <li><a href="#mediai" style="color:var(--text-dim);">MediAI</a></li>
           <li><a href="#roadmap" style="color:var(--text-dim);">Roadmaps</a></li>
         </ul>
       </div>
@@ -1375,6 +1590,7 @@ const SEARCH_INDEX = [
   ...ENGINEERING_TOOLS.map(t => ({...t, cat:'Engineering', anchor:'engineering'})),
   ...BUILD_TOOLS.map(t => ({...t, cat:'Build', anchor:'build'})),
   {id:'legal-ai-india', icon:'⚖️', title:'Legal AI India', desc:"Know your rights before it's too late — AI-powered Indian legal information assistant.", cat:'Legal AI', anchor:'legal-ai'},
+  {id:'mediai-health', icon:'🩺', title:'MediAI', desc:"Understand your health, smarter — AI-powered health information assistant.", cat:'MediAI', anchor:'mediai'},
 ];
 
 /* ---------------------------------------------------------------
@@ -2680,6 +2896,617 @@ renderLegalStaticText();
 renderLegalCategories();
 
 /* ================================================================
+   MEDIAI — MODULE
+   A premium, structured AI-health-consultant dashboard (not a
+   chatbot, not a doctor). Mirrors the Legal AI architecture:
+   console → keyword-based classification → (follow-up questions
+   when the description is under-specified) → structured report.
+   -----------------------------------------------------------------
+   SECURITY NOTE: identical approach to Legal AI — this module never
+   holds an API key in the browser. `callSecureMediBackend()` always
+   attempts a same-origin POST to `/api/medi-analysis` first (where
+   YOU would deploy a real backend later); since none exists in this
+   static demo, it falls back transparently to an on-device,
+   rule-based health-knowledge engine so the feature works today.
+   ================================================================ */
+
+/* ---- Example scenarios shown as chips under the console ---- */
+const MEDI_EXAMPLES = [
+  'I have severe acne for the last two years.',
+  'My hair is falling excessively.',
+  'I have chest pain while running.',
+  'I have been experiencing headaches for five days.',
+  'I am skinny fat and want to build muscle.',
+  'I am sleeping 12 hours every day and still feel tired.',
+];
+
+/* ---- "What MediAI can help with" concern categories ---- */
+const MEDI_CONCERNS = [
+  {title:'Fitness', icon:'🏋️', kb:'muscle', desc:'Muscle building, workouts & body composition.', sample:'I am skinny fat and want to build muscle.'},
+  {title:'Skin Care', icon:'🧴', kb:'skin', desc:'Acne, pigmentation & skincare routines.', sample:'I have severe acne for the last two years.'},
+  {title:'Hair Care', icon:'💇', kb:'hair', desc:'Hair fall, dandruff & premature greying.', sample:'My hair is falling excessively.'},
+  {title:'Nutrition', icon:'🥗', kb:'nutrition', desc:'Diet, deficiencies & healthy eating.', sample:'I want to gain 10kg naturally.'},
+  {title:'Sleep Health', icon:'😴', kb:'sleep', desc:'Sleep quality, fatigue & daytime tiredness.', sample:'I am sleeping 12 hours every day and still feel tired.'},
+  {title:'Mental Wellness', icon:'🧘', kb:'mental', desc:'Anxiety, stress & emotional wellbeing.', sample:'I feel anxious all the time.'},
+  {title:'Digestive Health', icon:'🍽️', kb:'digestive', desc:'Stomach pain, bloating & digestion.', sample:'I have stomach pain after eating.'},
+  {title:'Heart & Fitness Safety', icon:'❤️', kb:'cardio', desc:'Chest discomfort & exercise safety.', sample:'I have chest pain while running.'},
+  {title:'Headaches', icon:'🤕', kb:'headache', desc:'Recurring headaches & migraines.', sample:'I have been experiencing headaches for five days.'},
+  {title:'Weight Goals', icon:'⚖️', kb:'weight', desc:'Weight gain or loss, done naturally.', sample:'I want to gain 10kg naturally.'},
+  {title:'Medical Reports', icon:'📋', kb:'reports', desc:'Understanding blood work & prescriptions.', sample:'I want help understanding my blood report.'},
+  {title:'General Health', icon:'🩺', kb:'general', desc:'Anything else on your mind.', sample:'I have not been feeling like myself lately.'},
+];
+
+/* ---- Health knowledge base — one structured entry per concern ----
+   Purely educational. Never a diagnosis. Every entry deliberately
+   uses hedged language ("may indicate", "could be associated with"). */
+const MEDI_KB = {
+  skin: {
+    label:'Skin Concerns',
+    summary:(t)=>`Based on what you've shared, this sounds like a skin-related concern — possibly related to hormonal activity, skincare habits, or diet. You mentioned: "${t}"`,
+    reasons:['Hormonal fluctuations (common in teenagers and young adults)','Excess oil production or clogged pores','Diet high in sugar or dairy for some individuals','Stress, which can worsen breakouts','Using products that don\'t suit your skin type'],
+    conditions:['This may indicate hormonal acne, common in the 15–30 age range.','This could be associated with mild folliculitis if bumps are inflamed.','Possible explanations include contact dermatitis if a new product was introduced recently.'],
+    specialists:['Dermatologist'],
+    tests:['Usually none required unless symptoms are severe or persistent — a dermatologist may suggest hormonal panels in some cases.'],
+    lifestyle:['Wash your face twice daily with a gentle cleanser','Avoid touching or picking at your skin','Use non-comedogenic (oil-free) moisturizer and sunscreen','Stay hydrated and aim for 7–9 hours of sleep'],
+    avoid:['Avoid harsh scrubbing or over-washing','Avoid picking or popping breakouts (raises scarring risk)','Avoid switching products too frequently'],
+    immediate:['Monitor how your skin responds to your current routine for 2–4 weeks','Keep a simple log of new products, foods or stress triggers','Consult a dermatologist if it persists beyond a few months or worsens'],
+    severity:'Low',
+  },
+  hair: {
+    label:'Hair & Scalp Concerns',
+    summary:(t)=>`This sounds like a hair or scalp-related concern. You mentioned: "${t}"`,
+    reasons:['Nutritional deficiencies (iron, protein, biotin)','Stress-related hair shedding (telogen effluvium)','Genetic/hereditary factors','Scalp conditions like dandruff or seborrheic dermatitis','Hormonal changes'],
+    conditions:['This may indicate telogen effluvium if the hair fall started after a stressful period or illness.','This could be associated with androgenetic (pattern) hair loss if it runs in the family.','Possible explanations include a nutritional deficiency, especially iron or vitamin D.'],
+    specialists:['Dermatologist', 'Trichologist (hair specialist)'],
+    tests:['CBC','Vitamin D Test','Vitamin B12 Test','Thyroid Profile','Iron/Ferritin levels'],
+    lifestyle:['Eat protein-rich meals regularly','Manage stress through exercise or relaxation techniques','Use a mild, sulfate-free shampoo','Avoid excessive heat styling'],
+    avoid:['Avoid tight hairstyles that pull on the scalp','Avoid crash diets — they often accelerate hair shedding','Avoid excessive use of chemical treatments'],
+    immediate:['Track how much hair you\'re losing daily for a couple of weeks','Consider basic blood tests (iron, thyroid, vitamin D/B12)','See a dermatologist if shedding continues beyond 3 months'],
+    severity:'Low',
+  },
+  muscle: {
+    label:'Fitness & Body Composition',
+    summary:(t)=>`This sounds like a fitness and body-composition goal rather than a medical concern. You mentioned: "${t}"`,
+    reasons:['Being "skinny fat" usually reflects low muscle mass with a higher body-fat percentage','Insufficient resistance training','Inadequate protein intake','Inconsistent training routine'],
+    conditions:['This may simply reflect your current training and nutrition pattern rather than a health condition.','Possible explanations include a calorie/protein intake that doesn\'t support muscle growth.'],
+    specialists:['Nutritionist', 'Physiotherapist (for form guidance if new to training)'],
+    tests:['Usually not required — a body composition scan (if available) can help track progress.'],
+    lifestyle:['Start a structured resistance training program (3–4 days/week)','Eat 1.6–2.2g of protein per kg of body weight daily','Prioritize compound lifts (squat, deadlift, bench, rows)','Get adequate sleep for recovery (7–9 hours)'],
+    avoid:['Avoid excessive cardio without any strength training','Avoid extremely low-calorie diets while trying to build muscle','Avoid comparing your progress to others — body recomposition takes months'],
+    immediate:['Set a realistic 3-month strength and nutrition plan','Track your protein intake for a week to see your baseline','Consider consulting a certified trainer or nutritionist for a personalized plan'],
+    severity:'Low',
+  },
+  nutrition: {
+    label:'Nutrition & Weight Goals',
+    summary:(t)=>`This sounds like a nutrition or weight-related goal. You mentioned: "${t}"`,
+    reasons:['Calorie intake not aligned with your goal (surplus for gain, deficit for loss)','Nutrient timing and meal frequency','Underlying digestive or metabolic factors in some cases','Lifestyle and activity level'],
+    conditions:['This may simply require a structured, calorie-conscious eating plan rather than indicating a medical issue.','This could be associated with a slow metabolism in rarer cases — a doctor can rule this out if gaining/losing weight remains difficult despite consistent effort.'],
+    specialists:['Nutritionist', 'Endocrinologist (only if progress stalls despite consistent effort)'],
+    tests:['Thyroid Profile','Blood Sugar Test','Lipid Profile'],
+    lifestyle:['Eat in a consistent calorie surplus (for gain) or deficit (for loss) of 300–500 calories/day','Prioritize whole foods: lean protein, whole grains, fruits and vegetables','Stay consistent for at least 8–12 weeks before reassessing','Track your intake using a simple food diary or app'],
+    avoid:['Avoid extreme calorie deficits or surpluses — both backfire long-term','Avoid skipping meals irregularly','Avoid relying on supplements instead of whole foods'],
+    immediate:['Calculate your daily calorie and protein targets','Start tracking meals for at least one week','Reassess progress every 2–4 weeks and adjust gradually'],
+    severity:'Low',
+  },
+  sleep: {
+    label:'Sleep & Fatigue',
+    summary:(t)=>`This sounds like a sleep-quality or fatigue-related concern. You mentioned: "${t}"`,
+    reasons:['Poor sleep quality despite long duration (fragmented sleep)','Vitamin D or B12 deficiency','Sedentary lifestyle or lack of physical activity','Underlying stress, anxiety or low mood','Possible sleep disorders (e.g. sleep apnea) in some cases'],
+    conditions:['This may indicate poor sleep quality rather than insufficient sleep quantity.','This could be associated with a vitamin deficiency, especially B12, D or iron.','Possible explanations include an irregular sleep schedule affecting your circadian rhythm.'],
+    specialists:['General Physician', 'Endocrinologist (if a deficiency is suspected)'],
+    tests:['CBC','Thyroid Profile','Vitamin D Test','Vitamin B12 Test'],
+    lifestyle:['Keep a consistent sleep and wake time, even on weekends','Get natural sunlight exposure earlier in the day','Reduce screen time an hour before bed','Stay physically active during the day'],
+    avoid:['Avoid caffeine in the afternoon/evening','Avoid long, irregular daytime naps','Avoid using your bed for work or scrolling'],
+    immediate:['Track your sleep pattern for a week (bedtime, wake time, how rested you feel)','Get basic blood tests to rule out deficiencies','See a doctor if excessive tiredness continues despite good sleep habits'],
+    severity:'Low',
+  },
+  mental: {
+    label:'Mental Wellness',
+    summary:(t)=>`This sounds like it may relate to stress, anxiety or emotional wellbeing. You mentioned: "${t}"`,
+    reasons:['Chronic stress from academics, work or relationships','Irregular sleep or poor lifestyle habits','Excessive screen time or social media use','Underlying anxiety, which is very common and treatable'],
+    conditions:['This may be associated with generalized anxiety, which is common and manageable with the right support.','Possible explanations include situational stress rather than a long-term condition — this often improves with lifestyle changes and support.'],
+    specialists:['Psychiatrist', 'Clinical Psychologist / Counsellor'],
+    tests:['Usually no physical tests are required — a mental health professional may use standardized questionnaires for assessment.'],
+    lifestyle:['Practice deep breathing or short meditation sessions daily','Maintain a consistent sleep schedule','Stay physically active — even short walks help','Talk to someone you trust about what you\'re feeling'],
+    avoid:['Avoid isolating yourself for long periods','Avoid excessive caffeine, which can worsen anxiety','Avoid bottling up feelings without any outlet'],
+    immediate:['If feelings are overwhelming or persistent, consider speaking with a counsellor or psychiatrist','Reach out to a trusted friend, family member or mental health helpline','Practice one small self-care habit daily (walk, journaling, breathing exercises)'],
+    severity:'Moderate',
+  },
+  digestive: {
+    label:'Digestive Health',
+    summary:(t)=>`This sounds like a digestive concern. You mentioned: "${t}"`,
+    reasons:['Eating too quickly or overeating','Food intolerances (lactose, gluten, etc.)','Acidity or mild gastritis','Stress affecting digestion','Certain trigger foods (spicy, oily, or processed food)'],
+    conditions:['This may indicate mild acid reflux or indigestion if it happens after heavy or spicy meals.','This could be associated with a food intolerance if certain foods consistently trigger it.','Possible explanations include gastritis if pain is frequent and linked to hunger or specific foods.'],
+    specialists:['Gastroenterologist', 'General Physician'],
+    tests:['Usually not required for occasional symptoms — persistent cases may warrant an ultrasound or endoscopy as advised by a doctor.'],
+    lifestyle:['Eat smaller, more frequent meals','Chew food slowly and thoroughly','Stay upright for 30+ minutes after eating','Stay hydrated between meals rather than during'],
+    avoid:['Avoid lying down immediately after eating','Avoid excessive spicy, oily or fried foods if they trigger symptoms','Avoid skipping meals and then overeating later'],
+    immediate:['Note which foods seem to trigger the pain','Stay hydrated and eat lighter meals for a few days','See a doctor if pain is severe, persistent, or accompanied by vomiting/fever'],
+    severity:'Moderate',
+  },
+  cardio: {
+    label:'Heart & Exercise Safety',
+    summary:(t)=>`Chest discomfort during physical activity should always be taken seriously. You mentioned: "${t}"`,
+    reasons:['Being unfit or exercising above your current fitness level','Muscle strain in the chest wall','Acid reflux triggered by exercise','In rarer but more serious cases, underlying cardiac or respiratory causes'],
+    conditions:['This may indicate simple exertional breathlessness if you\'re new to intense exercise.','This could be associated with a musculoskeletal strain if the pain is localized and worsens with movement.','Possible explanations also include cardiac causes, which is why chest pain during exertion should always be medically evaluated.'],
+    specialists:['Cardiologist', 'General Physician'],
+    tests:['ECG','Lipid Profile','Blood Sugar Test'],
+    lifestyle:['Warm up properly before exercise and cool down after','Build exercise intensity gradually','Stay hydrated','Get adequate rest between intense sessions'],
+    avoid:['Avoid ignoring recurring chest pain during exercise','Avoid pushing through exercise if you feel dizzy, breathless or unwell','Avoid self-diagnosing — this symptom needs medical evaluation'],
+    immediate:['Stop the activity immediately if chest pain occurs and rest','Seek urgent medical attention if pain is severe, radiates to the arm/jaw, or comes with sweating/breathlessness','Book an evaluation with a cardiologist even if symptoms are mild but recurring'],
+    severity:'High',
+  },
+  headache: {
+    label:'Headaches',
+    summary:(t)=>`This sounds like a headache-related concern. You mentioned: "${t}"`,
+    reasons:['Dehydration or skipped meals','Poor sleep or eye strain (screens)','Stress and tension in the neck/shoulders','Sinus congestion','Migraine, in some individuals'],
+    conditions:['This may indicate a tension headache if it feels like pressure around the head.','This could be associated with a migraine if it\'s one-sided, throbbing, and with light/sound sensitivity.','Possible explanations include dehydration or eye strain from extended screen time.'],
+    specialists:['Neurologist', 'General Physician'],
+    tests:['Usually not required for occasional headaches — persistent or severe cases may warrant imaging (MRI) as advised by a doctor.'],
+    lifestyle:['Stay well hydrated throughout the day','Take regular screen breaks (20-20-20 rule)','Maintain a consistent sleep schedule','Manage stress through relaxation techniques'],
+    avoid:['Avoid skipping meals for long periods','Avoid excessive caffeine or sudden caffeine withdrawal','Avoid ignoring headaches that are worsening or unusual for you'],
+    immediate:['Track your headache pattern, triggers and duration','Stay hydrated and ensure adequate rest','Seek medical attention if headaches persist beyond 5–7 days, are severe, or come with vision changes/vomiting'],
+    severity:'Moderate',
+  },
+  weight: {
+    label:'Weight Management',
+    summary:(t)=>`This sounds like a weight-management goal. You mentioned: "${t}"`,
+    reasons:['Calorie balance not aligned with your goal','Activity level and exercise consistency','Sleep and stress, which affect metabolism and appetite','In some cases, thyroid or hormonal factors'],
+    conditions:['This may simply require a structured, sustainable calorie and activity plan.','This could be associated with a metabolic or hormonal factor if progress stalls despite consistent effort — worth discussing with a doctor.'],
+    specialists:['Nutritionist', 'Endocrinologist (if progress stalls despite consistent effort)'],
+    tests:['Thyroid Profile','Blood Sugar Test','Lipid Profile'],
+    lifestyle:['Set a realistic, gradual calorie target (surplus or deficit of 300–500 kcal/day)','Combine strength training with your goal-specific nutrition plan','Prioritize sleep — poor sleep disrupts hunger hormones','Track progress over weeks, not days'],
+    avoid:['Avoid extreme or crash approaches — they\'re rarely sustainable','Avoid comparing your timeline to others','Avoid relying solely on the scale — track measurements/photos too'],
+    immediate:['Calculate your daily calorie and protein targets','Start a simple tracking habit (food + activity)','Reassess and adjust every 2–4 weeks'],
+    severity:'Low',
+  },
+  reports: {
+    label:'Medical Reports & Documents',
+    summary:(t)=>`You'd like help understanding a medical report, blood test or prescription. You mentioned: "${t}"`,
+    reasons:['Medical reports use clinical terms that can be confusing without context','Reference ranges vary by lab and by individual factors (age, sex, etc.)'],
+    conditions:['MediAI can offer general, educational explanations of common report terms and typical reference ranges — it cannot interpret your specific results with certainty.','Possible explanations for any flagged values depend heavily on your full medical history, which only a doctor can properly assess.'],
+    specialists:['General Physician (best first point of contact for report interpretation)'],
+    tests:['Bring your existing report — no new tests needed just to discuss it.'],
+    lifestyle:['Keep a folder (physical or digital) of all your medical reports for easy reference','Note any symptoms you had around the time of testing','Bring previous reports to compare trends over time'],
+    avoid:['Avoid self-diagnosing based on a single out-of-range value','Avoid stopping or starting medication based on report interpretation alone','Avoid comparing your results directly with someone else\'s'],
+    immediate:['Share the report with a general physician for proper interpretation','Note any symptoms alongside the report for context','Preserve the original report and any previous ones for comparison'],
+    severity:'Low',
+  },
+  general: {
+    label:'General Health',
+    summary:(t)=>`Thanks for sharing. You mentioned: "${t}"`,
+    reasons:['General health concerns often relate to a combination of sleep, nutrition, stress and activity levels','Many mild, non-specific symptoms are lifestyle-related'],
+    conditions:['This may be related to general lifestyle factors rather than one specific condition.','Possible explanations range widely — more detail would help narrow this down.'],
+    specialists:['General Physician'],
+    tests:['CBC','Vitamin D Test','Vitamin B12 Test','Thyroid Profile'],
+    lifestyle:['Prioritize consistent sleep, hydration and balanced meals','Stay physically active most days of the week','Manage stress through activities you enjoy'],
+    avoid:['Avoid ignoring symptoms that persist or worsen','Avoid self-medicating without professional guidance'],
+    immediate:['Monitor your symptoms and note any patterns','Consider a general health check-up, especially if it\'s been a while','Consult a general physician for a more specific evaluation'],
+    severity:'Low',
+  },
+};
+
+/* ---- Keyword → concern scoring map (transparent, on-device) ---- */
+const MEDI_KEYWORDS = {
+  skin:['acne','pimple','skin','dark spots','pigmentation','rash','itchy skin','skin becoming darker','breakout'],
+  hair:['hair fall','hair falling','bald','baldness','dandruff','white hair','grey hair','hair loss','scalp'],
+  muscle:['skinny fat','build muscle','muscle building','bulk up','lean muscle','get ripped','gym'],
+  nutrition:['diet','nutrition','eating habits','protein intake','malnutrition','underweight'],
+  sleep:['sleeping 12 hours','sleep','tired','fatigue','always sleepy','oversleeping','insomnia','can\'t sleep'],
+  mental:['anxious','anxiety','stressed','depressed','overthinking','panic','mental health','feel low'],
+  digestive:['stomach pain','bloating','indigestion','acidity','gas','constipation','diarrhea','stomach ache'],
+  cardio:['chest pain','breathless','palpitation','heart racing','shortness of breath'],
+  headache:['headache','migraine','head pain','head ache'],
+  weight:['gain weight','lose weight','weight gain','weight loss','gain 10kg','lose 10kg','overweight'],
+  reports:['blood report','medical report','prescription','test results','lab report'],
+};
+
+/* ---- Follow-up question templates per concern (asked before the report) ---- */
+const MEDI_FOLLOWUPS = {
+  skin: [
+    {key:'age', label:'What is your age?', type:'number'},
+    {key:'duration', label:'Since when have you noticed this?', type:'chips', options:['A few days','1–4 weeks','1–6 months','6+ months']},
+    {key:'severity', label:'How would you describe the severity?', type:'chips', options:['Mild','Moderate','Severe']},
+  ],
+  hair: [
+    {key:'age', label:'What is your age?', type:'number'},
+    {key:'duration', label:'Since when have you noticed this?', type:'chips', options:['A few days','1–4 weeks','1–6 months','6+ months']},
+    {key:'family', label:'Does hair loss run in your family?', type:'chips', options:['Yes','No','Not sure']},
+  ],
+  digestive: [
+    {key:'age', label:'What is your age?', type:'number'},
+    {key:'duration', label:'Since when are you experiencing this pain?', type:'chips', options:['Today','A few days','1–2 weeks','1+ month']},
+    {key:'nature', label:'Is the pain sharp or dull?', type:'chips', options:['Sharp','Dull','Cramping']},
+    {key:'fever', label:'Do you have a fever?', type:'chips', options:['Yes','No']},
+    {key:'vomiting', label:'Are you vomiting?', type:'chips', options:['Yes','No']},
+  ],
+  cardio: [
+    {key:'age', label:'What is your age?', type:'number'},
+    {key:'when', label:'When does the chest pain occur?', type:'chips', options:['Only during exercise','At rest too','Both']},
+    {key:'radiate', label:'Does the pain spread to your arm, jaw or back?', type:'chips', options:['Yes','No']},
+  ],
+  headache: [
+    {key:'age', label:'What is your age?', type:'number'},
+    {key:'duration', label:'Since when have you had this headache?', type:'chips', options:['Today','A few days','5+ days','Weeks/recurring']},
+    {key:'nature', label:'Is it one-sided, throbbing, or a general pressure?', type:'chips', options:['One-sided/throbbing','General pressure','Not sure']},
+  ],
+  mental: [
+    {key:'age', label:'What is your age?', type:'number'},
+    {key:'duration', label:'How long have you been feeling this way?', type:'chips', options:['A few days','A few weeks','Months','Ongoing for a long time']},
+  ],
+  general: [
+    {key:'age', label:'What is your age?', type:'number'},
+    {key:'duration', label:'Since when have you noticed this?', type:'chips', options:['A few days','1–4 weeks','1–6 months','6+ months']},
+  ],
+};
+function followupsFor(kbKey){
+  return MEDI_FOLLOWUPS[kbKey] || MEDI_FOLLOWUPS.general;
+}
+
+/* ---- Scoring engine ---- */
+function scoreMediConcern(text){
+  const lower = ' ' + text.toLowerCase() + ' ';
+  return Object.keys(MEDI_KEYWORDS).map(key => {
+    const hits = MEDI_KEYWORDS[key].filter(kw => lower.includes(kw.toLowerCase())).length;
+    return {key, hits};
+  }).sort((a,b) => b.hits - a.hits);
+}
+
+/* ---- Secure backend hook (mirrors Legal AI's pattern exactly) ---- */
+async function callSecureMediBackend(text, answers){
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 3500);
+  try{
+    const res = await fetch('/api/medi-analysis', {
+      method:'POST', signal: controller.signal,
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ query:text, answers })
+    });
+    clearTimeout(timeout);
+    if(res.ok) return await res.json();
+    return null;
+  }catch(err){
+    clearTimeout(timeout);
+    return null;
+  }
+}
+
+/* ---- Local rule-based fallback report generator ---- */
+function generateLocalMediReport(text, answers){
+  const scored = scoreMediConcern(text);
+  const top = scored[0];
+  const second = scored[1];
+  let confidence = 'Low';
+  let kbKey = 'general';
+  if(top && top.hits > 0){
+    kbKey = top.key;
+    confidence = (top.hits >= 2 && (!second || second.hits === 0)) ? 'High'
+               : (second && second.hits > 0 && second.hits >= top.hits) ? 'Medium'
+               : (top.hits >= 2 ? 'High' : 'Medium');
+  }
+  const kb = MEDI_KB[kbKey];
+  const trimmed = text.trim();
+
+  // Severity can escalate based on follow-up answers (e.g. chest pain radiating, fever + vomiting)
+  let severity = kb.severity;
+  if(answers){
+    if((answers.radiate === 'Yes') || (answers.fever === 'Yes' && answers.vomiting === 'Yes')){
+      severity = 'Emergency';
+    } else if(answers.when === 'At rest too' || answers.when === 'Both'){
+      severity = severity === 'Low' ? 'Moderate' : 'High';
+    }
+  }
+
+  return {
+    category: kb.label,
+    summary: kb.summary(trimmed.length > 200 ? trimmed.slice(0,200) + '…' : trimmed),
+    reasons: kb.reasons,
+    conditions: kb.conditions,
+    severity,
+    specialists: kb.specialists,
+    tests: kb.tests,
+    lifestyle: kb.lifestyle,
+    avoid: kb.avoid,
+    immediate: kb.immediate,
+    confidence,
+  };
+}
+
+async function analyzeMediScenario(text, answers){
+  const backendResult = await callSecureMediBackend(text, answers);
+  if(backendResult) return backendResult;
+  return generateLocalMediReport(text, answers);
+}
+
+/* ---- Rendering: static text + example chips ---- */
+function renderMediStaticText(){
+  $('#mediExamples').innerHTML = MEDI_EXAMPLES.map(ex => `<span class="legal-chip" data-text="${ex.replace(/"/g,'&quot;')}">${ex}</span>`).join('');
+  $$('#mediExamples .legal-chip').forEach(chip => chip.addEventListener('click', () => {
+    $('#mediInput').value = chip.dataset.text;
+    $('#mediInput').focus();
+  }));
+}
+
+function renderMediConcerns(){
+  const grid = $('#mediConcernGrid');
+  grid.innerHTML = '';
+  MEDI_CONCERNS.forEach((c, i) => {
+    const card = el('div', 'tool-card legal-category-card glass reveal medi-concern-card');
+    card.style.transitionDelay = (i % 6) * 0.05 + 's';
+    card.innerHTML = `
+      <div class="tool-icon">${c.icon}</div>
+      <h4>${c.title}</h4>
+      <p>${c.desc}</p>
+      <div class="tc-arrow">Explore <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    `;
+    card.addEventListener('click', () => {
+      $('#mediInput').value = c.sample;
+      $('.medi-console').scrollIntoView({behavior:'smooth', block:'center'});
+      setTimeout(() => $('#mediInput').focus(), 400);
+    });
+    grid.appendChild(card);
+  });
+}
+
+/* ---- Image upload previews (client-side only — never uploaded anywhere) ---- */
+let mediSelectedImages = [];
+function drawMediImagePreviews(){
+  const box = $('#mediImagePreview');
+  box.innerHTML = '';
+  mediSelectedImages.forEach((file, i) => {
+    const thumb = el('div', 'medi-image-thumb');
+    const isImage = file.type.startsWith('image/');
+    thumb.innerHTML = isImage
+      ? `<img src="${URL.createObjectURL(file)}" alt="${file.name}"><button aria-label="Remove">✕</button>`
+      : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:22px;background:var(--glass-bg-strong);">📄</div><button aria-label="Remove">✕</button>`;
+    $('button', thumb).addEventListener('click', () => { mediSelectedImages.splice(i,1); drawMediImagePreviews(); });
+    box.appendChild(thumb);
+  });
+}
+$('#mediImageInput').addEventListener('change', (e) => { mediSelectedImages = mediSelectedImages.concat([...e.target.files]); drawMediImagePreviews(); });
+$('#mediDocInput').addEventListener('change', (e) => { mediSelectedImages = mediSelectedImages.concat([...e.target.files]); drawMediImagePreviews(); });
+
+/* ---- Conversational follow-up flow ---- */
+let mediPendingText = '';
+let mediPendingKbKey = 'general';
+let mediAnswers = {};
+
+function needsFollowup(text){
+  // A short/vague description benefits from clarifying questions, mirroring
+  // the "stomach pain" example in the spec. Longer, detailed descriptions
+  // can skip straight to the report.
+  return text.trim().split(/\s+/).length < 14;
+}
+
+function renderMediFollowup(text){
+  const scored = scoreMediConcern(text);
+  const kbKey = (scored[0] && scored[0].hits > 0) ? scored[0].key : 'general';
+  mediPendingText = text;
+  mediPendingKbKey = kbKey;
+  mediAnswers = {};
+  const questions = followupsFor(kbKey);
+  const box = $('#mediFollowup');
+  box.innerHTML = `
+    <div class="medi-followup-head"><span class="dot-live"></span><h4>Just a few quick questions</h4></div>
+    <p class="medi-followup-sub">This helps MediAI give you a more accurate, personalized report.</p>
+    <div id="mediQuestionList"></div>
+    <div class="medi-console-actions" style="margin-top:6px;">
+      <button class="btn btn-ghost btn-sm" id="mediSkipBtn">Skip &amp; generate report</button>
+      <button class="btn btn-primary" id="mediContinueBtn">Continue</button>
+    </div>
+  `;
+  const list = $('#mediQuestionList');
+  questions.forEach(q => {
+    const wrap = el('div', 'medi-question');
+    if(q.type === 'number'){
+      wrap.innerHTML = `<label>${q.label}</label><input type="number" min="1" max="120" data-key="${q.key}">`;
+    } else {
+      wrap.innerHTML = `<label>${q.label}</label><div class="medi-chip-options" data-key="${q.key}">${q.options.map(o=>`<span class="medi-chip-option">${o}</span>`).join('')}</div>`;
+    }
+    list.appendChild(wrap);
+  });
+  $$('#mediQuestionList input[type=number]').forEach(inp => inp.addEventListener('input', () => { mediAnswers[inp.dataset.key] = inp.value; }));
+  $$('#mediQuestionList .medi-chip-options').forEach(group => {
+    $$('.medi-chip-option', group).forEach(chip => chip.addEventListener('click', () => {
+      $$('.medi-chip-option', group).forEach(c => c.classList.remove('selected'));
+      chip.classList.add('selected');
+      mediAnswers[group.dataset.key] = chip.textContent;
+    }));
+  });
+  $('#mediContinueBtn').addEventListener('click', () => runMediAnalysis(mediPendingText, mediAnswers));
+  $('#mediSkipBtn').addEventListener('click', () => runMediAnalysis(mediPendingText, {}));
+  box.style.display = 'block';
+  box.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+/* ---- Severity meter markup ---- */
+function mediSeverityMarkup(severity){
+  const levels = ['Low','Moderate','High','Emergency'];
+  const idx = Math.max(0, levels.indexOf(severity));
+  const cls = severity.toLowerCase();
+  return `
+    <span class="medi-severity-label medi-severity-${cls}">${severity}</span>
+    <div class="medi-severity-track">
+      ${levels.map((_,i) => `<div class="medi-severity-seg ${i<=idx ? 'filled-'+cls : ''}"></div>`).join('')}
+    </div>`;
+}
+
+function buildMediReportText(report){
+  return [
+    `MediAI Health Report — ${report.category}`,
+    '='.repeat(40),
+    `\nHealth Problem Summary:\n${report.summary}`,
+    `\nPossible Reasons:\n${report.reasons.map(l=>'- '+l).join('\n')}`,
+    `\nPossible Conditions:\n${report.conditions.map(l=>'- '+l).join('\n')}`,
+    `\nSeverity Level: ${report.severity}`,
+    `\nRecommended Specialist:\n${report.specialists.map(l=>'- '+l).join('\n')}`,
+    `\nRecommended Tests:\n${report.tests.map(l=>'- '+l).join('\n')}`,
+    `\nLifestyle Suggestions:\n${report.lifestyle.map(l=>'- '+l).join('\n')}`,
+    `\nThings to Avoid:\n${report.avoid.map(l=>'- '+l).join('\n')}`,
+    `\nImmediate Actions:\n${report.immediate.map(l=>'- '+l).join('\n')}`,
+    `\nAI Confidence: ${report.confidence}`,
+    `\nMediAI provides educational and informational health guidance only. It is not a substitute for professional medical advice, diagnosis or treatment. Always consult qualified healthcare professionals regarding medical concerns.`,
+  ].join('\n');
+}
+
+function renderMediReport(report){
+  const box = $('#mediReport');
+  const confClass = report.confidence === 'High' ? 'confidence-high' : report.confidence === 'Medium' ? 'confidence-medium' : 'confidence-low';
+  box.innerHTML = `
+    <div class="medi-report-top">
+      <div>
+        <h3>MediAI Health Report</h3>
+        <div class="mr-sub">${report.category} · Generated from your description — educational information only</div>
+      </div>
+      <div class="confidence-badge ${confClass}">AI Confidence: ${report.confidence}</div>
+    </div>
+    <div class="medi-report-actions">
+      <button class="btn btn-ghost btn-sm" id="mediCopyBtn">📋 Copy Report</button>
+      <button class="btn btn-ghost btn-sm" id="mediDownloadBtn">⬇️ Download</button>
+      <button class="btn btn-ghost btn-sm" id="mediShareBtn">🔗 Share</button>
+    </div>
+    <div class="medi-report-body">
+      <div class="medi-section-card">
+        <div class="medi-section-head"><div class="medi-section-num">1</div><h4>Health Problem Summary</h4></div>
+        <p>${report.summary}</p>
+      </div>
+      <div class="medi-section-card">
+        <div class="medi-section-head"><div class="medi-section-num">2</div><h4>Possible Reasons</h4></div>
+        <ul>${report.reasons.map(r=>`<li>${r}</li>`).join('')}</ul>
+      </div>
+      <div class="medi-section-card">
+        <div class="medi-section-head"><div class="medi-section-num">3</div><h4>Possible Conditions</h4></div>
+        <ul>${report.conditions.map(r=>`<li>${r}</li>`).join('')}</ul>
+        <div class="medi-disclaimer-inline">MediAI never provides a definitive diagnosis — only educational possibilities to discuss with a professional.</div>
+      </div>
+      <div class="medi-section-card">
+        <div class="medi-section-head"><div class="medi-section-num">4</div><h4>Severity Level</h4></div>
+        ${mediSeverityMarkup(report.severity)}
+        <p style="margin-top:10px;">${
+          report.severity === 'Emergency' ? 'These symptoms may warrant urgent medical evaluation. Please seek medical attention promptly.'
+          : report.severity === 'High' ? 'These symptoms are not typically an emergency, but medical attention is recommended soon.'
+          : report.severity === 'Moderate' ? 'These symptoms are commonly seen and usually manageable, but a medical opinion is worth considering if they persist.'
+          : 'These symptoms are commonly seen and are usually not a cause for major concern, though monitoring is always wise.'
+        }</p>
+      </div>
+      <div class="medi-section-card">
+        <div class="medi-section-head"><div class="medi-section-num">5</div><h4>Should You Worry?</h4></div>
+        <p>${
+          report.severity === 'Emergency' ? 'Yes — based on what you\'ve described, prompt medical evaluation is advisable rather than waiting it out.'
+          : report.severity === 'High' ? 'Some caution is warranted. While not necessarily an emergency, it would be wise to get this checked by a professional soon.'
+          : 'This is generally common and manageable. Most people experience something similar at some point — but keep monitoring, and don\'t hesitate to consult a doctor if it changes or worsens.'
+        }</p>
+      </div>
+      <div class="medi-section-card">
+        <div class="medi-section-head"><div class="medi-section-num">6</div><h4>Recommended Specialist</h4></div>
+        <div class="medi-tags">${report.specialists.map(s=>`<span class="medi-tag">${s}</span>`).join('')}</div>
+      </div>
+      <div class="medi-section-card">
+        <div class="medi-section-head"><div class="medi-section-num">7</div><h4>Recommended Tests</h4></div>
+        <div class="medi-tags">${report.tests.map(t=>`<span class="medi-tag">${t}</span>`).join('')}</div>
+      </div>
+      <div class="medi-section-card">
+        <div class="medi-section-head"><div class="medi-section-num">8</div><h4>Lifestyle Suggestions</h4></div>
+        <ul>${report.lifestyle.map(l=>`<li>${l}</li>`).join('')}</ul>
+      </div>
+      <div class="medi-section-card">
+        <div class="medi-section-head"><div class="medi-section-num">9</div><h4>Things to Avoid</h4></div>
+        <ul>${report.avoid.map(a=>`<li>${a}</li>`).join('')}</ul>
+      </div>
+      <div class="medi-section-card">
+        <div class="medi-section-head"><div class="medi-section-num">10</div><h4>Immediate Actions</h4></div>
+        <ol>${report.immediate.map(a=>`<li>${a}</li>`).join('')}</ol>
+      </div>
+      <div class="medi-section-card">
+        <div class="medi-section-head"><div class="medi-section-num">11</div><h4>Health Improvement Plan</h4></div>
+        <p><b>This week:</b> Start with 1–2 of the lifestyle suggestions above.</p>
+        <p style="margin-top:6px;"><b>This month:</b> Track your symptoms/progress weekly and reassess.</p>
+        <p style="margin-top:6px;"><b>Ongoing:</b> ${report.severity === 'Low' ? 'Maintain consistent healthy habits and monitor for changes.' : 'Follow up with the recommended specialist and continue monitoring closely.'}</p>
+      </div>
+    </div>
+  `;
+  box.style.display = 'block';
+
+  const reportText = buildMediReportText(report);
+  $('#mediCopyBtn').addEventListener('click', () => {
+    navigator.clipboard?.writeText(reportText).then(() => {
+      const btn = $('#mediCopyBtn'); const orig = btn.textContent;
+      btn.textContent = '✓ Copied'; setTimeout(() => btn.textContent = orig, 1800);
+    });
+  });
+  $('#mediDownloadBtn').addEventListener('click', () => {
+    const blob = new Blob([reportText], {type:'text/plain'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'mediai-health-report.txt';
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  });
+  $('#mediShareBtn').addEventListener('click', async () => {
+    if(navigator.share){
+      try{ await navigator.share({title:'MediAI — Health Report', text: reportText}); }catch(e){}
+    } else {
+      navigator.clipboard?.writeText(reportText);
+      const btn = $('#mediShareBtn'); const orig = btn.textContent;
+      btn.textContent = '✓ Copied to share'; setTimeout(() => btn.textContent = orig, 1800);
+    }
+  });
+  observeReveals();
+}
+
+async function runMediAnalysis(text, answers){
+  $('#mediFollowup').style.display = 'none';
+  $('#mediReport').style.display = 'none';
+  const loadingBox = $('#mediLoading');
+  loadingBox.style.display = 'block';
+  loadingBox.scrollIntoView({behavior:'smooth', block:'center'});
+  const steps = ['Reading your symptoms...', 'Cross-referencing common causes...', 'Assessing severity...', 'Compiling your health report...'];
+  let stepIndex = 0;
+  $('#mediLoadingText').textContent = steps[0];
+  const stepTimer = setInterval(() => {
+    stepIndex = (stepIndex + 1) % steps.length;
+    $('#mediLoadingText').textContent = steps[stepIndex];
+  }, 500);
+
+  const [report] = await Promise.all([
+    analyzeMediScenario(text, answers),
+    new Promise(resolve => setTimeout(resolve, 1600)),
+  ]);
+
+  clearInterval(stepTimer);
+  loadingBox.style.display = 'none';
+  renderMediReport(report);
+  $('#mediReport').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+/* ---- Entry point: decide whether to ask follow-ups or go straight to the report ---- */
+function startMediAnalysis(){
+  const text = $('#mediInput').value.trim();
+  if(!text){ $('#mediInput').focus(); return; }
+  $('#mediReport').style.display = 'none';
+  if(needsFollowup(text)){
+    renderMediFollowup(text);
+  } else {
+    runMediAnalysis(text, {});
+  }
+}
+
+/* ---- Wire up controls ---- */
+$('#mediAnalyzeBtn').addEventListener('click', startMediAnalysis);
+$('#mediClearBtn').addEventListener('click', () => {
+  $('#mediInput').value = '';
+  $('#mediFollowup').style.display = 'none';
+  $('#mediReport').style.display = 'none';
+  $('#mediLoading').style.display = 'none';
+  mediSelectedImages = [];
+  drawMediImagePreviews();
+  $('#mediInput').focus();
+});
+
+renderMediStaticText();
+renderMediConcerns();
+
+/* ================================================================
    PDF STUDIO — MODULE
    A premium, flagship PDF productivity suite.
    -----------------------------------------------------------------
@@ -3425,7 +4252,7 @@ window.addEventListener('scroll', () => {
    mobile versions) and highlights the matching nav link as you scroll. */
 const SECTION_LABELS = {
   'home':'Home', 'study':'Study', 'engineering':'Engineering', 'pdf-studio':'PDF Studio',
-  'legal-ai':'Legal AI', 'build':'Build', 'roadmap':'Roadmap', 'future':'Future', 'about':'About', 'contact':'Contact',
+  'legal-ai':'Legal AI', 'mediai':'MediAI', 'build':'Build', 'roadmap':'Roadmap', 'future':'Future', 'about':'About', 'contact':'Contact',
 };
 const spySections = Object.keys(SECTION_LABELS).map(id => document.getElementById(id)).filter(Boolean);
 const navCurrentLabel = $('#navCurrentLabel');
