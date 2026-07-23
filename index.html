@@ -201,7 +201,52 @@ header#navbar.scrolled{
   transition:color .3s, background .3s;position:relative;
 }
 .nav-links a:hover{color:var(--text);background:var(--glass);}
-.nav-actions{display:flex;align-items:center;gap:10px;}
+.nav-links a.active-link{color:var(--text);background:var(--glass-strong);}
+.nav-links a.active-link::after{
+  content:'';position:absolute;left:50%;bottom:3px;width:16px;height:2px;border-radius:2px;
+  background:var(--grad);transform:translateX(-50%);
+}
+
+/* "Which page am I on" indicator — a glass pill that expands into view in the
+   header once you scroll down, showing the section currently on screen.
+   Desktop version lives inline in nav-actions (max-width transition so it
+   never disturbs sibling layout); a second fixed-position version covers
+   mobile/tablet where the nav bar collapses into a hamburger menu. */
+.nav-current-section{
+  display:flex;align-items:center;gap:0;max-width:0;padding:0;border-radius:999px;
+  background:var(--glass-strong);border:1px solid transparent;overflow:hidden;
+  backdrop-filter:blur(16px) saturate(150%);-webkit-backdrop-filter:blur(16px) saturate(150%);
+  font-size:12.5px;font-weight:600;color:var(--text-dim);white-space:nowrap;flex-shrink:0;
+  opacity:0;transition:max-width .45s var(--ease), opacity .3s var(--ease), padding .45s var(--ease), border-color .45s var(--ease);
+}
+header#navbar.scrolled .nav-current-section{
+  max-width:240px;padding:7px 14px 7px 10px;opacity:1;border-color:var(--border);gap:8px;
+}
+.nav-current-dot{width:6px;height:6px;border-radius:50%;background:var(--grad);flex-shrink:0;box-shadow:0 0 8px var(--purple);animation:navDotPulse 2s ease-in-out infinite;}
+@keyframes navDotPulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.nav-current-section .ncs-label{
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700;
+}
+@media (max-width:1180px){
+  .nav-current-desktop{display:none;}
+}
+
+/* Mobile/tablet floating version — fixed under the header, independent of flex flow */
+.nav-current-mobile{
+  display:none;position:fixed;top:64px;left:50%;z-index:999;
+  align-items:center;gap:8px;padding:8px 16px;border-radius:999px;
+  background:var(--glass-strong);border:1px solid var(--border);
+  backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);
+  font-size:12.5px;font-weight:600;color:var(--text-dim);white-space:nowrap;
+  box-shadow:0 8px 24px rgba(0,0,0,0.35);
+  opacity:0;visibility:hidden;transform:translate(-50%,-8px);
+  transition:opacity .35s var(--ease), transform .35s var(--ease), visibility .35s, top .4s var(--ease);
+}
+.nav-current-mobile.visible{opacity:1;visibility:visible;transform:translate(-50%,0);}
+@media (max-width:1180px){
+  .nav-current-mobile{display:flex;}
+}
+.nav-actions{display:flex;align-items:center;gap:12px;}
 .nav-toggle{display:none;width:38px;height:38px;border-radius:10px;background:var(--glass);border:1px solid var(--border);align-items:center;justify-content:center;flex-direction:column;gap:4px;}
 .nav-toggle span{width:16px;height:2px;background:var(--text);border-radius:2px;transition:.3s;}
 .nav-toggle.active span:nth-child(1){transform:translateY(6px) rotate(45deg);}
@@ -217,6 +262,7 @@ header#navbar.scrolled{
   display:inline-flex;align-items:center;gap:8px;margin-bottom:26px;
   padding:8px 16px;border-radius:999px;font-size:13px;font-weight:500;
   background:var(--glass);border:1px solid var(--border);color:var(--text-dim);
+  backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);
   animation:fadeUp .8s var(--ease) both;
 }
 .hero-badge b{color:var(--blue-soft);font-weight:600;}
@@ -239,6 +285,7 @@ header#navbar.scrolled{
 .search-bar{
   display:flex;align-items:center;gap:10px;padding:8px 8px 8px 22px;border-radius:999px;
   background:var(--glass-strong);border:1px solid var(--border-strong);
+  backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%);
   box-shadow:var(--shadow-glass);transition:border-color .3s, box-shadow .3s;
 }
 .search-bar:focus-within{border-color:var(--blue-soft);box-shadow:0 0 0 4px rgba(59,130,246,0.15);}
@@ -325,7 +372,8 @@ header#navbar.scrolled{
 #modalOverlay.active{opacity:1;visibility:visible;}
 .modal-box{
   width:100%;max-width:640px;border-radius:var(--radius-lg);
-  background:linear-gradient(180deg, rgba(20,20,32,0.98), rgba(10,10,18,0.98));
+  background:linear-gradient(180deg, rgba(22,22,36,0.72), rgba(10,10,18,0.78));
+  backdrop-filter:blur(28px) saturate(160%);-webkit-backdrop-filter:blur(28px) saturate(160%);
   border:1px solid var(--border-strong);box-shadow:0 30px 80px rgba(0,0,0,0.6);
   transform:translateY(30px) scale(.97);transition:transform .4s var(--ease);
   max-height:85vh;display:flex;flex-direction:column;
@@ -346,6 +394,7 @@ header#navbar.scrolled{
 .field label{display:block;font-size:12.5px;font-weight:600;color:var(--text-dim);margin-bottom:6px;letter-spacing:.02em;}
 .field input[type=text],.field input[type=number],.field input[type=date],.field input[type=time],.field textarea,.field select{
   width:100%;padding:11px 14px;border-radius:11px;background:rgba(255,255,255,0.045);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
   border:1px solid var(--border);font-size:14px;transition:border-color .25s;
 }
 .field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--blue-soft);}
@@ -354,12 +403,13 @@ header#navbar.scrolled{
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .result-box{
   margin-top:16px;padding:18px;border-radius:14px;background:var(--grad-soft);
+  backdrop-filter:blur(16px) saturate(150%);-webkit-backdrop-filter:blur(16px) saturate(150%);
   border:1px solid var(--border);font-size:14px;
 }
 .result-box .rb-value{font-family:'Space Grotesk';font-size:24px;font-weight:700;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;}
 .result-box.hidden{display:none;}
 .hint{font-size:12px;color:var(--text-faint);margin-top:6px;}
-.tag{display:inline-block;padding:4px 10px;border-radius:999px;background:var(--glass-strong);border:1px solid var(--border);font-size:11.5px;color:var(--text-dim);margin:3px 4px 0 0;}
+.tag{display:inline-block;padding:4px 10px;border-radius:999px;background:var(--glass-strong);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--border);font-size:11.5px;color:var(--text-dim);margin:3px 4px 0 0;}
 table.calc-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13.5px;}
 table.calc-table th,table.calc-table td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--border);}
 table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em;}
@@ -382,7 +432,7 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
   display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--purple-soft);
   padding:7px 14px;border-radius:999px;background:var(--grad-soft);border:1px solid var(--border);
 }
-.lang-toggle{display:flex;gap:4px;background:var(--glass-strong);border:1px solid var(--border);border-radius:999px;padding:3px;}
+.lang-toggle{display:flex;gap:4px;background:var(--glass-strong);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--border);border-radius:999px;padding:3px;}
 .lang-btn{padding:6px 14px;border-radius:999px;font-size:12.5px;font-weight:600;color:var(--text-dim);transition:.25s;}
 .lang-btn.active{background:var(--grad);color:#fff;}
 #legalInput{
@@ -394,6 +444,7 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 .legal-examples{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;position:relative;z-index:1;}
 .legal-chip{
   font-size:12.5px;padding:7px 13px;border-radius:999px;background:var(--glass-strong);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
   border:1px solid var(--border);color:var(--text-dim);transition:.25s;cursor:pointer;
 }
 .legal-chip:hover{border-color:var(--border-strong);color:var(--text);transform:translateY(-1px);}
@@ -417,13 +468,15 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 .legal-report-top{
   display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;
   padding:22px 26px;border-radius:var(--radius) var(--radius) 0 0;
-  background:var(--grad-soft);border:1px solid var(--border);border-bottom:none;
+  background:var(--grad-soft);backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);
+  border:1px solid var(--border);border-bottom:none;
 }
 .legal-report-top h3{font-size:18px;font-weight:700;}
 .legal-report-top .lr-sub{font-size:12.5px;color:var(--text-dim);margin-top:3px;}
 .confidence-badge{
   display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;font-size:12.5px;font-weight:700;
   letter-spacing:.03em;text-transform:uppercase;flex-shrink:0;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
 }
 .confidence-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:currentColor;}
 .confidence-high{background:rgba(52,211,153,0.14);color:var(--green);border:1px solid rgba(52,211,153,0.3);}
@@ -431,17 +484,20 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 .confidence-low{background:rgba(248,113,113,0.14);color:var(--red);border:1px solid rgba(248,113,113,0.3);}
 .legal-report-actions{
   display:flex;gap:8px;flex-wrap:wrap;padding:16px 26px;background:var(--glass);
+  backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);
   border:1px solid var(--border);border-top:none;border-bottom:none;
 }
 .legal-report-body{
   border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);
   overflow:hidden;background:rgba(255,255,255,0.02);
+  backdrop-filter:blur(16px) saturate(130%);-webkit-backdrop-filter:blur(16px) saturate(130%);
 }
 .legal-section-card{padding:24px 26px;border-bottom:1px solid var(--border);}
 .legal-section-card:last-child{border-bottom:none;}
 .legal-section-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
 .legal-section-num{
   width:30px;height:30px;border-radius:10px;background:var(--grad-soft);border:1px solid var(--border);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
   display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--blue-soft);flex-shrink:0;
 }
 .legal-section-head h4{font-size:15px;font-weight:700;}
@@ -450,10 +506,12 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 .legal-law-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
 .legal-law-tag{
   font-size:12px;padding:6px 12px;border-radius:8px;background:var(--grad-soft);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
   border:1px solid var(--border);color:var(--blue-soft);font-weight:600;
 }
 .legal-disclaimer-inline{
   margin-top:14px;padding:12px 14px;border-radius:10px;background:rgba(251,191,36,0.08);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
   border:1px solid rgba(251,191,36,0.25);color:var(--amber);font-size:12.5px;line-height:1.6;
 }
 .legal-disclaimer{
@@ -504,7 +562,8 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
   }
   .nav-links.mobile-open{
     display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;
-    background:rgba(8,8,14,0.98);border:1px solid var(--border);border-radius:0 0 18px 18px;padding:14px;gap:2px;
+    background:rgba(8,8,14,0.82);backdrop-filter:blur(24px) saturate(160%);-webkit-backdrop-filter:blur(24px) saturate(160%);
+    border:1px solid var(--border);border-radius:0 0 18px 18px;padding:14px;gap:2px;
     max-height:calc(100vh - 70px);overflow-y:auto;
   }
   .nav-links.mobile-open a{width:100%;padding:12px 14px;}
@@ -571,11 +630,21 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
       <a href="#contact">Contact</a>
     </nav>
     <div class="nav-actions">
+      <div class="nav-current-section nav-current-desktop" id="navCurrentSection" aria-live="polite">
+        <span class="nav-current-dot"></span>
+        <span class="ncs-label" id="navCurrentLabel">Home</span>
+      </div>
       <a href="#legal-ai" class="btn btn-primary btn-sm nav-dashboard-desktop">Legal AI</a>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
     </div>
   </div>
 </header>
+
+<!-- Floating "current section" pill for mobile/tablet (nav collapses to hamburger there) -->
+<div class="nav-current-mobile" id="navCurrentMobile" aria-live="polite">
+  <span class="nav-current-dot"></span>
+  <span class="ncs-label" id="navCurrentLabelMobile">Home</span>
+</div>
 
 <!-- ============================================================
      HERO SECTION
@@ -2432,6 +2501,52 @@ const navbar = $('#navbar');
 window.addEventListener('scroll', () => {
   navbar.classList.toggle('scrolled', window.scrollY > 30);
 }, {passive:true});
+
+/* -- "Which section am I on" scroll-spy indicator --
+   Tracks every top-level section, updates the glass pill label (desktop +
+   mobile versions) and highlights the matching nav link as you scroll. */
+const SECTION_LABELS = {
+  'home':'Home', 'study':'Study', 'productivity':'Productivity', 'engineering':'Engineering',
+  'legal-ai':'Legal AI', 'build':'Build', 'roadmap':'Roadmap', 'future':'Future', 'about':'About', 'contact':'Contact',
+};
+const spySections = Object.keys(SECTION_LABELS).map(id => document.getElementById(id)).filter(Boolean);
+const navCurrentLabel = $('#navCurrentLabel');
+const navCurrentLabelMobile = $('#navCurrentLabelMobile');
+const navCurrentMobile = $('#navCurrentMobile');
+let lastActiveSectionId = null;
+
+function updateActiveSection(){
+  const scrollPos = window.scrollY + window.innerHeight * 0.3;
+  let current = spySections[0];
+  for(const sec of spySections){
+    if(sec.offsetTop <= scrollPos) current = sec; else break;
+  }
+  if(!current || current.id === lastActiveSectionId) return;
+  lastActiveSectionId = current.id;
+  const label = SECTION_LABELS[current.id] || current.id;
+  navCurrentLabel.textContent = label;
+  navCurrentLabelMobile.textContent = label;
+  $$('#navLinks a').forEach(a => a.classList.toggle('active-link', a.getAttribute('href') === '#' + current.id));
+}
+
+function positionMobilePill(){
+  const h = navbar.getBoundingClientRect().height;
+  navCurrentMobile.style.top = (h + 10) + 'px';
+}
+
+let lastScrollY = window.scrollY;
+window.addEventListener('scroll', () => {
+  updateActiveSection();
+  positionMobilePill();
+  // Show the floating mobile pill only while scrolling down past the hero;
+  // hide it near the very top since the section label would just say "Home".
+  navCurrentMobile.classList.toggle('visible', window.scrollY > 260);
+  lastScrollY = window.scrollY;
+}, {passive:true});
+
+updateActiveSection();
+positionMobilePill();
+window.addEventListener('resize', positionMobilePill);
 
 /* -- Mobile nav toggle -- */
 const navToggle = $('#navToggle'), navLinks = $('#navLinks');
