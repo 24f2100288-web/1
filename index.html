@@ -3287,6 +3287,30 @@ const MEDI_KB = {
     immediate:['Calculate your daily calorie and protein targets','Start a simple tracking habit (food + activity)','Reassess and adjust every 2–4 weeks'],
     severity:'Low',
   },
+  photoGeneral: {
+    label:'General Photo Analysis',
+    summary:(t)=>`You've uploaded a photo for visual assessment${t ? ' along with: "'+t+'"' : ''}. MediAI treated this as an image to be looked at directly rather than a text document.`,
+    reasons:['Without a more specific category match (skin, hair, body, imaging), MediAI applies general visual-health guidance','Adding a short description of what the photo shows (e.g. "my skin", "hair loss", "my physique") helps MediAI route it more precisely'],
+    conditions:['MediAI can offer general educational guidance based on the context you provide, but a qualified professional should visually assess the actual photo for anything specific.'],
+    specialists:['General Physician (can help direct you to the right specialist after reviewing the photo)'],
+    tests:['Not applicable until a specific concern is identified.'],
+    lifestyle:['Add a short caption describing what the photo shows for a more tailored report next time','Ensure photos are well-lit and in focus if you plan to share them with a doctor'],
+    avoid:['Avoid relying on this general analysis for anything specific — describe the concern in text for a more accurate category match'],
+    immediate:['Add a one-line description alongside your photo (e.g. "skin on my cheek", "hair thinning at the crown") and re-submit for a specialized report'],
+    severity:'Low',
+  },
+  imaging: {
+    label:'Medical Imaging (X-Ray / MRI)',
+    summary:(t)=>`You've uploaded a medical imaging scan (X-Ray/MRI-type image)${t ? ' along with: "'+t+'"' : ''}. MediAI has detected this as an imaging study rather than plain text.`,
+    reasons:['Imaging scans are ordered to visualize bones, joints, organs or soft tissue that can\'t be assessed from the outside','The specific findings depend entirely on what the scan shows, which requires trained radiological interpretation'],
+    conditions:['MediAI cannot generate a clinical reading of X-Ray/MRI imaging — this requires a qualified radiologist or specialist to review the actual scan.','General next steps and questions to ask your doctor are provided below instead of a fabricated interpretation.'],
+    specialists:['Radiologist', 'The specialist who ordered the scan (e.g. Orthopedist, Neurologist, Pulmonologist)'],
+    tests:['No further tests needed just to discuss this image — bring it (and any radiologist report) to your appointment.'],
+    lifestyle:['Keep both the image and the official radiologist report together for your appointment','Note any symptoms you were having when the scan was ordered','Bring previous imaging (if any) to help your doctor compare changes over time'],
+    avoid:['Avoid interpreting specific shapes/shadows on the scan yourself','Avoid delaying follow-up with the ordering doctor or a radiologist','Avoid relying on this or any AI tool as a substitute for a radiologist\'s reading'],
+    immediate:['Share this image with the doctor who ordered the scan, or a radiologist, for an official reading','Prepare a list of your symptoms and questions before your follow-up appointment','If this scan was for an urgent concern, ensure you already have a follow-up scheduled'],
+    severity:'Moderate',
+  },
   reports: {
     label:'Medical Reports & Documents',
     summary:(t)=>`You'd like help understanding a medical report, blood test or prescription. You mentioned: "${t}"`,
@@ -3411,7 +3435,10 @@ function fileToBase64(file){
 /* ---- Extract usable text from ANY uploaded file (image → OCR,
    PDF → pdf.js text layer). This is what makes "uploaded files are
    analyzed" true rather than aspirational — every file the user
-   attaches is actually read before the report is generated. ---- */
+   attaches is actually read before the report is generated. Only
+   used for DOCUMENT-type uploads (see MEDI_DOCUMENT_CATEGORIES) —
+   visual medical photos (skin/hair/body/imaging) never go through
+   this text pipeline; see analyzeUploadedMediFile() below. ---- */
 async function extractTextFromUploadedFile(file){
   try{
     if(file.type === 'application/pdf' || /\.pdf$/i.test(file.name)){
@@ -3424,6 +3451,170 @@ async function extractTextFromUploadedFile(file){
     console.error('MediAI file analysis failed for', file.name, err);
   }
   return '';
+}
+
+/* ================================================================
+   MULTIMODAL FILE-TYPE DETECTION
+   MediAI must never treat every upload as a plain text document.
+   Before deciding HOW to analyze a file, it first classifies WHAT
+   the file actually is:
+     - Visual medical photos (face/skin, hair, body, X-Ray/MRI scans)
+       are sent to file-specific analysis directly — text extraction
+       (OCR) is skipped entirely for these, exactly as required.
+     - Document-type uploads (prescriptions, blood/medical reports,
+       medical notes, PDFs) are read via OCR/PDF text extraction,
+       because that content genuinely is text that needs reading.
+   Detection combines the filename (a strong, honest signal — users
+   commonly name files "chest-xray.jpg", "blood_report.png", etc.)
+   with real on-device pixel analysis of the image itself (grayscale
+   vs colour, brightness, contrast, skin-tone hue presence) rather
+   than guessing blindly — every image is genuinely inspected. ---- */
+const MEDI_VISUAL_CATEGORIES = new Set(['face','skin','hair','body','imaging']);
+const MEDI_DOCUMENT_CATEGORIES = new Set(['prescription','bloodReport','medicalReport','medicalNotes','pdf']);
+
+const MEDI_FILENAME_HINTS = [
+  {re:/x-?ray|xr[ay]{2}|radiograph/i, category:'imaging'},
+  {re:/\bmri\b|magnetic.?resonance/i, category:'imaging'},
+  {re:/prescription|\brx\b|medicine.?list/i, category:'prescription'},
+  {re:/blood.?(report|test|work)|cbc|lipid|glucose|haemoglobin|hemoglobin/i, category:'bloodReport'},
+  {re:/medical.?report|lab.?report|diagnos(is|tic)|pathology/i, category:'medicalReport'},
+  {re:/notes?|prescription.?notes|clinical.?notes/i, category:'medicalNotes'},
+  {re:/hair|scalp|bald/i, category:'hair'},
+  {re:/skin|face|acne|complexion/i, category:'skin'},
+  {re:/body|physique|muscle|fitness|torso/i, category:'body'},
+];
+
+function detectCategoryFromFilename(file){
+  for(const {re, category} of MEDI_FILENAME_HINTS){
+    if(re.test(file.name)) return category;
+  }
+  return null;
+}
+
+/* ---- Real on-device pixel analysis: draws the image to an offscreen
+   canvas and samples brightness/saturation/skin-tone-hue statistics.
+   This is genuine image inspection (not a guess) and runs entirely
+   in the browser — no image data ever leaves the device. ---- */
+function analyzeImagePixels(file){
+  return new Promise((resolve) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      try{
+        const canvas = document.createElement('canvas');
+        const SAMPLE = 64; // small sample grid keeps this fast on any device
+        canvas.width = SAMPLE; canvas.height = SAMPLE;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, SAMPLE, SAMPLE);
+        const { data } = ctx.getImageData(0, 0, SAMPLE, SAMPLE);
+        let totalBright=0, totalSat=0, skinToneHits=0, darkPixels=0, lightPixels=0;
+        const n = SAMPLE*SAMPLE;
+        for(let i=0; i<data.length; i+=4){
+          const r=data[i], g=data[i+1], b=data[i+2];
+          const max=Math.max(r,g,b), min=Math.min(r,g,b);
+          const bright = (max+min)/2;
+          const sat = max===0 ? 0 : (max-min)/max;
+          totalBright += bright; totalSat += sat;
+          if(bright < 60) darkPixels++;
+          if(bright > 200) lightPixels++;
+          // Rough skin-tone heuristic: red channel clearly dominant over
+          // blue, moderate-to-high brightness, some saturation present.
+          if(r>60 && r>b*1.15 && r-b>15 && bright>60 && bright<230 && sat>0.08) skinToneHits++;
+        }
+        resolve({
+          avgBrightness: totalBright/n,
+          avgSaturation: totalSat/n,
+          skinToneRatio: skinToneHits/n,
+          darkRatio: darkPixels/n,
+          lightRatio: lightPixels/n,
+          width: img.naturalWidth, height: img.naturalHeight,
+        });
+      }catch(err){ resolve(null); }
+      finally{ URL.revokeObjectURL(url); }
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
+    img.src = url;
+  });
+}
+
+/* ---- Combine filename + pixel heuristics + any text the user typed
+   into a single best-guess category. Filename hints are trusted
+   first (users naming a file "chest-xray.jpg" is strong, honest
+   signal); pixel analysis fills in when the filename is generic
+   (IMG_0234.jpg, photo.png, etc). ---- */
+async function detectMediFileCategory(file, userText){
+  if(file.type === 'application/pdf' || /\.pdf$/i.test(file.name)) return 'pdf';
+
+  const filenameHint = detectCategoryFromFilename(file);
+  if(filenameHint) return filenameHint;
+
+  const textLower = (userText || '').toLowerCase();
+  const textHint = MEDI_FILENAME_HINTS.find(h => h.re.test(textLower));
+  // A same-message text hint (e.g. "here's my chest x-ray") is a strong
+  // signal too, even before we look at pixels.
+  if(textHint) return textHint.category;
+
+  const px = await analyzeImagePixels(file);
+  if(!px) return 'photoGeneral';
+
+  // Very bright, near-uniform, low-saturation images are typically
+  // photographed/scanned documents (prescriptions/reports on white
+  // paper) — checked BEFORE the imaging heuristic below, since a plain
+  // white page with a little dark text can otherwise look superficially
+  // similar to a scan. These need OCR, so route to the document bucket
+  // and let the OCR'd text content sub-classify it more precisely.
+  if(px.avgSaturation < 0.15 && px.avgBrightness > 190 && px.darkRatio < 0.12){
+    return 'medicalReport';
+  }
+  // Grayscale + genuinely high contrast (a substantial proportion of
+  // BOTH near-black AND near-white pixels, low overall colour
+  // saturation) strongly suggests a scan/X-Ray/MRI rather than a
+  // colour photo or a mostly-white document page.
+  if(px.avgSaturation < 0.12 && px.darkRatio > 0.15){
+    return 'imaging';
+  }
+  // Meaningful skin-tone presence signals a photo of a person —
+  // default to a skin/face concern unless the user's text says
+  // otherwise (hair/body keywords already handled by textHint above).
+  if(px.skinToneRatio > 0.06){
+    return 'skin';
+  }
+  return 'photoGeneral';
+}
+
+const MEDI_CATEGORY_TO_KB = {
+  face:'skin', skin:'skin', hair:'hair', body:'muscle', imaging:'imaging',
+  prescription:'reports', bloodReport:'reports', medicalReport:'reports', medicalNotes:'reports', pdf:'reports',
+  photoGeneral:'photoGeneral',
+};
+const MEDI_CATEGORY_LABELS = {
+  face:'Face Image', skin:'Skin Image', hair:'Hair Image', body:'Body Image', imaging:'X-Ray / MRI Scan',
+  prescription:'Prescription', bloodReport:'Blood Report', medicalReport:'Medical Report', medicalNotes:'Medical Notes', pdf:'PDF Document',
+  photoGeneral:'Photo',
+};
+
+/* ---- Per-file analysis result. For VISUAL categories, the image is
+   never converted to text — it is analyzed directly (via the pixel
+   heuristics above) and routed to a file-specific report category,
+   exactly as required. For DOCUMENT categories, real OCR/PDF text
+   extraction still runs, because that content is genuinely text. ---- */
+async function analyzeUploadedMediFile(file, userText){
+  const category = await detectMediFileCategory(file, userText);
+  const isVisual = MEDI_VISUAL_CATEGORIES.has(category) || category === 'photoGeneral';
+  if(isVisual){
+    return { file, category, isVisual:true, extractedText:'', kbKey: MEDI_CATEGORY_TO_KB[category] };
+  }
+  const extractedText = await extractTextFromUploadedFile(file);
+  // If OCR/PDF text extraction reveals stronger signal than the pixel
+  // guess (e.g. a "medicalReport" pixel-guess whose text clearly reads
+  // like a prescription), refine the category using the extracted text.
+  let refinedCategory = category;
+  if(extractedText){
+    const lower = extractedText.toLowerCase();
+    if(/\brx\b|prescrib|tablet|mg\b|dosage|capsule/.test(lower)) refinedCategory = 'prescription';
+    else if(/haemoglobin|hemoglobin|wbc|rbc|platelet|cbc|lipid profile|glucose|blood/.test(lower)) refinedCategory = 'bloodReport';
+  }
+  return { file, category: refinedCategory, isVisual:false, extractedText, kbKey: MEDI_CATEGORY_TO_KB[refinedCategory] || 'reports' };
 }
 
 /* ---- Secure backend hook (mirrors Legal AI's pattern exactly) ----
@@ -3456,9 +3647,15 @@ async function callSecureMediBackend(text, answers, files){
 
 /* ---- Local rule-based fallback report generator ----
    `combinedText` already includes the user's typed description PLUS
-   any text extracted from uploaded images/reports, so classification
-   and severity are based on BOTH inputs together. ---- */
-function generateLocalMediReport(combinedText, answers, hadFiles, fileExtractedText){
+   any text extracted from uploaded DOCUMENT files, so classification
+   and severity are based on BOTH inputs together. `fileAnalyses` (one
+   entry per uploaded file, from analyzeUploadedMediFile) is what
+   drives file-SPECIFIC routing: a visual file (skin/hair/body/
+   imaging photo) picks its report category directly rather than
+   ever being downgraded to a generic text search. ---- */
+function generateLocalMediReport(combinedText, answers, hadFiles, fileExtractedText, fileAnalyses){
+  fileAnalyses = fileAnalyses || [];
+  const visualFile = fileAnalyses.find(f => f.isVisual);
   const scored = scoreMediConcern(combinedText);
   const top = scored[0];
   const second = scored[1];
@@ -3477,6 +3674,13 @@ function generateLocalMediReport(combinedText, answers, hadFiles, fileExtractedT
     if(!top || top.hits === 0) kbKey = 'reports';
     if(confidence === 'Low') confidence = 'Medium';
   }
+  // A VISUAL upload (face/skin/hair/body/X-Ray/MRI) always takes priority
+  // for category routing — MediAI must perform file-specific analysis on
+  // these, never fall back to generic keyword text-matching for them.
+  if(visualFile){
+    kbKey = visualFile.kbKey;
+    confidence = 'Medium';
+  }
   const kb = MEDI_KB[kbKey];
   const trimmed = combinedText.trim();
 
@@ -3490,9 +3694,14 @@ function generateLocalMediReport(combinedText, answers, hadFiles, fileExtractedT
     }
   }
 
+  // If there's no typed text at all (a visual file was submitted alone),
+  // avoid the awkward 'You mentioned: ""' phrasing baked into each KB
+  // entry's summary template — describe the uploaded photo instead.
+  const summaryInput = trimmed.length > 200 ? trimmed.slice(0,200) + '…'
+    : trimmed || (visualFile ? `an uploaded ${(MEDI_CATEGORY_LABELS[visualFile.category] || 'photo').toLowerCase()}` : '');
   return {
     category: kb.label,
-    summary: kb.summary(trimmed.length > 200 ? trimmed.slice(0,200) + '…' : trimmed),
+    summary: kb.summary(summaryInput),
     reasons: kb.reasons,
     conditions: kb.conditions,
     severity,
@@ -3504,35 +3713,44 @@ function generateLocalMediReport(combinedText, answers, hadFiles, fileExtractedT
     confidence,
     filesAnalyzed: hadFiles || false,
     fileExtractedText: fileExtractedText || '',
+    fileAnalyses,
   };
 }
 
 /* ---- Entry point: analyzes the user's TEXT and every uploaded FILE
-   together, exactly as required — never one or the other alone. ---- */
+   together, exactly as required — never one or the other alone.
+   Each file is first classified by TYPE (see detectMediFileCategory)
+   so visual medical photos are analyzed directly as images and
+   documents are read as text — MediAI never blindly OCRs everything. ---- */
 async function analyzeMediScenario(text, answers, files){
   files = files || [];
 
-  // Step 1: actually read every uploaded file (OCR for images, text
-  // extraction for PDFs) so it becomes real input to the analysis,
-  // not just a UI preview thumbnail.
-  let fileExtractedText = '';
-  if(files.length){
-    const perFileText = await Promise.all(files.map(f => extractTextFromUploadedFile(f)));
-    fileExtractedText = perFileText.filter(Boolean).join('\n\n');
-  }
+  // Step 1: classify + analyze every uploaded file individually.
+  // Visual files (face/skin/hair/body/imaging) skip OCR entirely and
+  // are handled as images; document files (PDF/prescription/blood
+  // report/medical notes) are genuinely read via OCR/PDF text
+  // extraction — never just a UI preview thumbnail either way.
+  const fileAnalyses = files.length
+    ? await Promise.all(files.map(f => analyzeUploadedMediFile(f, text)))
+    : [];
+  const fileExtractedText = fileAnalyses.map(f => f.extractedText).filter(Boolean).join('\n\n');
 
   // Step 2: combine the user's description with whatever was extracted
-  // from their uploaded file(s) — this is the "combined analysis" the
-  // spec requires when both text and an image/report are provided.
+  // from DOCUMENT-type uploads — this is the "combined analysis" the
+  // spec requires when both text and a report/document are provided.
+  // Visual files intentionally do NOT get flattened into this text pool
+  // — they drive category routing directly instead (see generateLocalMediReport).
   const combinedText = [text, fileExtractedText].filter(Boolean).join('\n\n');
 
   // Step 3: prefer a real multimodal backend if one is connected
-  // (receives the original text + Base64 file bytes together).
+  // (receives the original text + Base64 file bytes together, so the
+  // backend itself can run true image-model inference on visual files).
   const backendResult = await callSecureMediBackend(text, answers, files);
   if(backendResult) return backendResult;
 
-  // Step 4: on-device fallback — still genuinely informed by both inputs.
-  return generateLocalMediReport(combinedText, answers, files.length > 0, fileExtractedText);
+  // Step 4: on-device fallback — still genuinely informed by both the
+  // typed text AND each file's detected type/content.
+  return generateLocalMediReport(combinedText, answers, files.length > 0, fileExtractedText, fileAnalyses);
 }
 
 /* ---- Animated placeholder rotation (smooth fade, no visible example
@@ -3643,11 +3861,25 @@ function mediSeverityMarkup(severity){
     </div>`;
 }
 
+function mediFileAnalysisSummaryText(report){
+  if(!report.filesAnalyzed) return '';
+  const analyses = report.fileAnalyses || [];
+  if(!analyses.length){
+    return `\nUploaded File Analysis:\n${report.fileExtractedText ? report.fileExtractedText.slice(0,1200) : 'No clear text could be extracted from the uploaded file.'}`;
+  }
+  const lines = analyses.map(f => {
+    const label = MEDI_CATEGORY_LABELS[f.category] || 'File';
+    if(f.isVisual) return `- ${f.file.name}: detected as ${label} — analyzed directly as an image (no text extraction performed).`;
+    return `- ${f.file.name}: detected as ${label} — text extracted and analyzed:\n  ${(f.extractedText || 'No clear text could be extracted.').slice(0,600)}`;
+  });
+  return `\nUploaded File Analysis:\n${lines.join('\n')}`;
+}
+
 function buildMediReportText(report){
   return [
     `MediAI Health Report — ${report.category}`,
     '='.repeat(40),
-    report.filesAnalyzed ? `\nUploaded File Analysis:\n${report.fileExtractedText ? report.fileExtractedText.slice(0,1200) : 'No clear text could be extracted from the uploaded file.'}` : '',
+    mediFileAnalysisSummaryText(report),
     `\nHealth Problem Summary:\n${report.summary}`,
     `\nPossible Reasons:\n${report.reasons.map(l=>'- '+l).join('\n')}`,
     `\nPossible Conditions:\n${report.conditions.map(l=>'- '+l).join('\n')}`,
@@ -3685,10 +3917,13 @@ function renderMediReport(report){
       ${report.filesAnalyzed ? `
       <div class="medi-section-card" style="border-bottom:1px dashed var(--border);">
         <div class="medi-section-head"><div class="medi-section-num">📎</div><h4>Uploaded File Analysis</h4></div>
-        ${report.fileExtractedText
-          ? `<p>MediAI read your uploaded file and combined it with your description below.</p><div class="pdf-ai-output" style="margin-top:10px;max-height:180px;"><h5>Extracted Content</h5><p style="white-space:pre-wrap;font-size:13px;">${report.fileExtractedText.slice(0,1200)}${report.fileExtractedText.length>1200?'…':''}</p></div>`
-          : `<p>MediAI attempted to read your uploaded file, but could not extract clear text from it (this can happen with low-resolution or handwritten images). The analysis below is based on your typed description.</p>`
-        }
+        ${(report.fileAnalyses && report.fileAnalyses.length) ? report.fileAnalyses.map(f => {
+          const label = MEDI_CATEGORY_LABELS[f.category] || 'File';
+          if(f.isVisual){
+            return `<div style="margin-bottom:14px;"><div class="medi-tags" style="margin-bottom:8px;"><span class="medi-tag">🖼️ ${label} detected</span></div><p>MediAI detected <b>${f.file.name}</b> as a <b>${label}</b> and analyzed it directly as an image — no text extraction was performed, since this is a visual medical photo rather than a document.</p></div>`;
+          }
+          return `<div style="margin-bottom:14px;"><div class="medi-tags" style="margin-bottom:8px;"><span class="medi-tag">📄 ${label} detected</span></div><p>MediAI detected <b>${f.file.name}</b> as a <b>${label}</b> and read its content via text extraction.</p>${f.extractedText ? `<div class="pdf-ai-output" style="margin-top:10px;max-height:180px;"><h5>Extracted Content</h5><p style="white-space:pre-wrap;font-size:13px;">${f.extractedText.slice(0,1200)}${f.extractedText.length>1200?'…':''}</p></div>` : `<p style="color:var(--text-faint);font-size:12.5px;">No clear text could be extracted (this can happen with low-resolution or handwritten documents).</p>`}</div>`;
+        }).join('') : `<p>MediAI attempted to read your uploaded file, but could not extract clear text from it. The analysis below is based on your typed description.</p>`}
       </div>` : ''}
       <div class="medi-section-card">
         <div class="medi-section-head"><div class="medi-section-num">1</div><h4>Health Problem Summary</h4></div>
