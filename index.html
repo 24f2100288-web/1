@@ -62,6 +62,22 @@
   --radius-lg:26px;
   --ease: cubic-bezier(.16,1,.3,1);
 
+  /* ---- Premium 120Hz-feel timing scale (additive — --ease above is
+     kept untouched since existing rules still reference it directly).
+     Durations follow the spec tiers; eases are tuned per-tier so quick
+     interactions feel snappy (ease-out) and larger movements feel like
+     they glide to a soft stop (ease-out-expo-ish). ---- */
+  --ease-micro:   cubic-bezier(.4,0,.2,1);
+  --ease-hover:   cubic-bezier(.25,.46,.45,.94);
+  --ease-card:    cubic-bezier(.16,1,.3,1);
+  --ease-section: cubic-bezier(.16,1,.3,1);
+  --ease-spring:  cubic-bezier(.34,1.56,.64,1);
+
+  --dur-micro:   150ms;
+  --dur-hover:   220ms;
+  --dur-card:    350ms;
+  --dur-section: 500ms;
+
   /* ================================================================
      GLOBAL GLASSMORPHISM DESIGN SYSTEM
      Every card, button, badge, navbar, search bar, upload area and
@@ -109,14 +125,20 @@
 html[data-theme="light"]{
   --bg:#f4f6fb;
   --bg-soft:#ffffff;
-  --text:#12141f;
-  --text-dim:#565973;
-  --text-faint:#8a8ca3;
+  /* Darkened for comfortable readability: near-black primary text,
+     and noticeably darker secondary/tertiary text than before so
+     body copy and captions don't wash out on the light background. */
+  --text:#080911;
+  --text-dim:#33354a;
+  --text-faint:#5b5d74;
 
   --glass-bg:rgba(20,22,40,0.04);
   --glass-bg-strong:rgba(20,22,40,0.07);
-  --glass-border:rgba(20,22,40,0.09);
-  --glass-border-strong:rgba(20,22,40,0.16);
+  /* Darker, more visible borders (higher opacity of the same near-black
+     tint) so card/input/section edges are clearly readable on white
+     instead of nearly disappearing. */
+  --glass-border:rgba(15,17,32,0.16);
+  --glass-border-strong:rgba(15,17,32,0.28);
 
   --glass-shadow-1: 0 4px 16px rgba(30,34,60,0.08);
   --glass-shadow:   0 10px 32px rgba(30,34,60,0.10);
@@ -130,7 +152,7 @@ html[data-theme="light"]{
 }
 
 *{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;overflow-x:hidden;width:100%;}
+html{scroll-behavior:smooth;overflow-x:hidden;width:100%;scroll-padding-top:88px;}
 body{
   /* Elegant midnight-blue base with two very soft, static color washes.
      This exists only to make the frosted-glass cards read as glass —
@@ -253,7 +275,8 @@ html{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.14) transparent;}
   -webkit-backdrop-filter:var(--glass-blur-1);
   border-radius:var(--radius);
   box-shadow:var(--glass-shadow-1);
-  transition:transform .3s var(--ease), border-color .3s var(--ease), box-shadow .3s var(--ease);
+  transition:transform var(--dur-card) var(--ease-card), border-color var(--dur-hover) var(--ease-hover),
+             box-shadow var(--dur-card) var(--ease-card), backdrop-filter var(--dur-hover) var(--ease-hover);
 }
 
 /* ---- Glass Button (every CTA, ghost button, icon button) ---- */
@@ -261,23 +284,53 @@ html{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.14) transparent;}
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
   padding:13px 26px;border-radius:999px;font-weight:600;font-size:14.5px;
   backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
-  transition:transform .3s var(--ease), box-shadow .3s var(--ease), background .3s var(--ease), border-color .3s var(--ease);
+  transition:transform var(--dur-hover) var(--ease-hover), box-shadow var(--dur-hover) var(--ease-hover),
+             background var(--dur-hover) var(--ease-hover), border-color var(--dur-hover) var(--ease-hover);
   white-space:nowrap;
+  position:relative;overflow:hidden;isolation:isolate; /* contains the ripple + glow pseudo-layers */
+  -webkit-tap-highlight-color:transparent;
 }
+/* Soft glow on hover is applied via box-shadow (see .btn-primary:hover /
+   .btn-ghost:hover below) rather than a pseudo-element, because .btn has
+   overflow:hidden to contain the ripple — and overflow clips descendant
+   boxes (incl. ::before/::after) but NOT the element's own box-shadow,
+   so box-shadow is the only glow technique that survives the clip. */
+/* Ripple: a JS-injected <span class="btn-ripple"> expands + fades on click */
+.btn-ripple{
+  position:absolute;border-radius:50%;background:rgba(255,255,255,0.5);
+  transform:scale(0);opacity:.6;pointer-events:none;
+  animation:btnRippleExpand .6s var(--ease-hover) forwards;
+}
+@keyframes btnRippleExpand{to{transform:scale(2.6);opacity:0;}}
 .btn-primary{
   background:var(--grad);color:#fff;border:1px solid transparent;
   box-shadow:0 6px 18px rgba(99,102,241,0.28);
 }
-.btn-primary:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(99,102,241,0.36);}
-.btn-primary:active{transform:translateY(0) scale(0.98);}
+.btn-primary:hover{transform:translateY(-2px) scale(1.015);box-shadow:0 14px 30px rgba(99,102,241,0.42), 0 0 22px rgba(139,92,246,0.28);}
+.btn-primary:active{transform:translateY(0) scale(0.96);transition-duration:var(--dur-micro);}
 .btn-ghost{
   background:var(--glass-bg);border:1px solid var(--glass-border);color:var(--text);
   box-shadow:var(--glass-shadow-1);
 }
-.btn-ghost:hover{border-color:var(--glass-border-strong);background:var(--glass-bg-strong);transform:translateY(-2px);}
+.btn-ghost:hover{border-color:var(--glass-border-strong);background:var(--glass-bg-strong);transform:translateY(-2px) scale(1.01);box-shadow:var(--glass-shadow-1), 0 0 16px rgba(255,255,255,0.08);}
+.btn-ghost:active{transform:translateY(0) scale(0.97);transition-duration:var(--dur-micro);}
 .btn-sm{padding:9px 18px;font-size:13px;}
 .btn-block{width:100%;}
 .btn:disabled{opacity:.45;cursor:not-allowed;transform:none !important;}
+@media (prefers-reduced-motion: reduce){
+  .btn, .btn-ripple{transition:none !important;animation:none !important;}
+}
+
+/* Glass sub-components that previously had NO transition at all get a
+   shared baseline so blur/depth changes (e.g. navbar going "scrolled",
+   a badge's background shifting) fade smoothly instead of snapping.
+   (.glass/.glass-card/.tool-icon/.search-bar keep their own more specific
+   `transition` rules elsewhere, which already include transform.) */
+.glass-badge, .glass-icon-tile, .glass-navbar, .glass-search, .glass-upload{
+  transition:background var(--dur-hover) var(--ease-hover), background-color var(--dur-hover) var(--ease-hover),
+             border-color var(--dur-hover) var(--ease-hover), box-shadow var(--dur-hover) var(--ease-hover),
+             backdrop-filter var(--dur-hover) var(--ease-hover);
+}
 
 /* ---- Glass Badge (eyebrow labels, tags, pills, premium/status badges) ---- */
 .glass-badge{
@@ -319,6 +372,8 @@ html{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.14) transparent;}
   backdrop-filter:var(--glass-blur-2);-webkit-backdrop-filter:var(--glass-blur-2);
   border:1px solid var(--glass-border-strong);
   box-shadow:var(--glass-shadow-2);
+  transition:opacity var(--dur-hover) var(--ease-hover), transform var(--dur-hover) var(--ease-hover),
+             background var(--dur-hover) var(--ease-hover), backdrop-filter var(--dur-hover) var(--ease-hover);
 }
 
 /* ================================================================
@@ -362,7 +417,9 @@ header#navbar{
   background:rgba(10,12,22,0.32);
   backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
   border-bottom:1px solid var(--glass-border);
-  transition:background .4s var(--ease), border-color .4s var(--ease), padding .4s var(--ease);
+  transition:background var(--dur-section) var(--ease-section), border-color var(--dur-section) var(--ease-section),
+             padding var(--dur-hover) var(--ease-hover), box-shadow var(--dur-hover) var(--ease-hover),
+             backdrop-filter var(--dur-section) var(--ease-section);
 }
 header#navbar.scrolled{
   background:rgba(10,12,22,0.6);
@@ -533,23 +590,30 @@ html[data-theme="light"] .theme-toggle-thumb .icon-sun{display:block;}
   background:var(--glass-strong);border:1px solid var(--border);
   backdrop-filter:var(--glass-blur-2);-webkit-backdrop-filter:var(--glass-blur-2);
   box-shadow:var(--glass-shadow-1);
-  transition:border-color .3s, box-shadow .3s;
+  transition:border-color var(--dur-hover) var(--ease-hover), box-shadow var(--dur-hover) var(--ease-hover),
+             background var(--dur-hover) var(--ease-hover), transform var(--dur-hover) var(--ease-hover);
 }
+.search-bar:hover{border-color:var(--glass-border-strong);box-shadow:var(--glass-shadow-1), 0 0 18px rgba(139,92,246,0.1);}
 .search-bar:focus-within{
   border-color:var(--blue-soft);
   box-shadow:0 0 0 4px rgba(59,130,246,0.1), 0 0 24px rgba(139,92,246,0.12), var(--glass-shadow);
+  transform:scale(1.008);
 }
-.search-bar svg{flex-shrink:0;opacity:.55;}
+.search-bar svg{flex-shrink:0;opacity:.55;transition:opacity var(--dur-hover) var(--ease-hover), transform var(--dur-hover) var(--ease-hover);}
+.search-bar:focus-within svg{opacity:.85;}
+.search-bar.searching svg{animation:searchIconPulse 1s var(--ease-hover) infinite;}
+@keyframes searchIconPulse{0%,100%{opacity:.55;transform:scale(1);}50%{opacity:1;transform:scale(1.12);}}
 .search-bar input{
   flex:1;background:transparent;border:none;outline:none;font-size:14.5px;color:var(--text);padding:10px 0;
 }
-.search-bar input::placeholder{color:var(--text-faint);}
+.search-bar input::placeholder{color:var(--text-faint);transition:color var(--dur-hover) var(--ease-hover);}
+.search-bar:focus-within input::placeholder{color:var(--text-dim);}
 .search-bar .btn{flex-shrink:0;}
 #searchResults{
   position:absolute;top:calc(100% + 12px);left:0;right:0;z-index:50;
   max-height:420px;overflow-y:auto;text-align:left;
   border-radius:var(--radius);opacity:0;visibility:hidden;transform:translateY(-8px) scale(.98);
-  transition:opacity .25s var(--ease), transform .25s var(--ease), visibility .25s;
+  transition:opacity var(--dur-hover) var(--ease-hover), transform var(--dur-hover) var(--ease-hover), visibility var(--dur-hover);
   padding:10px;
   background:var(--glass-strong);backdrop-filter:var(--glass-blur-2);-webkit-backdrop-filter:var(--glass-blur-2);
   border:1px solid var(--border-strong);box-shadow:var(--glass-shadow-2);
@@ -557,7 +621,7 @@ html[data-theme="light"] .theme-toggle-thumb .icon-sun{display:block;}
 #searchResults.active{opacity:1;visibility:visible;transform:translateY(0) scale(1);}
 .search-result-item{
   display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;cursor:pointer;
-  transition:background .2s, transform .2s;text-align:left;
+  transition:background var(--dur-micro) var(--ease-micro), transform var(--dur-micro) var(--ease-micro);text-align:left;
 }
 .search-result-item:hover{background:var(--glass-bg-strong);transform:translateX(2px);}
 .search-result-icon{
@@ -597,33 +661,75 @@ html[data-theme="light"] .theme-toggle-thumb .icon-sun{display:block;}
   border-radius:var(--radius);
   backdrop-filter:none;-webkit-backdrop-filter:none;
   box-shadow:0 1px 2px rgba(0,0,0,0.2);
-  transition:transform .3s var(--ease), border-color .3s var(--ease), box-shadow .3s var(--ease), background .3s var(--ease);
+  transition:transform var(--dur-card) var(--ease-card), border-color var(--dur-hover) var(--ease-hover),
+             box-shadow var(--dur-card) var(--ease-card), background var(--dur-hover) var(--ease-hover);
+  will-change:transform;
 }
 .tool-card::before{
-  content:'';position:absolute;inset:0;opacity:0;background:var(--grad-soft);transition:opacity .3s;
+  content:'';position:absolute;inset:0;opacity:0;background:var(--grad-soft);transition:opacity var(--dur-hover) var(--ease-hover);
 }
-.tool-card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,0.12);box-shadow:0 12px 28px rgba(0,0,0,0.28);background:rgba(255,255,255,0.025);}
+.tool-card:hover{transform:translateY(-5px) scale(1.008);border-color:rgba(255,255,255,0.12);box-shadow:0 16px 34px rgba(0,0,0,0.32);background:rgba(255,255,255,0.025);}
 .tool-card:hover::before{opacity:.5;}
-.tool-card:active{transform:translateY(-1px);}
+.tool-card:active{transform:translateY(-2px) scale(1);transition-duration:var(--dur-micro);}
 .tool-icon{
   width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;
   font-size:21px;background:var(--grad-soft);border:1px solid var(--border);margin-bottom:18px;position:relative;z-index:1;
   backdrop-filter:none;-webkit-backdrop-filter:none;
-  transition:transform .4s var(--ease);
+  transition:transform var(--dur-card) var(--ease-card);
 }
-.tool-card:hover .tool-icon{transform:scale(1.05);}
+.tool-card:hover .tool-icon{transform:scale(1.08) rotate(-2deg);}
 .tool-card h3{font-size:16px;font-weight:600;margin-bottom:8px;position:relative;z-index:1;letter-spacing:-0.01em;}
 .tool-card p{font-size:13.5px;color:var(--text-dim);position:relative;z-index:1;line-height:1.6;}
 .tool-card .tc-arrow{
   display:inline-flex;align-items:center;gap:6px;margin-top:16px;position:relative;z-index:1;
   font-size:13px;font-weight:600;color:var(--blue-soft);
 }
-.tool-card .tc-arrow svg{transition:transform .3s var(--ease);}
-.tool-card:hover .tc-arrow svg{transform:translateX(3px);}
+.tool-card .tc-arrow svg{transition:transform var(--dur-hover) var(--ease-hover);}
+.tool-card:hover .tc-arrow svg{transform:translateX(4px);}
 
-/* Scroll reveal */
-.reveal{opacity:0;transform:translateY(32px);transition:opacity .8s var(--ease), transform .8s var(--ease);}
-.reveal.visible{opacity:1;transform:translateY(0);}
+/* Scroll reveal
+   Deliberately implemented with `animation` (not `transition`).
+   Many elements that get `.reveal` (e.g. `.tool-card`) ALSO define
+   their own `transition` for hover/press feedback. `transition` is a
+   single shorthand property per element, so if reveal used `transition`
+   too, whichever rule wins the cascade (same specificity — last one
+   in source order, i.e. this rule) would silently wipe out the card's
+   own hover transition list. `animation` is a completely separate CSS
+   property from `transition`, so the two coexist without any collision
+   — the reveal plays once on scroll-into-view, and the card's own
+   transition keeps working normally for hover/active afterwards. */
+.reveal{
+  opacity:0;transform:translateY(24px) scale(.985);
+  will-change:opacity, transform;
+}
+/* IMPORTANT: `opacity:1; transform:translateY(0) scale(1);` below are
+   plain (non-animation) declarations, and `animation-fill-mode` is left
+   at its default `none`. That's deliberate: while the keyframes are
+   actively playing they take over as normal, but the instant playback
+   ends the animation effect stops applying entirely and these plain
+   declarations become the element's resting values. If fill-mode were
+   `forwards`/`both` instead, the animation would keep "pinning" transform
+   at a cascade priority ABOVE normal author rules forever after — which
+   would silently block .tool-card:hover (or any other :hover/:active
+   rule) from ever moving the element again. Using plain declarations
+   for the resting state avoids that trap entirely. */
+/* `:where()` zeroes out selector specificity to 0, so this resting-state
+   override never competes with (and can never accidentally beat) a real
+   component's own :hover/:active rule — e.g. `.tool-card:hover` has
+   specificity (0,2,0), identical to a plain `.reveal.visible` selector,
+   which would otherwise win purely because it's later in the file and
+   permanently block the card's hover transform. With :where(), normal
+   rules always take priority once the reveal animation has finished. */
+:where(.reveal.visible){
+  opacity:1;transform:translateY(0) scale(1);
+}
+.reveal.visible{
+  animation:revealIn var(--dur-section) var(--ease-section);
+}
+@keyframes revealIn{
+  from{opacity:0;transform:translateY(24px) scale(.985);}
+  to{opacity:1;transform:translateY(0) scale(1);}
+}
 
 /* ================================================================
    9. MODAL (generic tool interaction surface)
@@ -737,14 +843,26 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 .legal-console-meta{font-size:11.5px;color:var(--text-faint);margin-top:10px;position:relative;z-index:1;display:flex;align-items:center;gap:6px;}
 .legal-console-meta .dot-live{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);}
 
-/* Loading state */
+/* Loading state — premium gradient/shimmer orb (no traditional
+   rotating-border spinner). A soft animated gradient breathes and
+   shifts, with a gentle rotating sheen layered on top for depth. */
 .legal-loading{max-width:920px;margin:0 auto 40px;padding:30px;text-align:center;}
 .legal-spinner{
-  width:46px;height:46px;border-radius:50%;margin:0 auto 16px;
-  border:3px solid var(--glass-strong);border-top-color:var(--blue-soft);border-right-color:var(--purple-soft);
-  animation:legalSpin 0.9s linear infinite;
+  width:46px;height:46px;border-radius:50%;margin:0 auto 16px;position:relative;
+  background:linear-gradient(120deg, var(--blue-soft), var(--purple-soft) 45%, var(--cyan-soft) 75%, var(--blue-soft));
+  background-size:260% 260%;
+  animation:legalSpin 1.8s ease-in-out infinite;
+  will-change:transform, background-position;
 }
-@keyframes legalSpin{to{transform:rotate(360deg);}}
+.legal-spinner::after{
+  content:'';position:absolute;inset:3px;border-radius:50%;
+  background:var(--bg);opacity:.82;
+}
+@keyframes legalSpin{
+  0%,100%{background-position:0% 40%;transform:scale(.92);box-shadow:0 0 12px rgba(139,92,246,.25);}
+  50%{background-position:100% 60%;transform:scale(1.06);box-shadow:0 0 26px rgba(139,92,246,.45);}
+}
+@media (prefers-reduced-motion: reduce){ .legal-spinner{animation:none;} }
 .legal-loading p{color:var(--text-dim);font-size:14px;}
 .legal-loading .lstep{font-size:12px;color:var(--text-faint);margin-top:6px;}
 
@@ -1033,10 +1151,12 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 .pdf-dropzone{
   border:1.5px dashed var(--border-strong);border-radius:var(--radius);padding:44px 24px;text-align:center;
   background:var(--glass);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
-  transition:border-color .3s, background .3s, transform .2s;cursor:pointer;position:relative;z-index:1;
+  transition:border-color var(--dur-hover) var(--ease-hover), background var(--dur-hover) var(--ease-hover),
+             transform var(--dur-card) var(--ease-card), box-shadow var(--dur-hover) var(--ease-hover);
+  cursor:pointer;position:relative;z-index:1;
 }
-.pdf-dropzone:hover{border-color:var(--blue-soft);}
-.pdf-dropzone.dragover{border-color:var(--purple-soft);background:var(--grad-soft);transform:scale(1.01);}
+.pdf-dropzone:hover{border-color:var(--blue-soft);box-shadow:0 0 0 1px rgba(59,130,246,0.15), 0 8px 24px rgba(59,130,246,0.08);}
+.pdf-dropzone.dragover{border-color:var(--purple-soft);background:var(--grad-soft);transform:scale(1.02);box-shadow:0 0 0 3px rgba(139,92,246,0.15), 0 12px 32px rgba(139,92,246,0.18);}
 .pdf-dropzone-icon{
   width:62px;height:62px;border-radius:18px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;
   font-size:28px;background:var(--grad-soft);border:1px solid var(--border);
@@ -1085,17 +1205,22 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 }
 @keyframes pdfShimmer{0%{transform:translateX(-100%);}100%{transform:translateX(100%);}}
 
-/* Result / download area */
+/* Result / download area — a slightly springy pop-in marks task
+   completion as a distinct, satisfying moment rather than just
+   another fade. */
 .pdf-result-card{
   margin-top:20px;padding:22px;border-radius:var(--radius);position:relative;z-index:1;
   background:var(--grad-soft);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
-  border:1px solid var(--border);text-align:center;animation:fadeUp .5s var(--ease) both;
+  border:1px solid var(--border);text-align:center;animation:resultPopIn var(--dur-section) var(--ease-spring) both;
 }
+@keyframes resultPopIn{from{opacity:0;transform:translateY(14px) scale(.94);}to{opacity:1;transform:translateY(0) scale(1);}}
 .pdf-result-icon{
   width:52px;height:52px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;
   font-size:22px;background:var(--grad);color:#fff;box-shadow:0 6px 16px rgba(99,102,241,0.28);
   backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
+  animation:resultIconPop var(--dur-card) var(--ease-spring) .1s both;
 }
+@keyframes resultIconPop{from{transform:scale(0.5);}to{transform:scale(1);}}
 .pdf-result-card h4{font-size:15.5px;font-weight:700;margin-bottom:4px;}
 .pdf-result-card p{font-size:12.5px;color:var(--text-dim);margin-bottom:16px;}
 .pdf-result-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
@@ -1131,11 +1256,11 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
   background:rgba(18,18,28,0.85);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
   border:1px solid var(--border-strong);box-shadow:0 16px 40px rgba(0,0,0,0.4);
   font-size:13px;font-weight:500;
-  animation:pdfToastIn .4s var(--ease) both;
+  animation:pdfToastIn var(--dur-card) var(--ease-spring) both;
 }
-.pdf-toast.leaving{animation:pdfToastOut .35s var(--ease) both;}
-@keyframes pdfToastIn{from{opacity:0;transform:translateX(40px);}to{opacity:1;transform:translateX(0);}}
-@keyframes pdfToastOut{to{opacity:0;transform:translateX(40px);}}
+.pdf-toast.leaving{animation:pdfToastOut var(--dur-hover) var(--ease-hover) both;}
+@keyframes pdfToastIn{from{opacity:0;transform:translateX(40px) scale(.96);}to{opacity:1;transform:translateX(0) scale(1);}}
+@keyframes pdfToastOut{to{opacity:0;transform:translateX(40px) scale(.96);}}
 .pdf-toast-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 .pdf-toast.success .pdf-toast-dot{background:var(--green);box-shadow:0 0 8px var(--green);}
 .pdf-toast.info .pdf-toast-dot{background:var(--blue-soft);box-shadow:0 0 8px var(--blue-soft);}
@@ -1205,11 +1330,21 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 
 /* ---- Loading state ---- */
 .qz-loading{text-align:center;padding:60px 20px;}
+/* Same premium gradient-breathing orb as .legal-spinner (shares the
+   legalSpin keyframe) instead of a traditional rotating-border ring.
+   Also used inline (with a width/height style override) as a small
+   26px scan-status indicator next to the PDF filename during upload. */
 .qz-spinner{
-  width:48px;height:48px;border-radius:50%;margin:0 auto 20px;
-  border:3px solid var(--glass-strong);border-top-color:var(--blue-soft);border-right-color:var(--purple-soft);
-  animation:legalSpin 0.9s linear infinite;
+  width:48px;height:48px;border-radius:50%;margin:0 auto 20px;position:relative;
+  background:linear-gradient(120deg, var(--blue-soft), var(--purple-soft) 45%, var(--cyan-soft) 75%, var(--blue-soft));
+  background-size:260% 260%;
+  animation:legalSpin 1.8s ease-in-out infinite;
 }
+.qz-spinner::after{
+  content:'';position:absolute;inset:3px;border-radius:50%;
+  background:var(--bg);opacity:.82;
+}
+@media (prefers-reduced-motion: reduce){ .qz-spinner{animation:none;} }
 .qz-loading h4{font-size:16px;font-weight:700;margin-bottom:6px;}
 .qz-loading p{font-size:13px;color:var(--text-dim);}
 
@@ -1370,10 +1505,12 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 .img-dropzone{
   border:1.5px dashed var(--border-strong);border-radius:var(--radius);padding:44px 24px;text-align:center;
   background:var(--glass);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
-  transition:border-color .3s, background .3s, transform .2s;cursor:pointer;position:relative;z-index:1;
+  transition:border-color var(--dur-hover) var(--ease-hover), background var(--dur-hover) var(--ease-hover),
+             transform var(--dur-card) var(--ease-card), box-shadow var(--dur-hover) var(--ease-hover);
+  cursor:pointer;position:relative;z-index:1;
 }
-.img-dropzone:hover{border-color:var(--purple-soft);}
-.img-dropzone.dragover{border-color:var(--cyan-soft);background:var(--grad-soft);transform:scale(1.01);}
+.img-dropzone:hover{border-color:var(--purple-soft);box-shadow:0 0 0 1px rgba(139,92,246,0.15), 0 8px 24px rgba(139,92,246,0.08);}
+.img-dropzone.dragover{border-color:var(--cyan-soft);background:var(--grad-soft);transform:scale(1.02);box-shadow:0 0 0 3px rgba(165,243,252,0.15), 0 12px 32px rgba(165,243,252,0.18);}
 .img-dropzone-icon{
   width:62px;height:62px;border-radius:18px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;
   font-size:28px;background:var(--grad-soft);border:1px solid var(--border);
@@ -2248,7 +2385,13 @@ const searchBtn     = $('#searchBtn');
 function runSearch(query){
   const q = query.trim().toLowerCase();
   searchResults.innerHTML = '';
-  if(!q){ searchResults.classList.remove('active'); return; }
+  if(!q){ searchResults.classList.remove('active'); searchInput.closest('.search-bar')?.classList.remove('searching'); return; }
+  // Brief "searching" pulse on the icon — the search itself is instant
+  // (local index), but a tiny elegant loading beat makes it feel like
+  // something intelligent is happening rather than a static filter.
+  const bar = searchInput.closest('.search-bar');
+  bar?.classList.add('searching');
+  setTimeout(() => bar?.classList.remove('searching'), 220);
 
   const matches = SEARCH_INDEX.filter(item =>
     item.title.toLowerCase().includes(q) ||
@@ -7048,11 +7191,39 @@ $$('#navLinks a').forEach(a => a.addEventListener('click', () => {
   navLinks.classList.remove('mobile-open');
 }));
 
+/* -- Premium button ripple (click feedback) --
+   Delegated on document so it works for every current AND future
+   .btn on the page (including ones rendered dynamically later),
+   without needing to change any button markup. */
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.btn');
+  if(!btn || btn.disabled) return;
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  const ripple = document.createElement('span');
+  ripple.className = 'btn-ripple';
+  ripple.style.width = ripple.style.height = size + 'px';
+  ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+  ripple.style.top  = (e.clientY - rect.top  - size/2) + 'px';
+  btn.appendChild(ripple);
+  ripple.addEventListener('animationend', () => ripple.remove());
+}, {passive:true});
+
 /* -- Scroll reveal via IntersectionObserver -- */
 const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('visible'); });
-}, {threshold:0.12});
-function observeReveals(){ $$('.reveal').forEach(elm => revealObserver.observe(elm)); }
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      const target = entry.target;
+      target.classList.add('visible');
+      revealObserver.unobserve(target); // one-shot: avoids re-triggering jank on fast scroll-back
+      // Drop the will-change hint once the (one-shot) reveal animation
+      // finishes — keeping it on forever would pin a compositing layer
+      // for every revealed element for the rest of the page's life.
+      target.addEventListener('animationend', () => { target.style.willChange = 'auto'; }, {once:true});
+    }
+  });
+}, {threshold:0.1, rootMargin:'0px 0px -8% 0px'});
+function observeReveals(){ $$('.reveal:not(.visible)').forEach(elm => revealObserver.observe(elm)); }
 observeReveals();
 // Re-observe after dynamic renders (cards get added asynchronously above)
 setTimeout(observeReveals, 300);
