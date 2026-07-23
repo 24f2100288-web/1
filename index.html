@@ -6577,11 +6577,11 @@ const QuizApp = (() => {
   }
 
   function pdfSentenceToQuestion(item, vocab, qn, difficulty){
-    // Turn "X is defined as Y" / "X refers to Y" into "What does X refer to?"
-    // Otherwise, fall back to a comprehension-style question asking which
-    // statement matches content actually on that page.
-    const defMatch = item.text.match(/^(.{3,60}?)\s+(is defined as|refers to|means|is called|is known as)\s+(.{6,140})$/i);
-    let stmt, correctAnswer;
+    const text = item.text.trim();
+
+    // 1. Best case — an explicit definition pattern ("X is defined as Y",
+    //    "X refers to Y", etc.) lets us ask a precise, natural question.
+    const defMatch = text.match(/^(.{3,60}?)\s+(is defined as|refers to|means|is called|is known as)\s+(.{6,140})$/i);
     if(defMatch){
       const verbPhrase = defMatch[2].toLowerCase();
       const term = defMatch[1].trim();
@@ -6589,28 +6589,102 @@ const QuizApp = (() => {
       if(verbPhrase.includes('refers')) questionTail = `does "${term}" refer to`;
       else if(verbPhrase.includes('called') || verbPhrase.includes('known')) questionTail = `is "${term}" known as`;
       else questionTail = `does "${term}" mean`;
-      stmt = `According to the uploaded document (page ${item.page}), what ${questionTail}?`;
-      correctAnswer = defMatch[3].trim().replace(/[.]$/,'');
-    } else {
-      stmt = `Which of the following statements accurately reflects content found on page ${item.page} of the uploaded document?`;
-      correctAnswer = truncateAtWord(item.text, 150);
+      const stmt = `According to the uploaded document (page ${item.page}), what ${questionTail}?`;
+      const correctAnswer = defMatch[3].trim().replace(/[.]$/,'');
+      const distractors = buildDistractorPhrases(vocab, correctAnswer, `A term unrelated to ${term}, associated instead with`);
+      return makeQuestion(qn, stmt, [correctAnswer, ...distractors], 0,
+        `This is drawn directly from page ${item.page} of your uploaded document: "${truncateAtWord(text, 200)}"`, difficulty, {page:item.page});
     }
-    // Build 3 distractors from other vocab words woven into short generic
-    // statements — kept short/plausible rather than nonsensical. Sample
-    // without replacement so distractors never repeat identical wording.
+
+    // 2. Second best — a genuine fill-in-the-blank built from a real,
+    //    significant word/number actually present in the document. This
+    //    is a real content question ("what word completes this sentence
+    //    from your PDF?") rather than a generic "which paragraph matches
+    //    page X" filler, and it works regardless of language or phrasing
+    //    style since it doesn't depend on any specific sentence pattern.
+    const blank = pickBlankableTerm(text);
+    if(blank){
+      const blankedText = text.slice(0, blank.index) + '_____' + text.slice(blank.index + blank.term.length);
+      const stmt = `Fill in the blank based on page ${item.page} of your uploaded document:\n"${truncateAtWord(blankedText, 220)}"`;
+      const correctAnswer = blank.term;
+      const distractors = buildDistractorTerms(vocab, blank.term, blank.isNumber);
+      return makeQuestion(qn, stmt, [correctAnswer, ...distractors], 0,
+        `The original sentence from page ${item.page} reads: "${truncateAtWord(text, 200)}"`, difficulty, {page:item.page});
+    }
+
+    // 3. Last resort (rare — only reached if a sentence has no blank-able
+    //    term at all, e.g. very short or symbol-only lines): still a real
+    //    comprehension question, but phrased as true/false-style option
+    //    rather than exposing a raw, potentially huge paragraph as an
+    //    "answer" option.
+    const stmt = `According to page ${item.page} of the uploaded document, which of these is mentioned?`;
+    const correctAnswer = truncateAtWord(text, 90);
+    const distractors = buildDistractorPhrases(vocab, correctAnswer, `A statement not found on page ${item.page}, mentioning instead`);
+    return makeQuestion(qn, stmt, [correctAnswer, ...distractors], 0,
+      `This is drawn directly from page ${item.page} of your uploaded document: "${truncateAtWord(text, 200)}"`, difficulty, {page:item.page});
+  }
+
+  /* ---- Pick a real, meaningful word/phrase from a sentence to blank
+     out for a fill-in-the-blank question — prefers numbers (dates,
+     statistics, formulas) and capitalized proper nouns/terms first,
+     since those make the most concrete, unambiguous quiz answers,
+     then falls back to any long significant word. ---- */
+  function pickBlankableTerm(text){
+    // Numbers/statistics (e.g. "1947", "42%", "3.14") — strong, concrete answers.
+    const numberMatch = text.match(/\b\d[\d,.]*%?\b/);
+    if(numberMatch && numberMatch[0].length >= 2){
+      return {term:numberMatch[0], index:numberMatch.index, isNumber:true};
+    }
+    // Capitalized multi-word proper nouns (e.g. "United Nations", "FBI").
+    const properMatch = text.match(/\b([A-Z]{2,}|[A-Z][a-z]+(?:\s[A-Z][a-z]+){1,3})\b/);
+    if(properMatch && properMatch[0].length >= 3){
+      return {term:properMatch[0], index:properMatch.index, isNumber:false};
+    }
+    // Otherwise, the longest significant (non-stopword) word in the sentence.
+    const words = [...text.matchAll(/[A-Za-z\u00C0-\u024F]{6,}/g)];
+    if(words.length){
+      const longest = words.sort((a,b) => b[0].length - a[0].length)[0];
+      return {term:longest[0], index:longest.index, isNumber:false};
+    }
+    return null;
+  }
+
+  /* ---- Distractors for a fill-in-the-blank: other real numbers/words
+     pulled from the document itself, never invented text — so every
+     option at least looks like it could plausibly belong to the source
+     material. ---- */
+  function buildDistractorTerms(vocab, correctTerm, isNumber){
+    const distractors = [];
+    if(isNumber){
+      const base = parseFloat(correctTerm.replace(/[,%]/g,'')) || 10;
+      const used = new Set([correctTerm]);
+      while(distractors.length < 3){
+        const delta = Math.max(1, Math.round(base * (0.15 + Math.random()*0.4)));
+        const candidate = String(Math.max(0, Math.round(base + (Math.random()<0.5?-delta:delta))));
+        if(!used.has(candidate)){ used.add(candidate); distractors.push(candidate); }
+      }
+      return distractors;
+    }
+    const pool = shuffleArray(vocab.filter(w => w.toLowerCase() !== correctTerm.toLowerCase()));
+    for(let i=0; i<3; i++){
+      const w = pool[i % Math.max(pool.length,1)] || `option${i+1}`;
+      distractors.push(w.charAt(0).toUpperCase() + w.slice(1));
+    }
+    return distractors;
+  }
+
+  /* ---- Distractors for the definition-pattern / last-resort paths:
+     short plausible-looking phrases woven from real document vocabulary,
+     sampled without replacement so they never repeat identical wording. ---- */
+  function buildDistractorPhrases(vocab, correctAnswer, prefix){
     const distractors = [];
     const pool = shuffleArray(vocab.filter(w => !correctAnswer.toLowerCase().includes(w)));
     let poolIdx = 0;
     const nextWord = (fallback) => { const w = pool[poolIdx % Math.max(pool.length,1)]; poolIdx++; return w || fallback; };
     for(let i=0; i<3; i++){
-      const w1 = nextWord('concept');
-      const w2 = nextWord('topic');
-      distractors.push(defMatch
-        ? `A term unrelated to ${defMatch[1].trim()}, associated instead with ${w1}`
-        : `A statement about ${w1} and ${w2} not found on page ${item.page}`);
+      distractors.push(`${prefix} ${nextWord('a different concept')}`);
     }
-    const options = [correctAnswer, ...distractors];
-    return makeQuestion(qn, stmt, options, 0, `This is drawn directly from page ${item.page} of your uploaded document: "${item.text.length>200?item.text.slice(0,200)+'...':item.text}"`, difficulty, {page:item.page});
+    return distractors;
   }
 
   function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
