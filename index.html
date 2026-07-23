@@ -381,40 +381,51 @@ header#navbar.scrolled .nav-current-section{
 .hero-ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:48px;animation:fadeUp .6s var(--ease) .15s both;}
 
 /* Search bar (compact, secondary to the primary CTAs) */
-.search-wrap{position:relative;max-width:480px;margin:0 auto 44px;animation:fadeUp .6s var(--ease) .2s both;}
+/* ----------------------------------------------------------------
+   Flagship Glass Search Bar
+   One of the most visible glass components on the site — a richer
+   blur, a soft dual-color glow on focus, and refined result rows.
+   ---------------------------------------------------------------- */
+.search-wrap{position:relative;max-width:540px;margin:0 auto 44px;animation:fadeUp .6s var(--ease) .2s both;}
 .search-bar{
-  display:flex;align-items:center;gap:10px;padding:6px 6px 6px 18px;border-radius:999px;
-  background:var(--glass);border:1px solid var(--border);
-  backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
+  display:flex;align-items:center;gap:10px;padding:7px 7px 7px 20px;border-radius:999px;
+  background:var(--glass-strong);border:1px solid var(--border);
+  backdrop-filter:var(--glass-blur-2);-webkit-backdrop-filter:var(--glass-blur-2);
+  box-shadow:var(--glass-shadow-1);
   transition:border-color .3s, box-shadow .3s;
 }
-.search-bar:focus-within{border-color:var(--blue-soft);box-shadow:0 0 0 3px rgba(59,130,246,0.12);}
-.search-bar svg{flex-shrink:0;opacity:.5;}
+.search-bar:focus-within{
+  border-color:var(--blue-soft);
+  box-shadow:0 0 0 4px rgba(59,130,246,0.1), 0 0 24px rgba(139,92,246,0.12), var(--glass-shadow);
+}
+.search-bar svg{flex-shrink:0;opacity:.55;}
 .search-bar input{
-  flex:1;background:transparent;border:none;outline:none;font-size:14.5px;color:var(--text);padding:9px 0;
+  flex:1;background:transparent;border:none;outline:none;font-size:14.5px;color:var(--text);padding:10px 0;
 }
 .search-bar input::placeholder{color:var(--text-faint);}
 .search-bar .btn{flex-shrink:0;}
 #searchResults{
-  position:absolute;top:calc(100% + 10px);left:0;right:0;z-index:50;
+  position:absolute;top:calc(100% + 12px);left:0;right:0;z-index:50;
   max-height:420px;overflow-y:auto;text-align:left;
-  border-radius:var(--radius);opacity:0;visibility:hidden;transform:translateY(-8px);
-  transition:opacity .25s, transform .25s, visibility .25s;
+  border-radius:var(--radius);opacity:0;visibility:hidden;transform:translateY(-8px) scale(.98);
+  transition:opacity .25s var(--ease), transform .25s var(--ease), visibility .25s;
   padding:10px;
+  background:var(--glass-strong);backdrop-filter:var(--glass-blur-2);-webkit-backdrop-filter:var(--glass-blur-2);
+  border:1px solid var(--border-strong);box-shadow:var(--glass-shadow-2);
 }
-#searchResults.active{opacity:1;visibility:visible;transform:translateY(0);}
+#searchResults.active{opacity:1;visibility:visible;transform:translateY(0) scale(1);}
 .search-result-item{
-  display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;cursor:pointer;
-  transition:background .2s;text-align:left;
+  display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;cursor:pointer;
+  transition:background .2s, transform .2s;text-align:left;
 }
-.search-result-item:hover{background:var(--glass-strong);backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);}
+.search-result-item:hover{background:var(--glass-bg-strong);transform:translateX(2px);}
 .search-result-icon{
-  width:34px;height:34px;border-radius:9px;background:var(--grad-soft);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;
-  backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
+  width:36px;height:36px;border-radius:10px;background:var(--grad-soft);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;
+  border:1px solid var(--border);
 }
 .search-result-item .sr-title{font-size:14px;font-weight:600;}
-.search-result-item .sr-cat{font-size:12px;color:var(--text-faint);}
-.search-empty{padding:24px;text-align:center;color:var(--text-faint);font-size:13.5px;}
+.search-result-item .sr-cat{font-size:12px;color:var(--text-faint);margin-top:1px;}
+.search-empty{padding:28px 20px;text-align:center;color:var(--text-faint);font-size:13.5px;}
 
 /* Hero stat row — quiet, static, no bobbing/floating animation */
 .hero-floaters{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;max-width:860px;margin:0 auto;animation:fadeUp .6s var(--ease) .25s both;}
@@ -423,22 +434,40 @@ header#navbar.scrolled .nav-current-section{
 .floater .flabel{font-size:12px;color:var(--text-dim);margin-top:3px;letter-spacing:.01em;}
 
 /* ================================================================
-   8. TOOL CARDS (shared across Study / Productivity / Engineering / AI / Build)
+   8. TOOL CARDS (shared across Study / Engineering / PDF Studio /
+      Legal categories / Build)
+   ----------------------------------------------------------------
+   DESIGN NOTE — glassmorphism is used deliberately, not everywhere.
+   Per the UI distribution (75% minimal / 20% glass / 5% motion),
+   these large tool-listing grids are intentionally PREMIUM MINIMAL
+   cards — a solid soft-gray surface, soft shadow, rounded corners —
+   rather than frosted glass. Reserving glass for the navbar, search
+   bar, dashboard/report panels and upload areas keeps it feeling
+   special instead of applied to every single box on the page.
+   The JS that renders these cards still adds a `glass` class for
+   backward compatibility with older markup, so this override sits
+   after the base .glass rule and intentionally replaces its look
+   for anything that is also a `.tool-card` — no HTML/JS was changed.
    ================================================================ */
 .tool-card{
   padding:28px;cursor:pointer;position:relative;overflow:hidden;
-  transition:transform .35s var(--ease), border-color .35s var(--ease), box-shadow .35s var(--ease), background .35s var(--ease);
+  background:var(--bg-soft);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:var(--radius);
+  backdrop-filter:none;-webkit-backdrop-filter:none;
+  box-shadow:0 1px 2px rgba(0,0,0,0.2);
+  transition:transform .3s var(--ease), border-color .3s var(--ease), box-shadow .3s var(--ease), background .3s var(--ease);
 }
 .tool-card::before{
-  content:'';position:absolute;inset:0;opacity:0;background:var(--grad-soft);transition:opacity .35s;
+  content:'';position:absolute;inset:0;opacity:0;background:var(--grad-soft);transition:opacity .3s;
 }
-.tool-card:hover{transform:translateY(-4px);border-color:var(--border-strong);box-shadow:var(--glass-shadow);}
-.tool-card:hover::before{opacity:.7;}
+.tool-card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,0.12);box-shadow:0 12px 28px rgba(0,0,0,0.28);background:rgba(255,255,255,0.025);}
+.tool-card:hover::before{opacity:.5;}
 .tool-card:active{transform:translateY(-1px);}
 .tool-icon{
   width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;
   font-size:21px;background:var(--grad-soft);border:1px solid var(--border);margin-bottom:18px;position:relative;z-index:1;
-  backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
+  backdrop-filter:none;-webkit-backdrop-filter:none;
   transition:transform .4s var(--ease);
 }
 .tool-card:hover .tool-icon{transform:scale(1.05);}
@@ -911,8 +940,8 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
   <div class="container">
     <div class="hero-badge">StudentOS AI <b>v2.0</b></div>
     <h1>The Operating System Built<span class="line2">for Every Student.</span></h1>
-    <p class="hero-kicker">Study. Build. Create. Grow.</p>
-    <p class="tagline">Everything you need for academics, AI, PDF tools, productivity, legal assistance, engineering tools, career roadmaps and much more — all in one place.</p>
+    <p class="hero-kicker">Study • Build • Create • Grow</p>
+    <p class="tagline">Everything you need for academics, productivity, AI tools, PDF tools, legal assistance, engineering resources, career guidance and much more — all in one place.</p>
 
     <div class="hero-ctas">
       <a href="#study" class="btn btn-primary">Get Started</a>
@@ -922,7 +951,7 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
     <div class="search-wrap">
       <div class="search-bar">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="white" stroke-width="1.8"/><path d="M21 21l-4.35-4.35" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
-        <input type="text" id="globalSearch" placeholder="Search tools — try 'resume', 'legal', 'electronics'..." autocomplete="off">
+        <input type="text" id="globalSearch" placeholder="Ask for anything — PDF tools, legal help, calculators, roadmaps..." autocomplete="off">
         <button class="btn btn-primary btn-sm" id="searchBtn">Search</button>
       </div>
       <div id="searchResults" class="glass"></div>
