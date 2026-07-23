@@ -320,6 +320,10 @@ html{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.14) transparent;}
   background:
     radial-gradient(ellipse 900px 500px at 82% 12%, rgba(15,82,255,0.16), transparent 65%),
     linear-gradient(160deg, #050816 0%, #081229 55%, #030510 100%);
+  /* Fade the whole layer to transparent near the bottom so it dissolves
+     into the page background instead of ending in a hard-edged seam. */
+  -webkit-mask-image:linear-gradient(to bottom, #000 0%, #000 78%, transparent 100%);
+  mask-image:linear-gradient(to bottom, #000 0%, #000 78%, transparent 100%);
 }
 html[data-theme="light"] .hero-bg-gradient{opacity:.4;}
 .wave-mesh-bg{position:absolute;left:0;right:0;bottom:0;height:100%;z-index:0;overflow:visible;pointer-events:none;}
