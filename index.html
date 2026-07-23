@@ -365,20 +365,30 @@ header#navbar.scrolled .nav-current-section{
 }
 .hero-badge b{color:var(--blue-soft);font-weight:600;}
 .hero h1{
-  font-size:clamp(38px,6vw,68px);font-weight:800;line-height:1.05;margin-bottom:16px;letter-spacing:-0.03em;
+  font-size:clamp(34px,5.6vw,68px);font-weight:800;line-height:1.05;margin-bottom:16px;letter-spacing:-0.03em;
   animation:fadeUp .7s var(--ease) .05s both;
+  white-space:nowrap;
 }
 /* EVERYTHING — the visual anchor of the hero: blue-to-purple gradient,
-   slightly heavier weight, fades in first so the eye lands here. */
+   slightly heavier weight, fades in first so the eye lands here.
+   Desktop/tablet: sits inline, same line as "One Place." */
 .hero h1 .emphasis{
-  display:block;font-weight:800;
+  display:inline;font-weight:800;
   background:linear-gradient(135deg, #60A5FA, #A78BFA);
   -webkit-background-clip:text;background-clip:text;color:transparent;
 }
 /* "One Place." — deliberately quieter: white/soft gray, lighter weight,
-   a touch smaller than EVERYTHING so it reads as a supporting line. */
+   a touch smaller than EVERYTHING so it reads as a supporting line.
+   Desktop/tablet: inline right after EVERYTHING, same line. */
 .hero h1 .subline{
-  display:block;font-weight:600;font-size:0.62em;color:var(--text);margin-top:6px;letter-spacing:-0.01em;
+  display:inline;font-weight:600;font-size:0.62em;color:var(--text);margin-left:0.3em;letter-spacing:-0.01em;
+}
+/* Mobile: stack EVERYTHING. / One Place. onto two centered lines,
+   keep typography large and readable, no forced single-line overflow. */
+@media (max-width:640px){
+  .hero h1{white-space:normal;font-size:clamp(36px,11vw,50px);}
+  .hero h1 .emphasis{display:block;}
+  .hero h1 .subline{display:block;margin-left:0;margin-top:8px;}
 }
 .hero-kicker{
   font-size:14.5px;font-weight:500;color:var(--text-dim);letter-spacing:.03em;margin-bottom:36px;
@@ -1116,10 +1126,6 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
     <div class="hero-badge">StudentOS AI <b>v1.0</b></div>
     <h1><span class="emphasis">EVERYTHING.</span><span class="subline">One Place.</span></h1>
     <p class="hero-kicker">AI • Health • Legal • PDF • Productivity</p>
-
-    <div class="hero-ctas">
-      <a href="#study" class="btn btn-primary">Explore StudentOS</a>
-    </div>
 
     <div class="search-wrap">
       <div class="search-bar">
