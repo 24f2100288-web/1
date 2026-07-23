@@ -185,7 +185,12 @@ html{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.14) transparent;}
 /* ================================================================
    2. LAYOUT UTILITIES
    ================================================================ */
-.container{width:100%;max-width:1240px;margin:0 auto;padding:0 24px;}
+/* max-width scales up gradually on very wide screens (via clamp) so the
+   site's content uses more of the available width instead of staying
+   boxed into a narrow column with large empty margins on both sides —
+   while staying at the original 1240px on laptop/smaller-desktop sizes
+   so nothing regresses there. */
+.container{width:100%;max-width:clamp(1240px, 78vw, 1600px);margin:0 auto;padding:0 24px;}
 .section{padding:130px 0 50px;position:relative;}
 .section-tight{padding:70px 0;}
 .section-top-tight{padding-top:52px;}
@@ -364,10 +369,10 @@ header#navbar.scrolled{
   border-bottom:1px solid var(--glass-border-strong);padding:11px 0;
   box-shadow:var(--glass-shadow-1);
 }
-/* The navbar spans wider than the rest of the page's 1240px content
-   container so the logo and nav actions use the full header width on
-   large screens instead of leaving empty dark space on both edges. */
-.nav-container{max-width:1600px;}
+/* The navbar now shares the same responsive max-width as the rest of
+   the page's .container (see LAYOUT UTILITIES above) so the header and
+   every section scale together consistently at wide viewports. */
+.nav-container{max-width:clamp(1240px, 78vw, 1600px);}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;}
 .logo{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk';font-weight:700;font-size:19px;}
 .logo-mark{
