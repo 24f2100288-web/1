@@ -3974,14 +3974,9 @@ function renderMediReport(report){
         ${(report.fileAnalyses && report.fileAnalyses.length) ? report.fileAnalyses.map(f => {
           const label = MEDI_CATEGORY_LABELS[f.category] || 'File';
           if(f.isVisual){
-            const obs = buildVisualObservations(f);
             return `<div style="margin-bottom:14px;">
               <div class="medi-tags" style="margin-bottom:8px;"><span class="medi-tag">🖼️ ${label} — Visual Analysis</span></div>
               <p style="margin-bottom:10px;">MediAI analyzed <b>${f.file.name}</b> directly as a <b>${label}</b>. The entire specialized report below was generated based on this image.</p>
-              <div class="pdf-ai-output" style="margin-top:10px;max-height:220px;">
-                <h5 style="margin-bottom:8px;">Image Analysis Observations</h5>
-                <ul style="padding-left:18px;font-size:13px;line-height:1.7;color:var(--text-dim);">${obs.map(o => `<li>${o}</li>`).join('')}</ul>
-              </div>
             </div>`;
           }
           return `<div style="margin-bottom:14px;"><div class="medi-tags" style="margin-bottom:8px;"><span class="medi-tag">📄 ${label} detected</span></div><p>MediAI detected <b>${f.file.name}</b> as a <b>${label}</b> and read its content via text extraction.</p>${f.extractedText ? `<div class="pdf-ai-output" style="margin-top:10px;max-height:180px;"><h5>Extracted Content</h5><p style="white-space:pre-wrap;font-size:13px;">${f.extractedText.slice(0,1200)}${f.extractedText.length>1200?'…':''}</p></div>` : `<p style="color:var(--text-faint);font-size:12.5px;">No clear text could be extracted (this can happen with low-resolution or handwritten documents).</p>`}</div>`;
