@@ -317,35 +317,41 @@ html{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.14) transparent;}
    ================================================================ */
 .hero-bg-gradient{
   position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;
-  /* Near-solid dark navy/black base — almost no visible gradient of its
-     own. All the light in this backdrop should come from the wave and
-     orb below, not from a wash covering the whole hero (that's what
-     was previously bleeding purple up behind the navbar/logo). */
-  background:#050810;
-  -webkit-mask-image:linear-gradient(to bottom, #000 0%, #000 78%, transparent 100%);
-  mask-image:linear-gradient(to bottom, #000 0%, #000 78%, transparent 100%);
+  /* Deep navy-to-black gradient base, per spec palette. The center of
+     the hero (where the headline sits) stays on the darkest part of
+     this gradient for contrast; the wave/orb below add the only
+     saturated color, and only in the lower-right region. */
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 38%, #0A1440 0%, #070B1A 65%),
+    linear-gradient(160deg, #0A1440 0%, #070B1A 100%);
+  -webkit-mask-image:linear-gradient(to bottom, #000 0%, #000 82%, transparent 100%);
+  mask-image:linear-gradient(to bottom, #000 0%, #000 82%, transparent 100%);
 }
 html[data-theme="light"] .hero-bg-gradient{opacity:.35;}
-/* Confined to the lower half of the hero only, and to the right ~65%
-   of the width — matches the reference: mostly empty/dark center-left,
-   glow only in the bottom-right region. */
-.wave-mesh-bg{position:absolute;left:0;right:0;bottom:0;top:0;z-index:0;overflow:hidden;pointer-events:none;
-  /* Fade the left edge of this whole layer to fully transparent so the
-     glow dissolves into the dark base instead of ending at a visible
-     rectangular boundary. */
-  -webkit-mask-image:linear-gradient(115deg, transparent 0%, transparent 34%, #000 58%, #000 88%, transparent 100%);
-  mask-image:linear-gradient(115deg, transparent 0%, transparent 34%, #000 58%, #000 88%, transparent 100%);
+/* Small glowing orb/planet, upper-right area, per spec — subtle, not
+   the dominant element. */
+.hero-bg-gradient .wm-orb{
+  position:absolute;top:78px;right:22%;width:26px;height:26px;border-radius:50%;
+  background:radial-gradient(circle at 32% 28%, #2f5fc9 0%, #142260 55%, #060a1e 100%);
+  box-shadow:0 0 14px 3px rgba(20,50,160,0.32), inset -3px -3px 6px rgba(0,0,0,0.55);
+  animation:waveBreathe 14s ease-in-out infinite;
 }
-.wave-mesh-bg svg{position:absolute;bottom:-6%;right:-4%;width:min(760px,78%);max-width:none;height:auto;
-  animation:waveBreathe 16s ease-in-out infinite;}
-@keyframes waveBreathe{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
-.wave-mesh-bg .wm-orb{
-  position:absolute;top:80px;right:26%;width:30px;height:30px;border-radius:50%;
-  background:radial-gradient(circle at 34% 30%, #3a6bd9 0%, #14245e 55%, #060c1e 100%);
-  box-shadow:0 0 20px 4px rgba(30,70,200,0.28), inset -4px -4px 8px rgba(0,0,0,0.5);
+@keyframes waveBreathe{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+/* Soft glowing particles (small blurred dot, not a hard pixel-sharp
+   circle) — kept confined to the far edges/corners so they never sit
+   on top of the headline, tagline or stat cards. */
+.hero-bg-gradient .wm-star{
+  position:absolute;border-radius:50%;background:#cfe3ff;
+  box-shadow:0 0 6px 2px rgba(180,205,255,0.5);filter:blur(.4px);
 }
-.wave-mesh-bg .wm-star{position:absolute;border-radius:50%;background:#cfe3ff;}
-html[data-theme="light"] .wave-mesh-bg{opacity:.45;}
+/* Wave lines: flow left-bottom -> right-top across the visible hero
+   width, low opacity (10%-30% per spec) so they never compete with
+   the headline/search bar sitting above them. */
+.wave-mesh-bg{position:absolute;left:0;right:0;bottom:0;width:100%;height:70px;z-index:0;pointer-events:none;
+  animation:waveBreathe 18s ease-in-out infinite;}
+@media (max-width:900px){ .wave-mesh-bg{height:55px;} }
+html[data-theme="light"] .hero-bg-gradient .wm-orb,
+html[data-theme="light"] .wave-mesh-bg{opacity:.6;}
 
 /* ================================================================
    5. LOADING SCREEN
@@ -507,7 +513,12 @@ html[data-theme="light"] .theme-toggle-thumb .icon-sun{display:block;}
   display:inline;font-weight:600;font-size:0.62em;color:var(--text);margin-left:0.3em;letter-spacing:-0.01em;
 }
 @media (max-width:640px){
-  .hero h1{font-size:clamp(36px,11vw,50px);}
+  /* "EVERYTHING. One Place." no longer fits on one line at mobile
+     widths even at the reduced font-size below — allow it to wrap
+     onto two lines instead of overflowing off the right edge. */
+  .hero h1{font-size:clamp(36px,11vw,50px);white-space:normal;}
+  .hero h1 .emphasis{display:block;}
+  .hero h1 .subline{display:block;margin-left:0;margin-top:6px;}
 }
 .hero-kicker{
   font-size:14.5px;font-weight:500;color:var(--text-dim);letter-spacing:.03em;margin-bottom:36px;
@@ -1427,39 +1438,33 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
      ============================================================ -->
 <section class="hero" id="home">
   <div class="hero-bg-gradient" aria-hidden="true">
-    <div class="wave-mesh-bg" aria-hidden="true">
-      <div class="wm-orb"></div>
-      <div class="wm-star" style="top:6%;left:12%;width:2px;height:2px;opacity:.3;"></div>
-      <div class="wm-star" style="top:18%;left:46%;width:2px;height:2px;opacity:.22;"></div>
-      <div class="wm-star" style="top:28%;left:66%;width:2px;height:2px;opacity:.28;"></div>
-      <div class="wm-star" style="top:2%;left:34%;width:1.5px;height:1.5px;opacity:.18;"></div>
-      <svg width="900" height="460" viewBox="0 0 900 460" fill="none" preserveAspectRatio="xMaxYMax slice">
-        <defs>
-          <linearGradient id="wmLine" x1="0" y1="1" x2="1" y2="0">
-            <stop offset="0%" stop-color="#0F52FF" stop-opacity="0"/>
-            <stop offset="40%" stop-color="#0F52FF" stop-opacity=".55"/>
-            <stop offset="75%" stop-color="#7B2CFF" stop-opacity=".8"/>
-            <stop offset="100%" stop-color="#B14CFF" stop-opacity=".95"/>
-          </linearGradient>
-          <radialGradient id="wmGlow" cx="90%" cy="8%" r="38%">
-            <stop offset="0%" stop-color="#B14CFF" stop-opacity=".18"/>
-            <stop offset="60%" stop-color="#7B2CFF" stop-opacity=".05"/>
-            <stop offset="100%" stop-color="#7B2CFF" stop-opacity="0"/>
-          </radialGradient>
-          <filter id="wmSoftBlur" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="2.2"/>
-          </filter>
-        </defs>
-        <rect x="0" y="0" width="900" height="460" fill="url(#wmGlow)"/>
-        <g filter="url(#wmSoftBlur)">
-        <path d="M0.0,307.8 Q0.0,307.8 18.8,310.3 Q37.5,312.7 56.3,314.6 Q75.0,316.5 93.8,317.7 Q112.5,319.0 131.3,319.6 Q150.0,320.3 168.8,320.3 Q187.5,320.4 206.3,320.0 Q225.0,319.6 243.8,318.9 Q262.5,318.2 281.3,317.2 Q300.0,316.3 318.8,314.6 Q337.5,312.9 356.3,309.5 Q375.0,306.1 393.8,301.8 Q412.5,297.5 431.3,292.7 Q450.0,287.8 468.8,282.4 Q487.5,277.1 506.3,271.2 Q525.0,265.4 543.8,259.0 Q562.5,252.7 581.3,245.8 Q600.0,238.8 618.8,231.3 Q637.5,223.7 656.3,215.4 Q675.0,207.1 693.8,198.1 Q712.5,189.1 731.3,179.3 Q750.0,169.5 768.8,159.1 Q787.5,148.7 806.3,137.7 Q825.0,126.6 843.8,115.2 Q862.5,103.8 881.3,92.1 T900.0,80.4" stroke="url(#wmLine)" stroke-width="3" fill="none" opacity="0.9"/>
-        <path d="M0.0,339.3 Q0.0,339.3 18.8,342.2 Q37.5,345.0 56.3,347.3 Q75.0,349.5 93.8,351.0 Q112.5,352.5 131.3,353.2 Q150.0,353.9 168.8,354.0 Q187.5,354.1 206.3,353.6 Q225.0,353.2 243.8,352.3 Q262.5,351.5 281.3,350.4 Q300.0,349.3 318.8,347.5 Q337.5,345.6 356.3,342.2 Q375.0,338.7 393.8,334.5 Q412.5,330.2 431.3,325.5 Q450.0,320.7 468.8,315.5 Q487.5,310.3 506.3,304.7 Q525.0,299.1 543.8,293.0 Q562.5,286.9 581.3,280.2 Q600.0,273.5 618.8,266.1 Q637.5,258.8 656.3,250.7 Q675.0,242.6 693.8,233.8 Q712.5,224.9 731.3,215.2 Q750.0,205.6 768.8,195.2 Q787.5,184.8 806.3,173.8 Q825.0,162.9 843.8,151.5 Q862.5,140.1 881.3,128.5 T900.0,116.9" stroke="url(#wmLine)" stroke-width="3.4" fill="none" opacity="0.75"/>
-        <path d="M0.0,367.1 Q0.0,367.1 18.8,369.4 Q37.5,371.6 56.3,373.3 Q75.0,375.0 93.8,376.1 Q112.5,377.3 131.3,377.8 Q150.0,378.4 168.8,378.5 Q187.5,378.5 206.3,378.2 Q225.0,377.8 243.8,377.2 Q262.5,376.5 281.3,375.7 Q300.0,374.9 318.8,373.3 Q337.5,371.8 356.3,368.8 Q375.0,365.7 393.8,362.0 Q412.5,358.2 431.3,353.9 Q450.0,349.7 468.8,344.9 Q487.5,340.2 506.3,335.1 Q525.0,330.0 543.8,324.4 Q562.5,318.9 581.3,312.8 Q600.0,306.7 618.8,300.1 Q637.5,293.4 656.3,286.1 Q675.0,278.9 693.8,270.9 Q712.5,263.0 731.3,254.4 Q750.0,245.8 768.8,236.6 Q787.5,227.4 806.3,217.7 Q825.0,208.0 843.8,197.9 Q862.5,187.8 881.3,177.5 T900.0,167.2" stroke="url(#wmLine)" stroke-width="4" fill="none" opacity="0.6"/>
-        <path d="M0.0,396.4 Q0.0,396.4 18.8,398.4 Q37.5,400.4 56.3,402.0 Q75.0,403.5 93.8,404.5 Q112.5,405.5 131.3,406.1 Q150.0,406.6 168.8,406.6 Q187.5,406.7 206.3,406.4 Q225.0,406.0 243.8,405.4 Q262.5,404.9 281.3,404.1 Q300.0,403.4 318.8,402.0 Q337.5,400.6 356.3,397.8 Q375.0,395.1 393.8,391.7 Q412.5,388.2 431.3,384.3 Q450.0,380.4 468.8,376.1 Q487.5,371.8 506.3,367.1 Q525.0,362.5 543.8,357.4 Q562.5,352.3 581.3,346.7 Q600.0,341.2 618.8,335.1 Q637.5,329.1 656.3,322.4 Q675.0,315.8 693.8,308.5 Q712.5,301.3 731.3,293.4 Q750.0,285.6 768.8,277.2 Q787.5,268.8 806.3,260.0 Q825.0,251.1 843.8,241.9 Q862.5,232.7 881.3,223.4 T900.0,214.0" stroke="url(#wmLine)" stroke-width="4.6" fill="none" opacity="0.45"/>
-        <path d="M0.0,420.7 Q0.0,420.7 18.8,422.5 Q37.5,424.3 56.3,425.6 Q75.0,427.0 93.8,427.9 Q112.5,428.8 131.3,429.3 Q150.0,429.7 168.8,429.8 Q187.5,429.8 206.3,429.5 Q225.0,429.3 243.8,428.7 Q262.5,428.2 281.3,427.5 Q300.0,426.9 318.8,425.6 Q337.5,424.4 356.3,421.9 Q375.0,419.4 393.8,416.3 Q412.5,413.2 431.3,409.7 Q450.0,406.2 468.8,402.3 Q487.5,398.4 506.3,394.2 Q525.0,389.9 543.8,385.3 Q562.5,380.7 581.3,375.7 Q600.0,370.7 618.8,365.2 Q637.5,359.7 656.3,353.7 Q675.0,347.7 693.8,341.1 Q712.5,334.6 731.3,327.5 Q750.0,320.4 768.8,312.8 Q787.5,305.3 806.3,297.3 Q825.0,289.3 843.8,281.0 Q862.5,272.7 881.3,264.2 T900.0,255.8" stroke="url(#wmLine)" stroke-width="5" fill="none" opacity="0.32"/>
-        </g>
-      </svg>
-    </div>
+    <div class="wm-orb"></div>
+    <div class="wm-star" style="top:8%;left:6%;width:2px;height:2px;opacity:.3;"></div>
+    <div class="wm-star" style="top:14%;left:92%;width:1.5px;height:1.5px;opacity:.22;"></div>
+    <div class="wm-star" style="top:34%;left:4%;width:1.5px;height:1.5px;opacity:.2;"></div>
+    <div class="wm-star" style="top:6%;left:60%;width:1.5px;height:1.5px;opacity:.16;"></div>
+  </div>
+  <div aria-hidden="true">
+    <svg class="wave-mesh-bg" width="1200" height="500" viewBox="0 0 1200 500" fill="none" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="wmLine" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0%" stop-color="#0F52FF" stop-opacity="0"/>
+          <stop offset="40%" stop-color="#0F52FF" stop-opacity=".8"/>
+          <stop offset="75%" stop-color="#7B2CFF" stop-opacity=".9"/>
+          <stop offset="100%" stop-color="#B14CFF" stop-opacity="1"/>
+        </linearGradient>
+        <filter id="wmSoftBlur" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="2"/>
+        </filter>
+      </defs>
+      <g filter="url(#wmSoftBlur)">
+      <path d="M0.0,346.5 Q0.0,346.5 20.0,349.0 Q40.0,351.4 60.0,353.6 Q80.0,355.8 100.0,357.6 Q120.0,359.4 140.0,360.9 Q160.0,362.3 180.0,363.4 Q200.0,364.4 220.0,365.0 Q240.0,365.7 260.0,365.9 Q280.0,366.2 300.0,366.1 Q320.0,366.0 340.0,365.6 Q360.0,365.2 380.0,362.9 Q400.0,360.6 420.0,357.1 Q440.0,353.6 460.0,349.4 Q480.0,345.2 500.0,340.4 Q520.0,335.6 540.0,330.5 Q560.0,325.3 580.0,319.8 Q600.0,314.3 620.0,308.6 Q640.0,302.9 660.0,297.0 Q680.0,291.1 700.0,285.0 Q720.0,278.9 740.0,272.6 Q760.0,266.4 780.0,260.0 Q800.0,253.5 820.0,246.9 Q840.0,240.3 860.0,233.5 Q880.0,226.7 900.0,219.6 Q920.0,212.6 940.0,205.2 Q960.0,197.9 980.0,190.3 Q1000.0,182.6 1020.0,174.7 Q1040.0,166.7 1060.0,158.5 Q1080.0,150.2 1100.0,141.6 Q1120.0,133.0 1140.0,124.1 Q1160.0,115.3 1180.0,106.1 T1200.0,97.0" stroke="url(#wmLine)" stroke-width="2.4" fill="none" opacity="0.3"/>
+      <path d="M0.0,371.0 Q0.0,371.0 20.0,373.3 Q40.0,375.5 60.0,377.6 Q80.0,379.6 100.0,381.2 Q120.0,382.9 140.0,384.3 Q160.0,385.6 180.0,386.6 Q200.0,387.5 220.0,388.1 Q240.0,388.7 260.0,388.9 Q280.0,389.2 300.0,389.1 Q320.0,389.0 340.0,388.6 Q360.0,388.2 380.0,386.1 Q400.0,384.0 420.0,380.8 Q440.0,377.5 460.0,373.5 Q480.0,369.6 500.0,365.2 Q520.0,360.7 540.0,355.9 Q560.0,351.1 580.0,346.0 Q600.0,340.9 620.0,335.5 Q640.0,330.2 660.0,324.7 Q680.0,319.1 700.0,313.4 Q720.0,307.8 740.0,301.9 Q760.0,296.1 780.0,290.1 Q800.0,284.1 820.0,277.9 Q840.0,271.8 860.0,265.4 Q880.0,259.0 900.0,252.4 Q920.0,245.8 940.0,239.0 Q960.0,232.1 980.0,225.0 Q1000.0,217.9 1020.0,210.5 Q1040.0,203.1 1060.0,195.3 Q1080.0,187.6 1100.0,179.6 Q1120.0,171.6 1140.0,163.3 Q1160.0,155.0 1180.0,146.5 T1200.0,138.0" stroke="url(#wmLine)" stroke-width="2.8" fill="none" opacity="0.24"/>
+      <path d="M0.0,395.0 Q0.0,395.0 20.0,396.9 Q40.0,398.8 60.0,400.5 Q80.0,402.1 100.0,403.5 Q120.0,404.9 140.0,406.1 Q160.0,407.2 180.0,408.0 Q200.0,408.8 220.0,409.3 Q240.0,409.8 260.0,410.0 Q280.0,410.2 300.0,410.1 Q320.0,410.0 340.0,409.7 Q360.0,409.4 380.0,407.5 Q400.0,405.5 420.0,402.6 Q440.0,399.6 460.0,396.1 Q480.0,392.5 500.0,388.4 Q520.0,384.4 540.0,380.0 Q560.0,375.6 580.0,370.9 Q600.0,366.3 620.0,361.4 Q640.0,356.5 660.0,351.4 Q680.0,346.4 700.0,341.2 Q720.0,335.9 740.0,330.6 Q760.0,325.2 780.0,319.7 Q800.0,314.2 820.0,308.5 Q840.0,302.8 860.0,296.9 Q880.0,291.0 900.0,285.0 Q920.0,278.9 940.0,272.6 Q960.0,266.3 980.0,259.7 Q1000.0,253.2 1020.0,246.4 Q1040.0,239.5 1060.0,232.5 Q1080.0,225.4 1100.0,218.1 Q1120.0,210.7 1140.0,203.2 Q1160.0,195.6 1180.0,187.8 T1200.0,180.0" stroke="url(#wmLine)" stroke-width="3.2" fill="none" opacity="0.19"/>
+      <path d="M0.0,419.5 Q0.0,419.5 20.0,421.2 Q40.0,422.9 60.0,424.4 Q80.0,425.9 100.0,427.2 Q120.0,428.4 140.0,429.4 Q160.0,430.5 180.0,431.2 Q200.0,431.9 220.0,432.3 Q240.0,432.8 260.0,433.0 Q280.0,433.1 300.0,433.1 Q320.0,433.0 340.0,432.7 Q360.0,432.4 380.0,430.7 Q400.0,428.9 420.0,426.2 Q440.0,423.5 460.0,420.2 Q480.0,416.9 500.0,413.2 Q520.0,409.5 540.0,405.4 Q560.0,401.4 580.0,397.1 Q600.0,392.8 620.0,388.3 Q640.0,383.8 660.0,379.1 Q680.0,374.4 700.0,369.6 Q720.0,364.8 740.0,359.9 Q760.0,354.9 780.0,349.8 Q800.0,344.7 820.0,339.5 Q840.0,334.2 860.0,328.8 Q880.0,323.4 900.0,317.8 Q920.0,312.2 940.0,306.3 Q960.0,300.5 980.0,294.5 Q1000.0,288.4 1020.0,282.2 Q1040.0,275.9 1060.0,269.3 Q1080.0,262.8 1100.0,256.1 Q1120.0,249.3 1140.0,242.3 Q1160.0,235.4 1180.0,228.2 T1200.0,221.0" stroke="url(#wmLine)" stroke-width="3.6" fill="none" opacity="0.14"/>
+      <path d="M0.0,441.8 Q0.0,441.8 20.0,443.2 Q40.0,444.6 60.0,445.8 Q80.0,447.1 100.0,448.2 Q120.0,449.2 140.0,450.0 Q160.0,450.9 180.0,451.5 Q200.0,452.1 220.0,452.5 Q240.0,452.8 260.0,453.0 Q280.0,453.1 300.0,453.1 Q320.0,453.0 340.0,452.8 Q360.0,452.5 380.0,451.0 Q400.0,449.4 420.0,446.9 Q440.0,444.5 460.0,441.5 Q480.0,438.5 500.0,435.2 Q520.0,431.8 540.0,428.2 Q560.0,424.5 580.0,420.6 Q600.0,416.7 620.0,412.7 Q640.0,408.6 660.0,404.3 Q680.0,400.1 700.0,395.7 Q720.0,391.3 740.0,386.8 Q760.0,382.3 780.0,377.7 Q800.0,373.0 820.0,368.2 Q840.0,363.5 860.0,358.5 Q880.0,353.6 900.0,348.4 Q920.0,343.3 940.0,338.0 Q960.0,332.7 980.0,327.2 Q1000.0,321.7 1020.0,316.0 Q1040.0,310.3 1060.0,304.4 Q1080.0,298.4 1100.0,292.3 Q1120.0,286.2 1140.0,279.8 Q1160.0,273.5 1180.0,267.0 T1200.0,260.5" stroke="url(#wmLine)" stroke-width="4" fill="none" opacity="0.1"/>
+      </g>
+    </svg>
   </div>
   <div class="container">
     <div class="hero-badge">StudentOS AI <b>v1.0</b></div>
