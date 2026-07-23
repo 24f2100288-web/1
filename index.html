@@ -342,6 +342,10 @@ header#navbar.scrolled{
   border-bottom:1px solid var(--glass-border-strong);padding:11px 0;
   box-shadow:var(--glass-shadow-1);
 }
+/* The navbar spans wider than the rest of the page's 1240px content
+   container so the logo and nav actions use the full header width on
+   large screens instead of leaving empty dark space on both edges. */
+.nav-container{max-width:1600px;}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;}
 .logo{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk';font-weight:700;font-size:19px;}
 .logo-mark{
@@ -1358,7 +1362,7 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
      NAVIGATION BAR
      ============================================================ -->
 <header id="navbar">
-  <div class="container nav-inner">
+  <div class="container nav-container nav-inner">
     <a href="#home" class="logo">
       <span class="logo-mark">S</span>
       <span class="logo-text">Student<span>OS</span> AI</span>
