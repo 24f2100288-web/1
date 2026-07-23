@@ -1297,6 +1297,155 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 }
 
 /* ================================================================
+   IMAGE STUDIO — SECTION STYLES
+   Premium image toolkit organized into distinct category cards
+   (Basic / Format Converter / AI Tools / Student Tools / Advanced),
+   each its own glass panel, plus a single shared workspace below for
+   upload -> process -> download. Mirrors the PDF Studio pattern
+   (same dropzone/file-list/progress/result/toast components) so the
+   two flagship tools feel like the same product.
+   ================================================================ */
+.img-categories{display:grid;gap:22px;margin-bottom:56px;}
+.img-category-card{padding:28px;position:relative;overflow:hidden;}
+.img-category-head{display:flex;align-items:center;gap:14px;margin-bottom:20px;position:relative;z-index:1;}
+.img-category-icon{
+  width:46px;height:46px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:20px;background:var(--grad-soft);border:1px solid var(--border);
+  backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
+}
+.img-category-head h3{font-size:16.5px;font-weight:700;margin-bottom:2px;}
+.img-category-head p{font-size:12.5px;color:var(--text-dim);}
+.img-tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;position:relative;z-index:1;}
+.img-tool-item{
+  display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;cursor:pointer;
+  background:var(--glass-bg);border:1px solid var(--glass-border);transition:.25s var(--ease);
+  backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
+}
+.img-tool-item:hover{
+  border-color:var(--glass-border-strong);background:var(--glass-bg-strong);
+  transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,0.25);
+}
+.img-tool-item.active-tool{border-color:var(--blue-soft);background:var(--grad-soft);}
+.img-tool-item-icon{
+  width:38px;height:38px;border-radius:11px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:17px;background:var(--glass-strong);border:1px solid var(--border);
+}
+.img-tool-item-text{flex:1;min-width:0;}
+.img-tool-item-title{font-size:13.5px;font-weight:600;}
+.img-tool-item-desc{font-size:11.5px;color:var(--text-faint);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.img-cloud-chip{
+  font-size:9.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;flex-shrink:0;
+  padding:3px 7px;border-radius:999px;color:var(--blue-soft);background:rgba(96,165,250,0.12);border:1px solid rgba(96,165,250,0.25);
+}
+
+/* ---- Shared workspace (upload -> process -> download), mirrors PDF Studio ---- */
+.img-workspace{max-width:960px;margin:0 auto 40px;padding:32px;position:relative;overflow:hidden;}
+.img-workspace::before{
+  content:'';position:absolute;top:-50%;right:-15%;width:55%;height:200%;
+  background:radial-gradient(circle, rgba(139,92,246,0.12), transparent 65%);pointer-events:none;
+}
+.img-workspace-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:20px;position:relative;z-index:1;}
+.img-active-tool{display:flex;align-items:center;gap:12px;}
+.img-active-tool .tool-icon{margin-bottom:0;}
+.img-active-tool h3{font-size:17px;font-weight:700;}
+.img-active-tool p{font-size:12.5px;color:var(--text-dim);}
+.img-clear-tool{font-size:12.5px;color:var(--text-faint);text-decoration:underline;text-underline-offset:3px;cursor:pointer;}
+
+.img-dropzone{
+  border:1.5px dashed var(--border-strong);border-radius:var(--radius);padding:44px 24px;text-align:center;
+  background:var(--glass);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
+  transition:border-color .3s, background .3s, transform .2s;cursor:pointer;position:relative;z-index:1;
+}
+.img-dropzone:hover{border-color:var(--purple-soft);}
+.img-dropzone.dragover{border-color:var(--cyan-soft);background:var(--grad-soft);transform:scale(1.01);}
+.img-dropzone-icon{
+  width:62px;height:62px;border-radius:18px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;
+  font-size:28px;background:var(--grad-soft);border:1px solid var(--border);
+  backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
+  animation:imgFloatIcon 4s ease-in-out infinite;
+}
+@keyframes imgFloatIcon{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+.img-dropzone h4{font-size:15.5px;font-weight:600;margin-bottom:6px;}
+.img-dropzone p{font-size:12.5px;color:var(--text-faint);}
+.img-dropzone input[type=file]{display:none;}
+.img-dropzone.has-image{padding:20px;}
+
+/* Live image preview grid — actual thumbnails, not just filename rows */
+.img-preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin-top:18px;position:relative;z-index:1;}
+.img-preview-card{
+  position:relative;border-radius:14px;overflow:hidden;aspect-ratio:1;
+  background:var(--glass-strong);border:1px solid var(--border);
+  animation:fadeUp .4s var(--ease) both;
+}
+.img-preview-card img{width:100%;height:100%;object-fit:cover;display:block;}
+.img-preview-meta{
+  position:absolute;left:0;right:0;bottom:0;padding:6px 8px;font-size:10.5px;color:#fff;
+  background:linear-gradient(to top, rgba(0,0,0,0.75), transparent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.img-preview-remove{
+  position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  color:#fff;background:rgba(4,4,8,0.6);border:1px solid rgba(255,255,255,0.15);transition:.2s;backdrop-filter:blur(4px);
+}
+.img-preview-remove:hover{background:rgba(220,60,60,0.75);}
+
+.img-tool-options{margin-top:16px;position:relative;z-index:1;}
+.img-slider-row{display:flex;align-items:center;gap:14px;}
+.img-slider-row input[type=range]{flex:1;accent-color:var(--blue-soft);}
+.img-slider-val{font-size:13px;font-weight:700;color:var(--blue-soft);min-width:48px;text-align:right;}
+
+/* Progress bar (identical component to PDF Studio's, own namespace) */
+.img-progress-wrap{margin-top:20px;position:relative;z-index:1;}
+.img-progress-label{display:flex;justify-content:space-between;font-size:12.5px;color:var(--text-dim);margin-bottom:8px;}
+.img-progress-track{height:8px;border-radius:99px;background:var(--glass-strong);overflow:hidden;backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);}
+.img-progress-fill{height:100%;width:0%;border-radius:99px;background:var(--grad);backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);transition:width .3s var(--ease);position:relative;overflow:hidden;}
+.img-progress-fill::after{
+  content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);
+  animation:pdfShimmer 1.4s linear infinite;
+}
+
+/* Result card: before/after comparison + download */
+.img-result-card{
+  margin-top:20px;padding:22px;border-radius:var(--radius);position:relative;z-index:1;
+  background:var(--grad-soft);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
+  border:1px solid var(--border);text-align:center;animation:fadeUp .5s var(--ease) both;
+}
+.img-result-icon{
+  width:52px;height:52px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;
+  font-size:22px;background:var(--grad);color:#fff;box-shadow:0 6px 16px rgba(99,102,241,0.28);
+  backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
+  animation:imgResultPop .5s var(--ease) both;
+}
+@keyframes imgResultPop{0%{transform:scale(0.4);opacity:0;}60%{transform:scale(1.08);}100%{transform:scale(1);opacity:1;}}
+.img-result-card h4{font-size:15.5px;font-weight:700;margin-bottom:4px;}
+.img-result-card p{font-size:12.5px;color:var(--text-dim);margin-bottom:16px;}
+.img-result-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.img-compare-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;text-align:left;}
+.img-compare-item{border-radius:14px;overflow:hidden;border:1px solid var(--border);background:var(--glass-strong);}
+.img-compare-item img{width:100%;display:block;max-height:220px;object-fit:contain;background:rgba(0,0,0,0.2);}
+.img-compare-label{padding:8px 12px;font-size:11.5px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:.03em;}
+
+/* Blur-region tool: click-and-drag rectangles drawn over the preview */
+.img-blur-canvas-wrap{position:relative;margin-top:16px;border-radius:14px;overflow:hidden;border:1px solid var(--border);cursor:crosshair;}
+.img-blur-canvas-wrap canvas{display:block;width:100%;height:auto;}
+.img-blur-hint{font-size:12px;color:var(--text-faint);margin-top:8px;text-align:center;}
+
+/* "Cloud required" honest fallback (identical wording pattern to PDF Studio) */
+.img-cloud-note{
+  margin-top:16px;padding:16px 18px;border-radius:12px;position:relative;z-index:1;
+  background:rgba(96,165,250,0.08);backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
+  border:1px solid rgba(96,165,250,0.25);font-size:12.5px;color:var(--blue-soft);line-height:1.6;display:flex;gap:10px;align-items:flex-start;
+}
+.img-cloud-note svg{flex-shrink:0;margin-top:2px;}
+
+@media (max-width:760px){
+  .img-workspace{padding:22px;}
+  .img-workspace-head{flex-direction:column;align-items:flex-start;}
+  .img-dropzone{padding:32px 16px;}
+  .img-category-card{padding:20px;}
+  .img-compare-row{grid-template-columns:1fr;}
+}
+
+/* ================================================================
    11. RESPONSIVE MEDIA QUERIES
    ================================================================ */
 @media (max-width:1180px){
@@ -1369,6 +1518,7 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
     </a>
     <nav class="nav-links" id="navLinks">
       <a href="#home">Home</a>
+      <a href="#image-studio">Image Studio</a>
       <a href="#pdf-studio">PDF Studio</a>
       <a href="#study">Study</a>
       <a href="#engineering">Engineering</a>
@@ -1423,6 +1573,82 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
       <div class="floater glass"><div class="fnum">All-in-One</div><div class="flabel">Student OS</div></div>
       <div class="floater glass"><div class="fnum">Built For</div><div class="flabel">Modern Students</div></div>
     </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     IMAGE STUDIO SECTION
+     A premium image toolkit organized into distinct category cards.
+     Every tool that CAN genuinely run client-side (resize, compress,
+     format conversion, upscaling, enhancement, watermarking, passport
+     photos, sensitive-info blurring) is implemented for real via the
+     Canvas API + lazily-loaded libraries (heic2any, JSZip) — nothing
+     here is a mockup. AI Background Remover and Watermark Remover
+     honestly require a real ML model / cloud backend to work
+     accurately, so they use the same "cloud required" honest fallback
+     pattern as PDF Studio's Chat-with-PDF / OCR tools.
+     ============================================================ -->
+<section class="section" id="image-studio">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2.5" stroke="currentColor" stroke-width="1.8"/><circle cx="8.5" cy="9.5" r="1.6" stroke="currentColor" stroke-width="1.5"/><path d="M3 16l5-5 4 4 3-3 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Image Studio</div>
+      <h2>Every Image Tool. <span class="gradient-text">Beautifully Simplified.</span></h2>
+      <p>Resize, convert, enhance and protect your images — fast, private, and right in your browser.</p>
+    </div>
+
+    <div class="pdf-stat-row reveal">
+      <div class="pdf-stat glass"><div class="fnum">2</div><div class="flabel">Basic Tools</div></div>
+      <div class="pdf-stat glass"><div class="fnum">4</div><div class="flabel">Format Converters</div></div>
+      <div class="pdf-stat glass"><div class="fnum">3</div><div class="flabel">AI Tools</div></div>
+      <div class="pdf-stat glass"><div class="fnum">100%</div><div class="flabel">Runs In Your Browser*</div></div>
+    </div>
+
+    <!-- Category cards — each its own glass panel, per spec (never one giant grid) -->
+    <div class="img-categories reveal" id="imgCategories"></div>
+
+    <!-- ================= WORKSPACE ================= -->
+    <div class="img-workspace glass reveal" id="imgWorkspace">
+      <div class="img-workspace-head">
+        <div class="img-active-tool" id="imgActiveToolInfo">
+          <div class="tool-icon" id="imgActiveIcon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2.5" stroke="currentColor" stroke-width="1.8"/><circle cx="8.5" cy="9.5" r="1.6" stroke="currentColor" stroke-width="1.5"/><path d="M3 16l5-5 4 4 3-3 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div>
+            <h3 id="imgActiveTitle">Select a tool above</h3>
+            <p id="imgActiveDesc">Pick any tool from the categories above to load it here.</p>
+          </div>
+        </div>
+        <span class="img-clear-tool" id="imgClearBtn">Reset workspace</span>
+      </div>
+
+      <!-- Drag & drop dropzone -->
+      <div class="img-dropzone" id="imgDropzone">
+        <div class="img-dropzone-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 16V4M7 9l5-5 5 5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 16v3a2 2 0 002 2h12a2 2 0 002-2v-3" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h4 id="imgDropzoneTitle">Drag & drop your image here</h4>
+        <p id="imgDropzoneHint">or click to browse — your images never leave this browser tab</p>
+        <input type="file" id="imgFileInput" accept="image/*">
+      </div>
+
+      <!-- Selected image previews (real thumbnails) -->
+      <div class="img-preview-grid" id="imgPreviewGrid"></div>
+
+      <!-- Per-tool options (injected dynamically: sliders, size fields, text inputs) -->
+      <div class="img-tool-options" id="imgToolOptions"></div>
+
+      <!-- Process button -->
+      <div style="margin-top:20px;position:relative;z-index:1;">
+        <button class="btn btn-primary btn-block" id="imgProcessBtn" disabled>Upload an image to continue</button>
+      </div>
+
+      <!-- Progress -->
+      <div class="img-progress-wrap" id="imgProgressWrap" style="display:none;">
+        <div class="img-progress-label"><span id="imgProgressLabel">Processing...</span><span id="imgProgressPct">0%</span></div>
+        <div class="img-progress-track"><div class="img-progress-fill" id="imgProgressFill"></div></div>
+      </div>
+
+      <!-- Result -->
+      <div id="imgResultArea"></div>
+    </div>
+
+    <p class="hint reveal" style="text-align:center;max-width:700px;margin:0 auto;">*Resize, compress, format conversion, upscaling, enhancement, watermarking, passport photos and sensitive-info blurring all run 100% locally in your browser via the Canvas API (plus <code>heic2any</code> &amp; <code>JSZip</code>, loaded on first use). AI Background Remover and Watermark Remover require secure cloud processing and are marked clearly below.</p>
   </div>
 </section>
 
@@ -4864,6 +5090,823 @@ const PDF_HANDLERS = {
   },
 };
 
+/* ================================================================
+   IMAGE STUDIO — premium image toolkit
+   Organized into 5 category cards (Basic / Format Converter / AI
+   Tools / Student Tools / Advanced), each its own glass panel, all
+   sharing the single #imgWorkspace panel below for upload -> process
+   -> download. Every tool that can genuinely run in the browser is
+   implemented for real via the Canvas API (+ lazily-loaded heic2any/
+   JSZip for HEIC decoding and ZIP bundling) — AI Background Remover
+   and Watermark Remover honestly require a real ML model / server
+   and use the same "cloud required" pattern as PDF Studio.
+   ================================================================ */
+
+/* Inline SVG icons (not emoji) — guaranteed to render identically on every
+   OS/browser instead of showing as tofu boxes when a system font lacks
+   certain emoji glyphs (confirmed happening with the emoji originally
+   used here, same issue fixed earlier in the hero section). */
+const IMG_ICON_WRENCH = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M14.7 6.3a4 4 0 105.6 5.6L15 17.2a2 2 0 01-2.8 0l-1.4-1.4a2 2 0 010-2.8l5.9-5.9z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8.5 15.5L4 20" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>`;
+const IMG_ICON_RESIZE = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 9V4h5M20 15v5h-5M4 4l6 6M20 20l-6-6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const IMG_ICON_COMPRESS = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 4v4a1 1 0 01-1 1H4M15 4v4a1 1 0 001 1h4M9 20v-4a1 1 0 00-1-1H4M15 20v-4a1 1 0 011-1h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const IMG_ICON_SWAP = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 7h13l-3-3M20 17H7l3 3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const IMG_ICON_IMAGE = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2.5" stroke="currentColor" stroke-width="1.7"/><circle cx="8.5" cy="9.5" r="1.6" stroke="currentColor" stroke-width="1.5"/><path d="M3 16l5-5 4 4 3-3 6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const IMG_ICON_PALETTE = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3a9 9 0 100 18c1.4 0 2-1 2-2 0-.6-.3-1-.6-1.4-.3-.4-.4-.6-.4-1 0-1 .8-1.6 1.8-1.6H17a4 4 0 004-4c0-4.4-4-8-9-8z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="7.5" cy="11" r="1.1" fill="currentColor"/><circle cx="9.5" cy="7" r="1.1" fill="currentColor"/><circle cx="14.5" cy="7" r="1.1" fill="currentColor"/></svg>`;
+const IMG_ICON_PHONE = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="7" y="2.5" width="10" height="19" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M11 19h2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>`;
+const IMG_ICON_STACK = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3l9 4.5-9 4.5-9-4.5L12 3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3 12l9 4.5 9-4.5M3 16.5L12 21l9-4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const IMG_ICON_SPARKLE = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M19 15l.7 2L22 17.7l-2.3.7L19 20l-.7-2L16 17.7l2.3-.7L19 15z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>`;
+const IMG_ICON_WAND = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 20L15 9M17 3l1 2 2 1-2 1-1 2-1-2-2-1 2-1zM19.5 13l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const IMG_ICON_ZOOM = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="1.7"/><path d="M20 20l-4.35-4.35" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M8.5 10.5h4M10.5 8.5v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`;
+const IMG_ICON_SUN = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.7"/><path d="M12 2.5v2.5M12 19v2.5M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2.5 12H5M19 12h2.5M4.2 19.8L6 18M18 6l1.8-1.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>`;
+const IMG_ICON_CAP = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3l10 5-10 5L2 8l10-5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M6 10.5V16c0 1.5 3 3 6 3s6-1.5 6-3v-5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 8v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>`;
+const IMG_ICON_ID = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="2.5" y="5" width="19" height="14" rx="2.5" stroke="currentColor" stroke-width="1.7"/><circle cx="8.5" cy="12" r="2.2" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 16.5c.5-1.5 1.7-2.3 3-2.3s2.5.8 3 2.3M14 10h5M14 13.5h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`;
+const IMG_ICON_PUZZLE = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 4h4v2.2a1.8 1.8 0 003.6 0V4H20v4h-2.2a1.8 1.8 0 000 3.6H20V15h-4v-2.2a1.8 1.8 0 00-3.6 0V15H8v4H4v-4h2.2a1.8 1.8 0 000-3.6H4V9h4V4z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>`;
+const IMG_ICON_DROPLET = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3s6 6.5 6 11a6 6 0 01-12 0c0-4.5 6-11 6-11z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>`;
+const IMG_ICON_CLEAN = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 13l7-7 4 4-7 7H6v-4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 21h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>`;
+const IMG_ICON_LOCK = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M8 11V8a4 4 0 018 0v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>`;
+
+const IMAGE_CATEGORIES = [
+  {
+    key:'basic', icon:IMG_ICON_WRENCH, title:'Basic Tools', desc:'The everyday essentials — resize and shrink any image.',
+    tools:[
+      {id:'img-resize', icon:IMG_ICON_RESIZE, title:'Resize Image', desc:'Resize to exact pixel dimensions or a percentage scale.'},
+      {id:'img-compress', icon:IMG_ICON_COMPRESS, title:'Compress Image', desc:'Shrink file size while keeping visual quality high.'},
+    ],
+  },
+  {
+    key:'format', icon:IMG_ICON_SWAP, title:'Format Converter', desc:'Convert between the image formats you actually need.',
+    tools:[
+      {id:'img-png-to-jpg', icon:IMG_ICON_IMAGE, title:'PNG to JPG', desc:'Convert a transparent PNG into a compact JPG.', accepts:'.png,image/png'},
+      {id:'img-jpg-to-png', icon:IMG_ICON_PALETTE, title:'JPG to PNG', desc:'Convert a JPG into a lossless PNG file.', accepts:'.jpg,.jpeg,image/jpeg'},
+      {id:'img-heic-to-jpg', icon:IMG_ICON_PHONE, title:'HEIC to JPG', desc:'Convert iPhone HEIC photos into universal JPG files.', accepts:'.heic,.heif,image/heic,image/heif'},
+      {id:'img-bulk-convert', icon:IMG_ICON_STACK, title:'Bulk Image Converter', desc:'Convert many images at once and download them as one ZIP.', multiple:true},
+    ],
+  },
+  {
+    key:'ai', icon:IMG_ICON_SPARKLE, title:'AI Tools', desc:'Smarter editing, powered by algorithms and (where needed) the cloud.',
+    tools:[
+      {id:'img-bg-remover', icon:IMG_ICON_WAND, title:'AI Background Remover', desc:'Cleanly remove the background from any photo.', cloudOnly:true},
+      {id:'img-upscaler', icon:IMG_ICON_ZOOM, title:'AI Image Upscaler', desc:'Scale an image up 2x, 4x or 8x with smoothed detail.'},
+      {id:'img-enhancer', icon:IMG_ICON_SUN, title:'AI Image Enhancer', desc:'Auto-correct brightness, contrast and color balance.'},
+    ],
+  },
+  {
+    key:'student', icon:IMG_ICON_CAP, title:'Student Tools', desc:'Purpose-built for the paperwork every student deals with.',
+    tools:[
+      {id:'img-passport-photo', icon:IMG_ICON_ID, title:'Passport Photo Maker', desc:'Crop to a standard passport/ID size with a clean background.'},
+    ],
+  },
+  {
+    key:'advanced', icon:IMG_ICON_PUZZLE, title:'Advanced Tools', desc:'Watermarking and privacy tools for sharing images safely.',
+    tools:[
+      {id:'img-watermark-add', icon:IMG_ICON_DROPLET, title:'Watermark Adder', desc:'Stamp a custom text watermark across your image.'},
+      {id:'img-watermark-remove', icon:IMG_ICON_CLEAN, title:'Watermark Remover', desc:'Attempt to remove an existing watermark from a photo.', cloudOnly:true},
+      {id:'img-blur-info', icon:IMG_ICON_LOCK, title:'Blur Sensitive Information', desc:'Draw boxes over faces, IDs or text to blur them out.'},
+    ],
+  },
+];
+const IMAGE_ALL_TOOLS = IMAGE_CATEGORIES.flatMap(cat => cat.tools.map(t => ({...t, categoryKey:cat.key, categoryTitle:cat.title})));
+
+/* Register every Image Studio tool in the global search index too */
+SEARCH_INDEX.push(...IMAGE_ALL_TOOLS.map(t => ({...t, cat:'Image Studio', anchor:'image-studio'})));
+
+/* ---- Render the 5 category cards (each its own glass panel) ---- */
+function renderImageCategories(){
+  const container = $('#imgCategories');
+  container.innerHTML = IMAGE_CATEGORIES.map(cat => `
+    <div class="img-category-card glass reveal">
+      <div class="img-category-head">
+        <div class="img-category-icon">${cat.icon}</div>
+        <div>
+          <h3>${cat.title}</h3>
+          <p>${cat.desc}</p>
+        </div>
+      </div>
+      <div class="img-tool-grid">
+        ${cat.tools.map(t => `
+          <div class="img-tool-item" data-tool-id="${t.id}">
+            <div class="img-tool-item-icon">${t.icon}</div>
+            <div class="img-tool-item-text">
+              <div class="img-tool-item-title">${t.title}</div>
+              <div class="img-tool-item-desc">${t.desc}</div>
+            </div>
+            ${t.cloudOnly ? '<span class="img-cloud-chip">Cloud</span>' : ''}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+  $$('.img-tool-item', container).forEach(item => {
+    item.addEventListener('click', () => activateImageTool(item.dataset.toolId));
+  });
+}
+renderImageCategories();
+
+/* ---- Lazy-loaded external libraries (loaded once, only when first needed) ----
+   heic2any: decodes iPhone HEIC/HEIF photos into a canvas-friendly JPEG
+   JSZip: bundles multiple converted images into one downloadable .zip */
+let heic2anyPromise = null, jszipPromise = null;
+function ensureHeic2Any(){
+  if(!heic2anyPromise){
+    heic2anyPromise = loadScript('https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js');
+  }
+  return heic2anyPromise;
+}
+function ensureJSZip(){
+  if(!jszipPromise){
+    jszipPromise = loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
+  }
+  return jszipPromise;
+}
+
+/* ---- Workspace state ---- */
+let imgActiveTool = null;
+let imgSelectedFiles = [];
+
+const imgActiveIcon  = $('#imgActiveIcon');
+const imgActiveTitle = $('#imgActiveTitle');
+const imgActiveDesc  = $('#imgActiveDesc');
+const imgDropzone    = $('#imgDropzone');
+const imgDropzoneTitle = $('#imgDropzoneTitle');
+const imgDropzoneHint  = $('#imgDropzoneHint');
+const imgFileInput   = $('#imgFileInput');
+const imgPreviewGrid = $('#imgPreviewGrid');
+const imgToolOptions = $('#imgToolOptions');
+const imgProcessBtn  = $('#imgProcessBtn');
+const imgProgressWrap = $('#imgProgressWrap');
+const imgProgressLabel = $('#imgProgressLabel');
+const imgProgressPct = $('#imgProgressPct');
+const imgProgressFill = $('#imgProgressFill');
+const imgResultArea = $('#imgResultArea');
+
+function activateImageTool(id){
+  const tool = IMAGE_ALL_TOOLS.find(t => t.id === id);
+  if(!tool) return;
+  imgActiveTool = tool;
+  imgSelectedFiles = [];
+  imgActiveIcon.innerHTML = tool.icon;
+  imgActiveTitle.textContent = tool.title;
+  imgActiveDesc.textContent = tool.desc;
+  imgDropzoneTitle.textContent = tool.multiple ? 'Drag & drop your images here' : 'Drag & drop your image here';
+  imgDropzoneHint.textContent = 'or click to browse — your images never leave this browser tab';
+  imgFileInput.accept = tool.accepts || 'image/*';
+  imgFileInput.multiple = !!tool.multiple;
+  imgDropzone.classList.remove('has-image');
+  imgPreviewGrid.innerHTML = '';
+  imgToolOptions.innerHTML = '';
+  imgResultArea.innerHTML = '';
+  imgProgressWrap.style.display = 'none';
+  imgProcessBtn.disabled = true;
+  imgProcessBtn.textContent = 'Upload an image to continue';
+  renderImageToolOptions(tool);
+  $$('.img-tool-item').forEach(el => el.classList.toggle('active-tool', el.dataset.toolId === id));
+  $('#imgWorkspace').scrollIntoView({behavior:'smooth', block:'start'});
+}
+$('#imgClearBtn').addEventListener('click', () => {
+  imgActiveTool = null; imgSelectedFiles = [];
+  imgActiveIcon.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2.5" stroke="currentColor" stroke-width="1.8"/><circle cx="8.5" cy="9.5" r="1.6" stroke="currentColor" stroke-width="1.5"/><path d="M3 16l5-5 4 4 3-3 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  imgActiveTitle.textContent = 'Select a tool above';
+  imgActiveDesc.textContent = 'Pick any tool from the categories above to load it here.';
+  imgDropzoneTitle.textContent = 'Drag & drop your image here';
+  imgDropzoneHint.textContent = 'or click to browse — your images never leave this browser tab';
+  imgFileInput.value = ''; imgFileInput.accept = 'image/*'; imgFileInput.multiple = false;
+  imgDropzone.classList.remove('has-image');
+  imgPreviewGrid.innerHTML = ''; imgToolOptions.innerHTML = ''; imgResultArea.innerHTML = '';
+  imgProgressWrap.style.display = 'none';
+  imgProcessBtn.disabled = true;
+  imgProcessBtn.textContent = 'Upload an image to continue';
+  $$('.img-tool-item').forEach(el => el.classList.remove('active-tool'));
+});
+
+/* ---- File upload: click, drag-and-drop, real thumbnail previews ---- */
+imgDropzone.addEventListener('click', () => imgFileInput.click());
+imgFileInput.addEventListener('change', (e) => handleImageFiles([...e.target.files]));
+['dragenter','dragover'].forEach(evt => imgDropzone.addEventListener(evt, (e) => {
+  e.preventDefault(); imgDropzone.classList.add('dragover');
+}));
+['dragleave','drop'].forEach(evt => imgDropzone.addEventListener(evt, (e) => {
+  e.preventDefault(); imgDropzone.classList.remove('dragover');
+}));
+imgDropzone.addEventListener('drop', (e) => {
+  const files = [...(e.dataTransfer?.files || [])];
+  if(files.length) handleImageFiles(files);
+});
+
+function drawImagePreviewGrid(){
+  imgPreviewGrid.innerHTML = '';
+  imgSelectedFiles.forEach((file, i) => {
+    const card = el('div', 'img-preview-card');
+    const isHeic = /\.heic$|\.heif$/i.test(file.name) || /heic|heif/i.test(file.type);
+    card.innerHTML = `
+      ${isHeic ? `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:26px;background:var(--glass-bg-strong);">📱</div>` : `<img alt="${file.name}">`}
+      <div class="img-preview-meta">${file.name}</div>
+      <button class="img-preview-remove" aria-label="Remove image"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M4 4l16 16M20 4L4 20" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
+    `;
+    if(!isHeic){
+      const imgEl = $('img', card);
+      imgEl.src = URL.createObjectURL(file);
+      imgEl.onload = () => URL.revokeObjectURL(imgEl.src);
+    }
+    $('.img-preview-remove', card).addEventListener('click', (e) => {
+      e.stopPropagation();
+      imgSelectedFiles.splice(i, 1);
+      drawImagePreviewGrid();
+      updateImageProcessBtnState();
+    });
+    imgPreviewGrid.appendChild(card);
+  });
+  imgDropzone.classList.toggle('has-image', imgSelectedFiles.length > 0);
+}
+function updateImageProcessBtnState(){
+  const hasFiles = imgSelectedFiles.length > 0;
+  imgProcessBtn.disabled = !hasFiles;
+  imgProcessBtn.textContent = hasFiles
+    ? `${imgActiveTool ? imgActiveTool.title : 'Process'} (${imgSelectedFiles.length} image${imgSelectedFiles.length>1?'s':''})`
+    : 'Upload an image to continue';
+}
+function handleImageFiles(files){
+  if(!imgActiveTool){ pdfToast('Choose a tool above before uploading an image.', 'info'); return; }
+  if(!files.length) return;
+  if(!imgActiveTool.multiple){ imgSelectedFiles = [files[0]]; }
+  else { imgSelectedFiles = imgSelectedFiles.concat(files); }
+  drawImagePreviewGrid();
+  updateImageProcessBtnState();
+  imgResultArea.innerHTML = '';
+  // If the freshly-selected tool has an "on select" preview requirement
+  // (e.g. Blur tool needs to draw the canvas immediately), trigger it.
+  if(imgActiveTool.id === 'img-blur-info' && imgSelectedFiles.length) initBlurCanvas(imgSelectedFiles[0]);
+}
+
+/* ---- Per-tool options UI (sliders, size fields, text inputs) ---- */
+function renderImageToolOptions(tool){
+  let html = '';
+  if(tool.id === 'img-resize'){
+    html = `
+      <div class="field-row">
+        <div class="field"><label>Width (px)</label><input type="number" id="imgOptWidth" min="1" placeholder="e.g. 800"></div>
+        <div class="field"><label>Height (px)</label><input type="number" id="imgOptHeight" min="1" placeholder="e.g. 600"></div>
+      </div>
+      <div class="field"><label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="imgOptLockRatio" checked style="width:auto;accent-color:var(--blue-soft);"> Lock aspect ratio</label></div>
+    `;
+  } else if(tool.id === 'img-compress'){
+    html = `
+      <div class="field">
+        <label>Quality</label>
+        <div class="img-slider-row"><input type="range" id="imgOptQuality" min="10" max="95" value="70"><span class="img-slider-val" id="imgOptQualityVal">70%</span></div>
+      </div>`;
+  } else if(tool.id === 'img-upscaler'){
+    html = `
+      <div class="field"><label>Scale factor</label>
+        <div class="qz-pill-group" id="imgUpscaleFactorGroup">
+          <div class="qz-pill active" data-scale="2">2x</div>
+          <div class="qz-pill" data-scale="4">4x</div>
+          <div class="qz-pill" data-scale="8">8x</div>
+        </div>
+      </div>`;
+  } else if(tool.id === 'img-passport-photo'){
+    html = `
+      <div class="field"><label>Photo size</label>
+        <select id="imgOptPassportSize">
+          <option value="35x45">35 × 45 mm (India / EU standard)</option>
+          <option value="2x2">2 × 2 in (US Passport / Visa)</option>
+          <option value="33x48">33 × 48 mm (India Passport)</option>
+        </select>
+      </div>
+      <div class="field"><label>Background color</label>
+        <select id="imgOptPassportBg">
+          <option value="#ffffff">White</option>
+          <option value="#e8f0f8">Light Blue</option>
+          <option value="#e8e8e8">Light Grey</option>
+        </select>
+      </div>`;
+  } else if(tool.id === 'img-watermark-add'){
+    html = `
+      <div class="field"><label>Watermark text</label><input type="text" id="imgOptWmText" placeholder="e.g. © Your Name" value="StudentOS AI"></div>
+      <div class="field">
+        <label>Opacity</label>
+        <div class="img-slider-row"><input type="range" id="imgOptWmOpacity" min="10" max="90" value="35"><span class="img-slider-val" id="imgOptWmOpacityVal">35%</span></div>
+      </div>
+      <div class="field"><label>Position</label>
+        <select id="imgOptWmPosition">
+          <option value="center">Repeated diagonal (center)</option>
+          <option value="bottom-right">Bottom-right corner</option>
+        </select>
+      </div>`;
+  } else if(tool.id === 'img-blur-info'){
+    html = `<p class="img-blur-hint">Click and drag directly on the preview above to draw blur boxes over sensitive areas. You can add multiple boxes.</p>
+      <div class="field" style="margin-top:10px;"><label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="imgOptBlurClear" style="width:auto;accent-color:var(--blue-soft);" onclick="return false;"> </label></div>
+      <button class="btn btn-ghost btn-sm" id="imgBlurUndoBtn" type="button">Undo last box</button>`;
+  } else if(tool.cloudOnly){
+    html = `<div class="img-cloud-note"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 18a4 4 0 01-.6-7.96A5.5 5.5 0 0116 8a4.5 4.5 0 011 8.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>This tool requires secure cloud processing (a real AI model) to run accurately — it can't be done reliably in the browser alone. This demo shows the complete, production-ready UI; connect it to an image AI API of your choice to make it fully live.</span></div>`;
+  }
+  imgToolOptions.innerHTML = html;
+
+  // Wire up live slider value labels
+  $('#imgOptQuality', imgToolOptions)?.addEventListener('input', e => { $('#imgOptQualityVal', imgToolOptions).textContent = e.target.value + '%'; });
+  $('#imgOptWmOpacity', imgToolOptions)?.addEventListener('input', e => { $('#imgOptWmOpacityVal', imgToolOptions).textContent = e.target.value + '%'; });
+  $$('#imgUpscaleFactorGroup .qz-pill', imgToolOptions).forEach(p => p.addEventListener('click', () => {
+    $$('#imgUpscaleFactorGroup .qz-pill', imgToolOptions).forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+  }));
+  $('#imgBlurUndoBtn', imgToolOptions)?.addEventListener('click', undoLastBlurBox);
+}
+
+/* ---- Progress bar helper (own namespace, identical component to PDF Studio's) ---- */
+function imgSetProgress(pct, label){
+  imgProgressWrap.style.display = 'block';
+  imgProgressFill.style.width = pct + '%';
+  imgProgressPct.textContent = pct + '%';
+  if(label) imgProgressLabel.textContent = label;
+}
+function imgResetProgress(){
+  imgProgressWrap.style.display = 'none';
+  imgProgressFill.style.width = '0%';
+}
+
+/* ---- Shared canvas helpers ---- */
+function loadImageFromFile(file){
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => { resolve(img); };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Could not load image')); };
+    img.src = url;
+  });
+}
+function canvasToBlob(canvas, type='image/png', quality){
+  return new Promise(resolve => canvas.toBlob(resolve, type, quality));
+}
+function downloadBlob(blob, filename){
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+function baseNameOf(filename){
+  return filename.replace(/\.[^.]+$/, '');
+}
+
+/* ---- Result rendering: single download card, or before/after comparison ---- */
+function imgShowDownloadResult({title, desc, blob, filename, originalUrl}){
+  const url = URL.createObjectURL(blob);
+  const compareHtml = originalUrl ? `
+    <div class="img-compare-row">
+      <div class="img-compare-item"><div class="img-compare-label">Before</div><img src="${originalUrl}" alt="Original"></div>
+      <div class="img-compare-item"><div class="img-compare-label">After</div><img src="${url}" alt="Result"></div>
+    </div>` : `<img src="${url}" alt="Result" style="max-width:100%;max-height:280px;border-radius:12px;margin-bottom:16px;border:1px solid var(--border);">`;
+  imgResultArea.innerHTML = `
+    <div class="img-result-card">
+      <div class="img-result-icon">✓</div>
+      <h4>${title}</h4>
+      <p>${desc}</p>
+      ${compareHtml}
+      <div class="img-result-actions">
+        <a href="${url}" download="${filename}" class="btn btn-primary btn-sm">⬇️ Download ${filename}</a>
+      </div>
+    </div>`;
+  pdfToast(`${title} — ready to download!`, 'success');
+}
+function imgShowCloudRequired(tool){
+  imgResultArea.innerHTML = `
+    <div class="img-cloud-note" style="margin-top:20px;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 18a4 4 0 01-.6-7.96A5.5 5.5 0 0116 8a4.5 4.5 0 011 8.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span><b>${tool.title}</b> requires secure cloud processing to complete. The interface above is fully wired and production-ready — connect it to your preferred image-AI backend to activate this exact flow live.</span>
+    </div>`;
+  pdfToast(`${tool.title} needs a cloud backend to run.`, 'info');
+}
+
+/* ---- Blur Sensitive Information: click-and-drag rectangles over a live canvas ---- */
+let blurCanvas = null, blurCtx = null, blurBaseImg = null, blurBoxes = [], blurDrawing = null;
+async function initBlurCanvas(file){
+  const img = await loadImageFromFile(file);
+  blurBaseImg = img;
+  blurBoxes = [];
+  const wrap = el('div', 'img-blur-canvas-wrap');
+  const canvas = document.createElement('canvas');
+  canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+  wrap.appendChild(canvas);
+  imgPreviewGrid.innerHTML = '';
+  imgPreviewGrid.style.display = 'block';
+  imgPreviewGrid.appendChild(wrap);
+  blurCanvas = canvas; blurCtx = canvas.getContext('2d');
+  redrawBlurCanvas();
+
+  function getPos(e){
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width, scaleY = canvas.height / rect.height;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return {x:(clientX-rect.left)*scaleX, y:(clientY-rect.top)*scaleY};
+  }
+  canvas.addEventListener('pointerdown', e => {
+    const p = getPos(e);
+    blurDrawing = {x0:p.x, y0:p.y, x1:p.x, y1:p.y};
+  });
+  canvas.addEventListener('pointermove', e => {
+    if(!blurDrawing) return;
+    const p = getPos(e);
+    blurDrawing.x1 = p.x; blurDrawing.y1 = p.y;
+    redrawBlurCanvas();
+  });
+  window.addEventListener('pointerup', () => {
+    if(!blurDrawing) return;
+    const {x0,y0,x1,y1} = blurDrawing;
+    if(Math.abs(x1-x0) > 6 && Math.abs(y1-y0) > 6){
+      blurBoxes.push({x:Math.min(x0,x1), y:Math.min(y0,y1), w:Math.abs(x1-x0), h:Math.abs(y1-y0)});
+    }
+    blurDrawing = null;
+    redrawBlurCanvas();
+  });
+}
+function redrawBlurCanvas(){
+  if(!blurCanvas || !blurBaseImg) return;
+  blurCtx.clearRect(0,0,blurCanvas.width,blurCanvas.height);
+  blurCtx.drawImage(blurBaseImg, 0, 0);
+  const allBoxes = blurDrawing ? [...blurBoxes, {x:Math.min(blurDrawing.x0,blurDrawing.x1), y:Math.min(blurDrawing.y0,blurDrawing.y1), w:Math.abs(blurDrawing.x1-blurDrawing.x0), h:Math.abs(blurDrawing.y1-blurDrawing.y0)}] : blurBoxes;
+  allBoxes.forEach(box => {
+    blurCtx.save();
+    blurCtx.strokeStyle = 'rgba(96,165,250,0.9)';
+    blurCtx.lineWidth = 2;
+    blurCtx.strokeRect(box.x, box.y, box.w, box.h);
+    blurCtx.fillStyle = 'rgba(96,165,250,0.18)';
+    blurCtx.fillRect(box.x, box.y, box.w, box.h);
+    blurCtx.restore();
+  });
+}
+function undoLastBlurBox(){
+  blurBoxes.pop();
+  redrawBlurCanvas();
+}
+function applyPixelBlur(ctx, x, y, w, h, blockSize=10){
+  // A dependency-free "mosaic" blur: average each small block's color and
+  // fill that block with the average — genuinely obscures the content
+  // rather than just drawing a translucent rectangle over it.
+  x = Math.max(0, Math.round(x)); y = Math.max(0, Math.round(y));
+  w = Math.round(w); h = Math.round(h);
+  const imgData = ctx.getImageData(x, y, w, h);
+  const data = imgData.data;
+  for(let by=0; by<h; by+=blockSize){
+    for(let bx=0; bx<w; bx+=blockSize){
+      const bw = Math.min(blockSize, w-bx), bh = Math.min(blockSize, h-by);
+      let r=0,g=0,b=0,a=0,count=0;
+      for(let dy=0; dy<bh; dy++){
+        for(let dx=0; dx<bw; dx++){
+          const idx = ((by+dy)*w + (bx+dx))*4;
+          r+=data[idx]; g+=data[idx+1]; b+=data[idx+2]; a+=data[idx+3]; count++;
+        }
+      }
+      r=Math.round(r/count); g=Math.round(g/count); b=Math.round(b/count); a=Math.round(a/count);
+      for(let dy=0; dy<bh; dy++){
+        for(let dx=0; dx<bw; dx++){
+          const idx = ((by+dy)*w + (bx+dx))*4;
+          data[idx]=r; data[idx+1]=g; data[idx+2]=b; data[idx+3]=a;
+        }
+      }
+    }
+  }
+  ctx.putImageData(imgData, x, y);
+}
+
+/* ---- Main process handler: routes to the right implementation per tool ---- */
+imgProcessBtn.addEventListener('click', async () => {
+  if(!imgActiveTool || !imgSelectedFiles.length) return;
+  const tool = imgActiveTool;
+  imgResultArea.innerHTML = '';
+  imgProcessBtn.disabled = true;
+  try{
+    if(tool.cloudOnly){
+      imgSetProgress(100, 'This feature requires a cloud backend');
+      await new Promise(r => setTimeout(r, 500));
+      imgShowCloudRequired(tool);
+    } else {
+      await IMAGE_HANDLERS[tool.id]();
+    }
+  } catch(err){
+    console.error('Image Studio error for', tool.id, err);
+    pdfToast('Something went wrong processing this image. Please try again.', 'info');
+  } finally {
+    updateImageProcessBtnState();
+    setTimeout(imgResetProgress, 900);
+  }
+});
+
+/* ---- Individual tool implementations ---- */
+const IMAGE_HANDLERS = {
+
+  /* -- Resize Image -- */
+  async 'img-resize'(){
+    imgSetProgress(10, 'Loading image...');
+    const file = imgSelectedFiles[0];
+    const originalUrl = URL.createObjectURL(file);
+    const img = await loadImageFromFile(file);
+    let w = parseInt($('#imgOptWidth', imgToolOptions).value) || img.naturalWidth;
+    let h = parseInt($('#imgOptHeight', imgToolOptions).value) || img.naturalHeight;
+    const lockRatio = $('#imgOptLockRatio', imgToolOptions)?.checked;
+    if(lockRatio && $('#imgOptWidth', imgToolOptions).value && !$('#imgOptHeight', imgToolOptions).value){
+      h = Math.round(w * (img.naturalHeight/img.naturalWidth));
+    } else if(lockRatio && $('#imgOptHeight', imgToolOptions).value && !$('#imgOptWidth', imgToolOptions).value){
+      w = Math.round(h * (img.naturalWidth/img.naturalHeight));
+    }
+    imgSetProgress(50, 'Resizing...');
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(img, 0, 0, w, h);
+    imgSetProgress(85, 'Encoding...');
+    const blob = await canvasToBlob(canvas, file.type === 'image/png' ? 'image/png' : 'image/jpeg', 0.92);
+    imgSetProgress(100, 'Done!');
+    imgShowDownloadResult({title:'Image Resized', desc:`Resized to ${w} × ${h} pixels.`, blob, filename:`${baseNameOf(file.name)}-resized.${blob.type==='image/png'?'png':'jpg'}`, originalUrl});
+  },
+
+  /* -- Compress Image -- */
+  async 'img-compress'(){
+    imgSetProgress(10, 'Loading image...');
+    const file = imgSelectedFiles[0];
+    const originalUrl = URL.createObjectURL(file);
+    const img = await loadImageFromFile(file);
+    const quality = (parseInt($('#imgOptQuality', imgToolOptions).value) || 70) / 100;
+    imgSetProgress(55, 'Compressing...');
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    const blob = await canvasToBlob(canvas, 'image/jpeg', quality);
+    imgSetProgress(100, 'Done!');
+    // Simple, flat-color source images (like a solid-fill PNG) can already
+    // be smaller than any JPEG re-encoding of them — be honest about that
+    // instead of claiming a saving that didn't actually happen.
+    const changePct = Math.round((1 - blob.size/file.size)*100);
+    const sizeDesc = changePct > 0
+      ? `New size: ${formatBytes(blob.size)} (${changePct}% smaller than the original ${formatBytes(file.size)}).`
+      : `New size: ${formatBytes(blob.size)} — this image was already highly compressed, so JPEG re-encoding didn't reduce it further (original was ${formatBytes(file.size)}).`;
+    imgShowDownloadResult({title:'Image Compressed', desc:sizeDesc, blob, filename:`${baseNameOf(file.name)}-compressed.jpg`, originalUrl});
+  },
+
+  /* -- PNG to JPG -- */
+  async 'img-png-to-jpg'(){
+    imgSetProgress(15, 'Loading PNG...');
+    const file = imgSelectedFiles[0];
+    const img = await loadImageFromFile(file);
+    imgSetProgress(55, 'Converting...');
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext('2d');
+    // JPG has no alpha channel — fill white behind any transparency first.
+    ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.drawImage(img, 0, 0);
+    const blob = await canvasToBlob(canvas, 'image/jpeg', 0.92);
+    imgSetProgress(100, 'Done!');
+    imgShowDownloadResult({title:'Converted to JPG', desc:'Transparent areas were filled with white, as JPG has no transparency support.', blob, filename:`${baseNameOf(file.name)}.jpg`});
+  },
+
+  /* -- JPG to PNG -- */
+  async 'img-jpg-to-png'(){
+    imgSetProgress(15, 'Loading JPG...');
+    const file = imgSelectedFiles[0];
+    const img = await loadImageFromFile(file);
+    imgSetProgress(55, 'Converting...');
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    const blob = await canvasToBlob(canvas, 'image/png');
+    imgSetProgress(100, 'Done!');
+    imgShowDownloadResult({title:'Converted to PNG', desc:'Your image is now a lossless PNG file.', blob, filename:`${baseNameOf(file.name)}.png`});
+  },
+
+  /* -- HEIC to JPG -- */
+  async 'img-heic-to-jpg'(){
+    imgSetProgress(10, 'Loading HEIC decoder...');
+    await ensureHeic2Any();
+    const file = imgSelectedFiles[0];
+    imgSetProgress(45, 'Decoding HEIC photo...');
+    const jpgBlob = await window['heic2any']({blob:file, toType:'image/jpeg', quality:0.92});
+    imgSetProgress(90, 'Finishing...');
+    const finalBlob = Array.isArray(jpgBlob) ? jpgBlob[0] : jpgBlob;
+    imgSetProgress(100, 'Done!');
+    imgShowDownloadResult({title:'Converted to JPG', desc:'Your iPhone HEIC photo is now a universally-supported JPG.', blob:finalBlob, filename:`${baseNameOf(file.name)}.jpg`});
+  },
+
+  /* -- Bulk Image Converter (many images -> one ZIP of JPGs) -- */
+  async 'img-bulk-convert'(){
+    imgSetProgress(8, 'Loading ZIP engine...');
+    await ensureJSZip();
+    const zip = new window['JSZip']();
+    const files = imgSelectedFiles;
+    for(let i=0; i<files.length; i++){
+      const file = files[i];
+      imgSetProgress(10 + Math.round((i/files.length)*75), `Converting ${file.name}...`);
+      try{
+        let sourceBlob = file;
+        if(/heic|heif/i.test(file.type) || /\.heic$|\.heif$/i.test(file.name)){
+          await ensureHeic2Any();
+          const out = await window['heic2any']({blob:file, toType:'image/jpeg', quality:0.9});
+          sourceBlob = Array.isArray(out) ? out[0] : out;
+        }
+        const img = await loadImageFromFile(sourceBlob);
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.drawImage(img, 0, 0);
+        const blob = await canvasToBlob(canvas, 'image/jpeg', 0.9);
+        zip.file(`${baseNameOf(file.name)}.jpg`, blob);
+      } catch(err){
+        console.error('Bulk convert failed for', file.name, err);
+      }
+    }
+    imgSetProgress(92, 'Zipping files...');
+    const zipBlob = await zip.generateAsync({type:'blob'});
+    imgSetProgress(100, 'Done!');
+    downloadBlob(zipBlob, 'converted-images.zip');
+    imgResultArea.innerHTML = `
+      <div class="img-result-card">
+        <div class="img-result-icon">✓</div>
+        <h4>Bulk Conversion Complete</h4>
+        <p>${files.length} image${files.length>1?'s':''} converted to JPG and bundled into a ZIP file.</p>
+        <div class="img-result-actions"><span class="tag">converted-images.zip downloaded</span></div>
+      </div>`;
+    pdfToast(`${files.length} images converted and zipped!`, 'success');
+  },
+
+  /* -- AI Image Upscaler (real canvas upscale with high-quality smoothing) -- */
+  async 'img-upscaler'(){
+    imgSetProgress(10, 'Loading image...');
+    const file = imgSelectedFiles[0];
+    const originalUrl = URL.createObjectURL(file);
+    const img = await loadImageFromFile(file);
+    const factor = parseInt($('#imgUpscaleFactorGroup .qz-pill.active', imgToolOptions)?.dataset.scale) || 2;
+    const targetW = img.naturalWidth * factor, targetH = img.naturalHeight * factor;
+    if(targetW * targetH > 60_000_000){
+      pdfToast('That image is too large to upscale at this factor in-browser. Try a smaller image or lower scale.', 'info');
+      return;
+    }
+    imgSetProgress(40, `Upscaling ${factor}x...`);
+    // Two-pass upscale (step through 2x increments) gives noticeably
+    // smoother results than one giant single-pass stretch.
+    let srcCanvas = document.createElement('canvas');
+    srcCanvas.width = img.naturalWidth; srcCanvas.height = img.naturalHeight;
+    srcCanvas.getContext('2d').drawImage(img, 0, 0);
+    let steps = Math.log2(factor);
+    for(let s=0; s<steps; s++){
+      const next = document.createElement('canvas');
+      next.width = srcCanvas.width*2; next.height = srcCanvas.height*2;
+      const nctx = next.getContext('2d');
+      nctx.imageSmoothingEnabled = true; nctx.imageSmoothingQuality = 'high';
+      nctx.drawImage(srcCanvas, 0, 0, next.width, next.height);
+      srcCanvas = next;
+      imgSetProgress(40 + Math.round(((s+1)/steps)*45), `Upscaling ${factor}x...`);
+    }
+    imgSetProgress(90, 'Encoding...');
+    const blob = await canvasToBlob(srcCanvas, 'image/png');
+    imgSetProgress(100, 'Done!');
+    imgShowDownloadResult({title:`Upscaled ${factor}x`, desc:`New size: ${srcCanvas.width} × ${srcCanvas.height} pixels.`, blob, filename:`${baseNameOf(file.name)}-${factor}x.png`, originalUrl});
+  },
+
+  /* -- AI Image Enhancer (real auto-contrast/brightness/saturation) -- */
+  async 'img-enhancer'(){
+    imgSetProgress(10, 'Loading image...');
+    const file = imgSelectedFiles[0];
+    const originalUrl = URL.createObjectURL(file);
+    const img = await loadImageFromFile(file);
+    imgSetProgress(35, 'Analyzing histogram...');
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imgData.data;
+
+    // Auto-contrast: find the real min/max luminance and stretch the
+    // range to fill 0-255, rather than applying a fixed blanket filter.
+    let min=255, max=0;
+    for(let i=0; i<data.length; i+=4){
+      const lum = 0.299*data[i] + 0.587*data[i+1] + 0.114*data[i+2];
+      if(lum<min) min=lum; if(lum>max) max=lum;
+    }
+    const range = Math.max(1, max-min);
+    imgSetProgress(60, 'Enhancing colors...');
+    const satBoost = 1.15; // mild, natural-looking saturation lift
+    for(let i=0; i<data.length; i+=4){
+      for(let c=0; c<3; c++){
+        let v = data[i+c];
+        v = ((v-min)/range)*255; // contrast stretch
+        const gray = 0.299*data[i] + 0.587*data[i+1] + 0.114*data[i+2];
+        v = gray + (v-gray)*satBoost; // saturation boost around the pixel's own luminance
+        data[i+c] = Math.max(0, Math.min(255, v));
+      }
+    }
+    ctx.putImageData(imgData, 0, 0);
+    imgSetProgress(90, 'Encoding...');
+    const blob = await canvasToBlob(canvas, 'image/jpeg', 0.94);
+    imgSetProgress(100, 'Done!');
+    imgShowDownloadResult({title:'Image Enhanced', desc:'Auto-corrected contrast and boosted color saturation.', blob, filename:`${baseNameOf(file.name)}-enhanced.jpg`, originalUrl});
+  },
+
+  /* -- Passport Photo Maker -- */
+  async 'img-passport-photo'(){
+    imgSetProgress(10, 'Loading photo...');
+    const file = imgSelectedFiles[0];
+    const originalUrl = URL.createObjectURL(file);
+    const img = await loadImageFromFile(file);
+    const sizeKey = $('#imgOptPassportSize', imgToolOptions)?.value || '35x45';
+    const bgColor = $('#imgOptPassportBg', imgToolOptions)?.value || '#ffffff';
+    // Convert each standard size to a pixel canvas at a print-quality
+    // 300 DPI so the output is genuinely usable, not just a thumbnail.
+    const DPI = 300;
+    const SIZES = {
+      '35x45': {wIn: 35/25.4, hIn: 45/25.4},
+      '2x2':   {wIn: 2, hIn: 2},
+      '33x48': {wIn: 33/25.4, hIn: 48/25.4},
+    };
+    const { wIn, hIn } = SIZES[sizeKey];
+    const targetW = Math.round(wIn*DPI), targetH = Math.round(hIn*DPI);
+    imgSetProgress(45, 'Cropping to size...');
+    const canvas = document.createElement('canvas');
+    canvas.width = targetW; canvas.height = targetH;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = bgColor; ctx.fillRect(0,0,targetW,targetH);
+    // Center-crop the source photo to match the target aspect ratio,
+    // then draw it to fill the frame (a real "cover" crop, not a squash).
+    const targetRatio = targetW/targetH;
+    const srcRatio = img.naturalWidth/img.naturalHeight;
+    let sx=0, sy=0, sw=img.naturalWidth, sh=img.naturalHeight;
+    if(srcRatio > targetRatio){ sw = sh*targetRatio; sx = (img.naturalWidth-sw)/2; }
+    else { sh = sw/targetRatio; sy = (img.naturalHeight-sh)/2; }
+    ctx.drawImage(img, sx, sy, sw, sh, 0, 0, targetW, targetH);
+    imgSetProgress(85, 'Encoding print-ready file...');
+    const blob = await canvasToBlob(canvas, 'image/jpeg', 0.95);
+    imgSetProgress(100, 'Done!');
+    imgShowDownloadResult({title:'Passport Photo Ready', desc:`Cropped to ${sizeKey.replace('x',' × ')} at 300 DPI (${targetW}×${targetH}px), print-ready.`, blob, filename:`passport-photo-${sizeKey}.jpg`, originalUrl});
+  },
+
+  /* -- Watermark Adder -- */
+  async 'img-watermark-add'(){
+    imgSetProgress(10, 'Loading image...');
+    const file = imgSelectedFiles[0];
+    const originalUrl = URL.createObjectURL(file);
+    const img = await loadImageFromFile(file);
+    const text = $('#imgOptWmText', imgToolOptions)?.value.trim() || 'StudentOS AI';
+    const opacity = (parseInt($('#imgOptWmOpacity', imgToolOptions)?.value) || 35) / 100;
+    const position = $('#imgOptWmPosition', imgToolOptions)?.value || 'center';
+    imgSetProgress(50, 'Stamping watermark...');
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    const fontSize = Math.max(18, Math.round(canvas.width/18));
+    ctx.font = `700 ${fontSize}px 'Space Grotesk', Arial, sans-serif`;
+    ctx.fillStyle = `rgba(255,255,255,${opacity})`;
+    ctx.strokeStyle = `rgba(0,0,0,${opacity*0.6})`;
+    ctx.lineWidth = Math.max(1, fontSize/22);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    if(position === 'bottom-right'){
+      ctx.textAlign = 'right';
+      ctx.strokeText(text, canvas.width-24, canvas.height-24);
+      ctx.fillText(text, canvas.width-24, canvas.height-24);
+    } else {
+      ctx.save();
+      ctx.translate(canvas.width/2, canvas.height/2);
+      ctx.rotate(-Math.PI/6);
+      const stepX = ctx.measureText(text).width + 80, stepY = fontSize*4;
+      const cols = Math.ceil(canvas.width*1.6/stepX), rows = Math.ceil(canvas.height*1.6/stepY);
+      for(let r=-rows; r<=rows; r++){
+        for(let c=-cols; c<=cols; c++){
+          ctx.strokeText(text, c*stepX, r*stepY);
+          ctx.fillText(text, c*stepX, r*stepY);
+        }
+      }
+      ctx.restore();
+    }
+    imgSetProgress(90, 'Encoding...');
+    const blob = await canvasToBlob(canvas, file.type === 'image/png' ? 'image/png' : 'image/jpeg', 0.92);
+    imgSetProgress(100, 'Done!');
+    imgShowDownloadResult({title:'Watermark Added', desc:`Stamped "${text}" across your image.`, blob, filename:`${baseNameOf(file.name)}-watermarked.${blob.type==='image/png'?'png':'jpg'}`, originalUrl});
+  },
+
+  /* -- Blur Sensitive Information -- */
+  async 'img-blur-info'(){
+    if(!blurCanvas || !blurBaseImg){ pdfToast('Upload an image first, then draw boxes over the areas to blur.', 'info'); return; }
+    if(!blurBoxes.length){ pdfToast('Draw at least one box over the preview before processing.', 'info'); return; }
+    imgSetProgress(20, 'Applying blur...');
+    const outCanvas = document.createElement('canvas');
+    outCanvas.width = blurCanvas.width; outCanvas.height = blurCanvas.height;
+    const outCtx = outCanvas.getContext('2d');
+    outCtx.drawImage(blurBaseImg, 0, 0);
+    blurBoxes.forEach((box, i) => {
+      applyPixelBlur(outCtx, box.x, box.y, box.w, box.h, Math.max(8, Math.round(Math.min(box.w,box.h)/8)));
+      imgSetProgress(20 + Math.round(((i+1)/blurBoxes.length)*65), 'Applying blur...');
+    });
+    imgSetProgress(90, 'Encoding...');
+    const blob = await canvasToBlob(outCanvas, 'image/jpeg', 0.95);
+    imgSetProgress(100, 'Done!');
+    const file = imgSelectedFiles[0];
+    imgShowDownloadResult({title:'Sensitive Areas Blurred', desc:`${blurBoxes.length} region${blurBoxes.length>1?'s':''} blurred out.`, blob, filename:`${baseNameOf(file.name)}-blurred.jpg`});
+  },
+};
+
 /* -- Shared: render PDF pages to JPG/PNG images, zipped into individual downloads -- */
 async function renderPdfToImage(format){
   pdfSetProgress(10, 'Loading render engine...');
@@ -4934,7 +5977,7 @@ window.addEventListener('scroll', () => {
    the scroll position), so this must stay in sync whenever sections
    are reordered. */
 const SECTION_LABELS = {
-  'home':'Home', 'pdf-studio':'PDF Studio', 'study':'Study', 'engineering':'Engineering',
+  'home':'Home', 'image-studio':'Image Studio', 'pdf-studio':'PDF Studio', 'study':'Study', 'engineering':'Engineering',
   'legal-ai':'Legal AI', 'mediai':'MediAI', 'roadmap':'Roadmap', 'future':'Future', 'about':'About', 'creator':'Creator', 'contact':'Contact',
 };
 const spySections = Object.keys(SECTION_LABELS).map(id => document.getElementById(id)).filter(Boolean);
