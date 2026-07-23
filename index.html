@@ -314,15 +314,16 @@ header#navbar.scrolled{
   display:flex;align-items:center;gap:0;max-width:0;padding:0;border-radius:999px;
   background:var(--glass-strong);border:1px solid transparent;overflow:hidden;
   backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
-  font-size:12.5px;font-weight:600;color:var(--text-dim);white-space:nowrap;flex-shrink:0;
+  font-size:11.5px;font-weight:600;color:var(--text-dim);white-space:nowrap;flex-shrink:0;
   opacity:0;transition:max-width .45s var(--ease), opacity .3s var(--ease), padding .45s var(--ease), border-color .45s var(--ease);
 }
 header#navbar.scrolled .nav-current-section{
-  max-width:240px;padding:7px 14px 7px 10px;opacity:1;border-color:var(--border);gap:8px;
+  max-width:160px;padding:6px 12px;opacity:1;border-color:var(--border);gap:0;
 }
-.nav-current-dot{width:6px;height:6px;border-radius:50%;background:var(--grad);flex-shrink:0;animation:navDotPulse 2s ease-in-out infinite;}
-@keyframes navDotPulse{0%,100%{opacity:1;}50%{opacity:.4;}}
 .nav-current-section .ncs-label{
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700;
+}
+.nav-current-mobile .ncs-label{
   background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700;
 }
 @media (max-width:1180px){
@@ -1103,7 +1104,6 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
     </nav>
     <div class="nav-actions">
       <div class="nav-current-section nav-current-desktop" id="navCurrentSection" aria-live="polite">
-        <span class="nav-current-dot"></span>
         <span class="ncs-label" id="navCurrentLabel">Home</span>
       </div>
       <a href="#study" class="btn btn-primary btn-sm nav-dashboard-desktop">Get Started</a>
@@ -1114,7 +1114,6 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 
 <!-- Floating "current section" pill for mobile/tablet (nav collapses to hamburger there) -->
 <div class="nav-current-mobile" id="navCurrentMobile" aria-live="polite">
-  <span class="nav-current-dot"></span>
   <span class="ncs-label" id="navCurrentLabelMobile">Home</span>
 </div>
 
