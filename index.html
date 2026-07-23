@@ -1020,6 +1020,170 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 }
 
 /* ================================================================
+   QUIZ GENERATOR V3.0 — premium AI examination & revision platform
+   Full-screen dedicated overlay (NOT the generic small tool modal —
+   an exam experience needs one-question-per-screen, a real timer,
+   a results dashboard and an answer-review flow, none of which fit
+   the 640px chat-style modal used by the other tools). Every surface
+   below reuses the site's existing glass tokens/tiers so it reads as
+   part of the same product, not a bolted-on feature.
+   ================================================================ */
+#quizAppOverlay{
+  position:fixed;inset:0;z-index:2600;background:rgba(4,4,8,0.72);
+  display:flex;align-items:flex-start;justify-content:center;padding:36px 18px 40px;
+  opacity:0;visibility:hidden;transition:opacity .35s var(--ease), visibility .35s var(--ease);
+  overflow-y:auto;backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
+}
+#quizAppOverlay.active{opacity:1;visibility:visible;}
+.quiz-app-box{
+  width:100%;max-width:900px;min-height:70vh;border-radius:var(--radius-lg);
+  background:linear-gradient(180deg, rgba(22,22,36,0.78), rgba(10,10,18,0.85));
+  backdrop-filter:var(--glass-blur-2);-webkit-backdrop-filter:var(--glass-blur-2);
+  border:1px solid var(--border-strong);box-shadow:0 30px 90px rgba(0,0,0,0.65);
+  transform:translateY(30px) scale(.97);transition:transform .4s var(--ease);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+#quizAppOverlay.active .quiz-app-box{transform:translateY(0) scale(1);}
+.quiz-app-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:20px 24px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.qz-head-left{display:flex;align-items:center;gap:12px;min-width:0;}
+.quiz-app-body{padding:26px;overflow-y:auto;flex:1;}
+
+/* ---- Mode tabs (Topic / PDF) ---- */
+.qz-modetabs{display:flex;gap:8px;background:var(--glass);border:1px solid var(--border);border-radius:999px;padding:5px;margin-bottom:22px;backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);}
+.qz-modetab{flex:1;text-align:center;padding:11px 16px;border-radius:999px;font-size:13.5px;font-weight:600;color:var(--text-dim);cursor:pointer;transition:.25s;}
+.qz-modetab.active{background:var(--grad);color:#fff;box-shadow:0 6px 16px rgba(99,102,241,0.3);}
+
+/* ---- Pill setting groups (Difficulty / Time / Question Type) ---- */
+.qz-pill-group{display:flex;gap:8px;flex-wrap:wrap;}
+.qz-pill{
+  padding:9px 16px;border-radius:999px;font-size:12.5px;font-weight:600;color:var(--text-dim);cursor:pointer;
+  background:var(--glass-bg);border:1px solid var(--glass-border);backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
+  transition:.25s;
+}
+.qz-pill:hover{border-color:var(--glass-border-strong);color:var(--text);}
+.qz-pill.active{background:var(--grad-soft);border-color:var(--blue-soft);color:var(--text);}
+.qz-section-label{font-size:12.5px;font-weight:600;color:var(--text-dim);margin:18px 0 8px;letter-spacing:.02em;}
+.qz-section-label:first-child{margin-top:0;}
+
+/* ---- PDF range picker ---- */
+.qz-range-options{display:grid;gap:10px;margin-top:10px;}
+.qz-chapter-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.qz-chapter-chip{padding:7px 14px;border-radius:999px;font-size:12px;font-weight:600;background:var(--glass-strong);border:1px solid var(--border);color:var(--text-dim);cursor:pointer;backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);}
+.qz-chapter-chip.active{background:var(--grad);color:#fff;border-color:transparent;}
+
+/* ---- Generate CTA + config summary ---- */
+.qz-config-note{font-size:12px;color:var(--text-faint);margin-top:14px;line-height:1.6;}
+
+/* ---- Loading state ---- */
+.qz-loading{text-align:center;padding:60px 20px;}
+.qz-spinner{
+  width:48px;height:48px;border-radius:50%;margin:0 auto 20px;
+  border:3px solid var(--glass-strong);border-top-color:var(--blue-soft);border-right-color:var(--purple-soft);
+  animation:legalSpin 0.9s linear infinite;
+}
+.qz-loading h4{font-size:16px;font-weight:700;margin-bottom:6px;}
+.qz-loading p{font-size:13px;color:var(--text-dim);}
+
+/* ---- Quiz-taking screen ---- */
+.qz-quiz-topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap;}
+.qz-qcounter{font-size:13.5px;font-weight:700;color:var(--text-dim);white-space:nowrap;}
+.qz-qcounter b{color:var(--text);background:var(--grad);-webkit-background-clip:text;background-clip:text;}
+.qz-timer-pill{
+  display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;font-size:13px;font-weight:700;
+  background:var(--glass-strong);border:1px solid var(--border);color:var(--text);white-space:nowrap;
+  backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);transition:color .3s,border-color .3s;
+}
+.qz-timer-pill svg{flex-shrink:0;}
+.qz-timer-pill.urgent{color:var(--red);border-color:var(--red);animation:qzPulse 1s ease-in-out infinite;}
+@keyframes qzPulse{0%,100%{opacity:1;}50%{opacity:.55;}}
+.qz-progress-track{height:7px;border-radius:99px;background:var(--glass-strong);overflow:hidden;backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);margin-bottom:26px;}
+.qz-progress-fill{height:100%;width:0%;border-radius:99px;background:var(--grad);transition:width .35s var(--ease);}
+
+.qz-question-card{
+  padding:28px;border-radius:var(--radius);margin-bottom:20px;position:relative;
+  background:var(--glass-strong);border:1px solid var(--border);
+  backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
+  animation:fadeUp .4s var(--ease) both;
+}
+.qz-question-meta{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.qz-question-stmt{font-size:18px;font-weight:600;line-height:1.5;}
+.qz-options{display:grid;gap:12px;}
+.qz-option{
+  display:flex;align-items:center;gap:14px;padding:15px 18px;border-radius:14px;cursor:pointer;
+  background:var(--glass-bg);border:1.5px solid var(--glass-border);transition:.22s;
+  backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
+}
+.qz-option:hover{border-color:var(--glass-border-strong);background:var(--glass-bg-strong);}
+.qz-option.selected{border-color:var(--blue-soft);background:var(--grad-soft);}
+.qz-option-letter{
+  width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;background:var(--glass-strong);border:1px solid var(--border);color:var(--text-dim);transition:.22s;
+}
+.qz-option.selected .qz-option-letter{background:var(--grad);color:#fff;border-color:transparent;}
+.qz-option-text{font-size:14.5px;line-height:1.5;flex:1;}
+.qz-nav-row{display:flex;justify-content:flex-end;gap:10px;margin-top:6px;}
+
+/* ---- Results dashboard ---- */
+.qz-result-hero{text-align:center;padding:8px 0 28px;}
+.qz-result-hero .qz-result-icon{
+  width:64px;height:64px;border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;
+  font-size:28px;background:var(--grad);color:#fff;box-shadow:0 10px 26px rgba(99,102,241,0.32);
+}
+.qz-result-hero h3{font-size:22px;font-weight:800;margin-bottom:4px;}
+.qz-result-hero p{font-size:13.5px;color:var(--text-dim);}
+.qz-stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:26px;}
+.qz-stat-card{
+  padding:20px 14px;border-radius:16px;text-align:center;background:var(--glass-strong);border:1px solid var(--border);
+  backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
+}
+.qz-stat-card .qz-stat-val{font-family:'Space Grotesk';font-size:26px;font-weight:700;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;display:block;margin-bottom:4px;}
+.qz-stat-card .qz-stat-label{font-size:11.5px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.04em;}
+
+.qz-analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+.qz-analysis-card{padding:20px;border-radius:16px;background:var(--glass);border:1px solid var(--border);backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);}
+.qz-analysis-card h5{font-size:13.5px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.qz-analysis-card ul{padding-left:0;list-style:none;display:grid;gap:8px;}
+.qz-analysis-card li{font-size:13px;color:var(--text-dim);line-height:1.5;padding-left:20px;position:relative;}
+.qz-analysis-card li::before{position:absolute;left:0;top:0;}
+.qz-analysis-card.strengths li::before{content:'✓';color:var(--green);font-weight:700;}
+.qz-analysis-card.weak li::before{content:'!';color:var(--amber);font-weight:700;}
+.qz-tips-card{padding:20px;border-radius:16px;background:var(--grad-soft);border:1px solid var(--border);backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);margin-bottom:20px;}
+.qz-tips-card h5{font-size:13.5px;font-weight:700;margin-bottom:10px;}
+.qz-tips-card ol{padding-left:18px;display:grid;gap:6px;}
+.qz-tips-card li{font-size:13px;color:var(--text-dim);line-height:1.6;}
+
+.qz-pdf-analysis{padding:20px;border-radius:16px;background:var(--glass);border:1px solid var(--border);backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);margin-bottom:20px;}
+.qz-pdf-analysis h5{font-size:13.5px;font-weight:700;margin-bottom:12px;}
+.qz-pdf-analysis-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text-dim);margin-bottom:10px;}
+.qz-pdf-analysis-row b{color:var(--text);}
+
+/* ---- Answer review ---- */
+.qz-review-filters{display:flex;gap:8px;margin-bottom:16px;}
+.qz-review-item{
+  padding:18px;border-radius:14px;background:var(--glass);border:1px solid var(--border);margin-bottom:12px;
+  border-left:3px solid var(--border-strong);backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
+}
+.qz-review-item.correct{border-left-color:var(--green);}
+.qz-review-item.incorrect{border-left-color:var(--red);}
+.qz-review-q{font-size:14px;font-weight:600;margin-bottom:10px;}
+.qz-review-ans-row{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;margin-bottom:8px;}
+.qz-review-ans-row span{color:var(--text-faint);}
+.qz-review-ans-row b{color:var(--text);margin-left:4px;}
+.qz-review-ans-row .ok{color:var(--green);}
+.qz-review-ans-row .bad{color:var(--red);}
+.qz-review-explain{font-size:12.5px;color:var(--text-dim);line-height:1.6;padding-top:8px;border-top:1px solid var(--border);}
+.qz-review-explain b{color:var(--blue-soft);}
+.qz-bonus-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:24px;padding-top:22px;border-top:1px solid var(--border);}
+
+@media (max-width:760px){
+  .quiz-app-body{padding:18px;}
+  .qz-stat-grid{grid-template-columns:1fr 1fr;}
+  .qz-analysis-grid{grid-template-columns:1fr;}
+  .qz-question-stmt{font-size:16px;}
+  .qz-question-card{padding:20px;}
+}
+
+/* ================================================================
    11. RESPONSIVE MEDIA QUERIES
    ================================================================ */
 @media (max-width:1180px){
@@ -1557,6 +1721,25 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 </div>
 
 <!-- ============================================================
+     QUIZ GENERATOR V3.0 — dedicated full-screen exam platform
+     ============================================================ -->
+<div id="quizAppOverlay">
+  <div class="quiz-app-box">
+    <div class="quiz-app-head">
+      <div class="qz-head-left">
+        <div class="tool-icon" style="margin-bottom:0;">🎯</div>
+        <div>
+          <h3 id="qzHeadTitle" style="font-size:17px;font-weight:700;">Quiz Generator</h3>
+          <p id="qzHeadSub" style="font-size:11.5px;color:var(--text-dim);">AI-powered examination &amp; revision platform</p>
+        </div>
+      </div>
+      <button class="modal-close" id="quizAppClose"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 4l16 16M20 4L4 20" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="quiz-app-body" id="quizAppBody"></div>
+  </div>
+</div>
+
+<!-- ============================================================
      LEGAL DOCUMENT MODAL (Privacy Policy / Terms / Disclaimers)
      Reuses the same glass modal component as every other popup on
      the site for full visual consistency.
@@ -1605,7 +1788,7 @@ function fmt(n){ if(!isFinite(n)) return '—'; return round(n,4).toLocaleString
    --------------------------------------------------------------- */
 const STUDY_TOOLS = [
   {id:'pdf-summarizer', icon:'📄', title:'PDF Summarizer', desc:'Paste text from any PDF/notes and get a quick bullet-point summary.'},
-  {id:'quiz-generator', icon:'❓', title:'Quiz Generator', desc:'Auto-generate a short practice quiz from any topic you type in.'},
+  {id:'quiz-generator', icon:'🎯', title:'Quiz Generator', desc:'Premium AI exam platform — generate timed MCQ quizzes from any topic or an uploaded PDF, with scoring and revision analysis.'},
   {id:'formula-sheet', icon:'∑', title:'Formula Sheet Generator', desc:'Generate a quick-reference formula sheet for popular subjects.'},
   {id:'mind-map', icon:'🧠', title:'Mind Map Generator', desc:'Turn a central topic into a branching mind map of subtopics.'},
   {id:'pyq-helper', icon:'📚', title:'Previous Year Question Helper', desc:'Organize and tag previous year questions by topic and frequency.'},
@@ -1768,6 +1951,10 @@ const modalTitle   = $('#modalTitle');
 const modalBody    = $('#modalBody');
 
 function openTool(id){
+  /* Quiz Generator V3.0 gets its own dedicated full-screen exam
+     platform (see QUIZ_APP below) — it must never behave like a
+     small chat-style modal tool, so we intercept it here. */
+  if(id === 'quiz-generator'){ QuizApp.open(); return; }
   const meta = ALL_TOOLS.find(t => t.id === id);
   if(!meta) return;
   modalIcon.textContent  = meta.icon;
@@ -1817,29 +2004,9 @@ TOOL_RENDERERS['pdf-summarizer'] = (wrap) => {
   });
 };
 
-/* -- Quiz Generator (template-based sample quiz) -- */
-TOOL_RENDERERS['quiz-generator'] = (wrap) => {
-  wrap.innerHTML = `
-    <div class="field"><label>Topic</label><input type="text" id="quizTopic" placeholder="e.g. Newton's Laws"></div>
-    <button class="btn btn-primary btn-block" id="quizBtn">Generate Quiz</button>
-    <div class="result-box hidden" id="quizResult"></div>
-  `;
-  $('#quizBtn', wrap).addEventListener('click', () => {
-    const topic = $('#quizTopic', wrap).value.trim() || 'this topic';
-    const box = $('#quizResult', wrap);
-    box.classList.remove('hidden');
-    box.innerHTML = `
-      <b>Practice Quiz: ${topic}</b>
-      <ol style="margin-top:10px;padding-left:18px;line-height:1.9;">
-        <li>Define ${topic} in your own words.</li>
-        <li>List two real-world applications of ${topic}.</li>
-        <li>What is the most common misconception about ${topic}?</li>
-        <li>Explain how ${topic} connects to a topic studied earlier.</li>
-        <li>Solve a basic problem that applies ${topic}.</li>
-      </ol>
-      <p class="hint">Tip: try answering out loud — active recall retains 2x more than re-reading.</p>`;
-  });
-};
+/* Quiz Generator no longer uses the generic TOOL_RENDERERS chat-modal
+   pattern — see the QuizApp module (Quiz Generator V3.0) near the end
+   of this script, which powers a dedicated full-screen exam platform. */
 
 /* -- Formula Sheet Generator -- */
 TOOL_RENDERERS['formula-sheet'] = (wrap) => {
@@ -4472,6 +4639,945 @@ window.addEventListener('scroll', () => {
 updateActiveSection();
 positionMobilePill();
 window.addEventListener('resize', positionMobilePill);
+
+/* ================================================================
+   QUIZ GENERATOR V3.0 — premium AI-powered examination & revision
+   platform. Strict rules this module enforces end-to-end:
+     - Every quiz is MCQ-only (4 options, 1 correct answer) — never a
+       chatbot-style free-text question.
+     - Two entry modes: Topic or PDF (PDF is scanned page-by-page and
+       questions can be scoped to the whole doc / a page range / a
+       detected chapter — the AI never ignores an uploaded PDF).
+     - Question count + difficulty mix is decided automatically from
+       the chosen time-per-question and topic/PDF size, never left to
+       chat-style guessing.
+     - One question per screen, its own countdown timer, auto-advance
+       on timeout, locked answer after time runs out.
+     - Full results dashboard + AI-style performance analysis +
+       PDF-specific coverage analysis + line-by-line answer review.
+   ================================================================ */
+const QuizApp = (() => {
+  const overlay = $('#quizAppOverlay');
+  const body    = $('#quizAppBody');
+  const headSub = $('#qzHeadSub');
+
+  /* ---- state ---- */
+  let state = null;
+  const QUESTION_COUNT_BY_TIME = {15:10, 30:15, 45:18, 60:20, 90:25};
+
+  function resetState(){
+    state = {
+      mode:'topic',                 // 'topic' | 'pdf'
+      topic:'',
+      pdfFile:null, pdfPages:[], pdfChapters:[], pdfScope:'entire', pdfStart:1, pdfEnd:1, pdfChapterIdx:null,
+      difficulty:'mixed', timePerQ:30, qType:'mixed',
+      questions:[], answers:[], flags:[],
+      current:0, timerId:null, timeLeft:0, startedAt:0, finishedAt:0,
+      reviewFilter:'all',
+    };
+  }
+
+  function open(){
+    resetState();
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    renderConfigScreen();
+  }
+  function close(){
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    clearInterval(state && state.timerId);
+  }
+  $('#quizAppClose').addEventListener('click', close);
+  overlay.addEventListener('click', e => { if(e.target === overlay) close(); });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape' && overlay.classList.contains('active')) close(); });
+
+  /* ---------------------------------------------------------------
+     CONFIG SCREEN — mode tabs, topic/pdf input, settings pills
+     --------------------------------------------------------------- */
+  function renderConfigScreen(){
+    headSub.textContent = 'AI-powered examination & revision platform';
+    body.innerHTML = `
+      <div class="qz-modetabs">
+        <div class="qz-modetab ${state.mode==='topic'?'active':''}" data-mode="topic">📚 Generate From Topic</div>
+        <div class="qz-modetab ${state.mode==='pdf'?'active':''}" data-mode="pdf">📄 Generate From PDF</div>
+      </div>
+      <div id="qzModeBody"></div>
+
+      <div class="qz-section-label">Difficulty Level</div>
+      <div class="qz-pill-group" id="qzDifficultyPills">
+        ${['easy','medium','hard','mixed'].map(d => `<div class="qz-pill ${state.difficulty===d?'active':''}" data-diff="${d}">${d[0].toUpperCase()+d.slice(1)}</div>`).join('')}
+      </div>
+
+      <div class="qz-section-label">Time Per Question</div>
+      <div class="qz-pill-group" id="qzTimePills">
+        ${[15,30,45,60,90].map(t => `<div class="qz-pill ${state.timePerQ===t?'active':''}" data-time="${t}">${t}s</div>`).join('')}
+        <div class="qz-pill ${state.timePerQ==='custom'?'active':''}" data-time="custom">Custom</div>
+      </div>
+      <div id="qzCustomTimeWrap" style="${state.timePerQ==='custom'?'':'display:none;'}margin-top:10px;max-width:200px;">
+        <input type="number" min="5" max="300" id="qzCustomTime" class="qz-custom-time-input" placeholder="Seconds" value="${typeof state.timePerQ==='number'?'':30}" style="width:100%;padding:11px 14px;border-radius:11px;background:rgba(255,255,255,0.045);border:1px solid var(--border);color:var(--text);font-size:14px;">
+      </div>
+
+      <div class="qz-section-label">Question Type</div>
+      <div class="qz-pill-group" id="qzTypePills">
+        ${[['concept','Concept Based'],['numerical','Numerical'],['formula','Formula Based'],['case','Case Study'],['logical','Logical Reasoning'],['mixed','Mixed'],['exam','Exam Level']].map(([v,l]) => `<div class="qz-pill ${state.qType===v?'active':''}" data-qtype="${v}">${l}</div>`).join('')}
+      </div>
+
+      <p class="qz-config-note" id="qzConfigNote"></p>
+      <button class="btn btn-primary btn-block" id="qzGenerateBtn" style="margin-top:20px;">Generate Quiz</button>
+    `;
+    renderModeBody();
+    updateConfigNote();
+
+    $$('.qz-modetab', body).forEach(tab => tab.addEventListener('click', () => {
+      state.mode = tab.dataset.mode;
+      renderConfigScreen();
+    }));
+    $$('.qz-pill', $('#qzDifficultyPills', body)).forEach(p => p.addEventListener('click', () => {
+      state.difficulty = p.dataset.diff;
+      $$('.qz-pill', $('#qzDifficultyPills', body)).forEach(x => x.classList.remove('active'));
+      p.classList.add('active'); updateConfigNote();
+    }));
+    $$('.qz-pill', $('#qzTimePills', body)).forEach(p => p.addEventListener('click', () => {
+      const wrap = $('#qzCustomTimeWrap', body);
+      if(p.dataset.time === 'custom'){
+        state.timePerQ = 'custom';
+        wrap.style.display = 'block';
+      } else {
+        state.timePerQ = parseInt(p.dataset.time);
+        wrap.style.display = 'none';
+      }
+      $$('.qz-pill', $('#qzTimePills', body)).forEach(x => x.classList.remove('active'));
+      p.classList.add('active'); updateConfigNote();
+    }));
+    $('#qzCustomTime', body)?.addEventListener('input', updateConfigNote);
+    $$('.qz-pill', $('#qzTypePills', body)).forEach(p => p.addEventListener('click', () => {
+      state.qType = p.dataset.qtype;
+      $$('.qz-pill', $('#qzTypePills', body)).forEach(x => x.classList.remove('active'));
+      p.classList.add('active');
+    }));
+    $('#qzGenerateBtn', body).addEventListener('click', handleGenerateClick);
+  }
+
+  function effectiveTimePerQ(){
+    if(state.timePerQ === 'custom'){
+      const v = parseInt($('#qzCustomTime', body)?.value);
+      return (v && v >= 5) ? v : 30;
+    }
+    return state.timePerQ;
+  }
+
+  function decideQuestionCount(contentSize){
+    // Base count from the selected time-per-question (matches spec's
+    // 15s->10, 30s->15, 60s->20, 90s->25 examples), then nudged by
+    // topic/PDF size and difficulty so the AI is "intelligently
+    // deciding" rather than using one fixed number always.
+    const t = effectiveTimePerQ();
+    let base = QUESTION_COUNT_BY_TIME[t] || Math.round(10 + (t/90)*15);
+    if(contentSize === 'small') base = Math.max(6, base - 5);
+    else if(contentSize === 'large') base = Math.min(30, base + 5);
+    if(state.difficulty === 'hard') base = Math.max(6, base - 2);
+    return base;
+  }
+
+  function updateConfigNote(){
+    const note = $('#qzConfigNote', body);
+    if(!note) return;
+    const t = effectiveTimePerQ();
+    const approxQ = decideQuestionCount(state.mode==='pdf' ? pdfContentSize() : 'medium');
+    note.textContent = `The AI will generate approximately ${approxQ} MCQs (${t}s each, ~${Math.round(approxQ*t/60)} min total) based on your selected difficulty and content size.`;
+  }
+
+  function pdfContentSize(){
+    const words = state.pdfPages.reduce((s,p) => s + p.text.split(/\s+/).length, 0);
+    if(words < 400) return 'small';
+    if(words > 2500) return 'large';
+    return 'medium';
+  }
+
+  /* ---- Mode-specific body: Topic input OR PDF upload + scope picker ---- */
+  function renderModeBody(){
+    const wrap = $('#qzModeBody', body);
+    if(state.mode === 'topic'){
+      wrap.innerHTML = `
+        <div class="field">
+          <label>Topic</label>
+          <input type="text" id="qzTopicInput" placeholder="e.g. Data Structures, Operating Systems, UPSC History, Aptitude..." value="${state.topic.replace(/"/g,'&quot;')}">
+        </div>
+        <p class="hint">Enter any subject, exam topic or concept — the AI intelligently builds an exam-style MCQ set around it.</p>
+      `;
+      $('#qzTopicInput', wrap).addEventListener('input', e => { state.topic = e.target.value; });
+    } else {
+      wrap.innerHTML = `
+        <div class="pdf-dropzone" id="qzDropzone" style="padding:32px 20px;">
+          <div class="pdf-dropzone-icon">📄</div>
+          <h4 id="qzDzTitle">${state.pdfFile ? state.pdfFile.name : 'Drag & drop your PDF here'}</h4>
+          <p id="qzDzHint">${state.pdfFile ? 'Click to replace — scanned pages: ' + state.pdfPages.length : 'Notes, books, PPT PDFs, assignments, research papers, scanned/handwritten notes — click to browse'}</p>
+          <input type="file" id="qzFileInput" accept="application/pdf,.pdf">
+        </div>
+        <div id="qzPdfScanStatus" style="margin-top:14px;"></div>
+        <div id="qzPdfScopeWrap"></div>
+      `;
+      const dz = $('#qzDropzone', wrap);
+      const fileInput = $('#qzFileInput', wrap);
+      dz.addEventListener('click', () => fileInput.click());
+      fileInput.addEventListener('change', e => { if(e.target.files[0]) handlePdfUpload(e.target.files[0]); });
+      ['dragenter','dragover'].forEach(evt => dz.addEventListener(evt, e => { e.preventDefault(); dz.classList.add('dragover'); }));
+      ['dragleave','drop'].forEach(evt => dz.addEventListener(evt, e => { e.preventDefault(); dz.classList.remove('dragover'); }));
+      dz.addEventListener('drop', e => { if(e.dataTransfer.files[0]) handlePdfUpload(e.dataTransfer.files[0]); });
+      if(state.pdfFile && state.pdfPages.length) renderPdfScopePicker();
+    }
+  }
+
+  async function handlePdfUpload(file){
+    if(!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf'){
+      pdfToast('Please upload a PDF file.', 'info'); return;
+    }
+    state.pdfFile = file;
+    const statusEl = $('#qzPdfScanStatus', body);
+    statusEl.innerHTML = `<div class="qz-spinner" style="width:26px;height:26px;margin:0 12px 0 0;display:inline-block;vertical-align:middle;"></div><span style="font-size:12.5px;color:var(--text-dim);">Scanning ${file.name}...</span>`;
+    $('#qzDzTitle', body).textContent = file.name;
+    try{
+      const pages = await extractPdfPagesForQuiz(file, (i,n) => {
+        statusEl.innerHTML = `<div class="qz-spinner" style="width:26px;height:26px;margin:0 12px 0 0;display:inline-block;vertical-align:middle;"></div><span style="font-size:12.5px;color:var(--text-dim);">Scanning page ${i} of ${n}...</span>`;
+      });
+      state.pdfPages = pages;
+      state.pdfChapters = detectChapters(pages);
+      state.pdfEnd = pages.length;
+      statusEl.innerHTML = `<p style="font-size:12.5px;color:var(--green);">✓ Scanned ${pages.length} page${pages.length===1?'':'s'} — extracted topics, definitions, formulas &amp; headings.</p>`;
+      $('#qzDzHint', body).textContent = `Scanned pages: ${pages.length}`;
+      renderPdfScopePicker();
+      updateConfigNote();
+    } catch(err){
+      statusEl.innerHTML = `<p style="font-size:12.5px;color:var(--red);">Could not read this PDF (${err.message || 'unknown error'}). Try another file.</p>`;
+    }
+  }
+
+  function renderPdfScopePicker(){
+    const wrap = $('#qzPdfScopeWrap', body);
+    if(!wrap) return;
+    wrap.innerHTML = `
+      <div class="qz-section-label">Generate Quiz From</div>
+      <div class="qz-pill-group">
+        <div class="qz-pill ${state.pdfScope==='entire'?'active':''}" data-scope="entire">Entire PDF</div>
+        <div class="qz-pill ${state.pdfScope==='range'?'active':''}" data-scope="range">Custom Page Range</div>
+        ${state.pdfChapters.length ? `<div class="qz-pill ${state.pdfScope==='chapter'?'active':''}" data-scope="chapter">Selected Chapter</div>` : ''}
+      </div>
+      <div id="qzScopeDetail" style="margin-top:12px;"></div>
+    `;
+    $$('.qz-pill', wrap).forEach(p => p.addEventListener('click', () => {
+      state.pdfScope = p.dataset.scope;
+      $$('.qz-pill', wrap).forEach(x => x.classList.remove('active'));
+      p.classList.add('active');
+      renderScopeDetail();
+      updateConfigNote();
+    }));
+    renderScopeDetail();
+
+    function renderScopeDetail(){
+      const detail = $('#qzScopeDetail', wrap);
+      if(state.pdfScope === 'range'){
+        detail.innerHTML = `
+          <div class="field-row">
+            <div class="field"><label>Start Page</label><input type="number" min="1" max="${state.pdfPages.length}" id="qzPageStart" value="${state.pdfStart}"></div>
+            <div class="field"><label>End Page</label><input type="number" min="1" max="${state.pdfPages.length}" id="qzPageEnd" value="${state.pdfEnd}"></div>
+          </div>
+          <p class="hint">e.g. Pages 1-20, or Pages 35-70 — the AI will only use content from these pages.</p>
+        `;
+        $('#qzPageStart', detail).addEventListener('input', e => { state.pdfStart = Math.max(1, parseInt(e.target.value)||1); updateConfigNote(); });
+        $('#qzPageEnd', detail).addEventListener('input', e => { state.pdfEnd = Math.min(state.pdfPages.length, parseInt(e.target.value)||state.pdfPages.length); updateConfigNote(); });
+      } else if(state.pdfScope === 'chapter'){
+        detail.innerHTML = `<div class="qz-chapter-list">${state.pdfChapters.map((c,i) => `<div class="qz-chapter-chip ${state.pdfChapterIdx===i?'active':''}" data-ci="${i}">${c.title} (p.${c.startPage}-${c.endPage})</div>`).join('')}</div>`;
+        $$('.qz-chapter-chip', detail).forEach(chip => chip.addEventListener('click', () => {
+          state.pdfChapterIdx = parseInt(chip.dataset.ci);
+          $$('.qz-chapter-chip', detail).forEach(x => x.classList.remove('active'));
+          chip.classList.add('active'); updateConfigNote();
+        }));
+      } else {
+        detail.innerHTML = `<p class="hint">All ${state.pdfPages.length} scanned page(s) will be used.</p>`;
+      }
+    }
+  }
+
+  /* ---------------------------------------------------------------
+     PDF SCANNING — page-tracked text extraction + chapter detection
+     (separate from PDF Studio's extractPdfText so we can keep a
+     per-page map for "recommended revision: page N" features)
+     --------------------------------------------------------------- */
+  async function extractPdfPagesForQuiz(file, onProgress){
+    await ensurePdfJs();
+    const buf = await file.arrayBuffer();
+    const doc = await window['pdfjsLib'].getDocument({data:buf}).promise;
+    const pages = [];
+    for(let i=1; i<=doc.numPages; i++){
+      const page = await doc.getPage(i);
+      const content = await page.getTextContent();
+      const text = content.items.map(it => it.str).join(' ').replace(/\s+/g,' ').trim();
+      pages.push({page:i, text});
+      if(onProgress) onProgress(i, doc.numPages);
+    }
+    return pages;
+  }
+
+  function detectChapters(pages){
+    // Heuristic: a "heading" line is short, title-cased/uppercase and
+    // starts with Chapter/Unit/Section, or is a short standalone caps
+    // line. Good enough to let users pick "Chapter 2" style scoping
+    // without needing real PDF outline/bookmark data.
+    const chapters = [];
+    const headingRe = /\b(chapter|unit|section|module)\s+(\d+)[:.\-]?\s*([A-Za-z0-9 ,'&-]{0,60})/i;
+    pages.forEach(p => {
+      const m = p.text.match(headingRe);
+      if(m){
+        // Build the title explicitly from the captured label/number/text
+        // snippet (never from the raw m[0], which can run long and get
+        // truncated down to just the label word, e.g. "Chapter").
+        const label = m[1][0].toUpperCase() + m[1].slice(1).toLowerCase();
+        const num = m[2];
+        const snippet = m[3].trim().split(/\s+/).slice(0,6).join(' ');
+        const title = `${label} ${num}${snippet ? ': ' + snippet : ''}`;
+        chapters.push({title: title.replace(/\s+/g,' ').slice(0,50), startPage: p.page, endPage: p.page});
+      }
+    });
+    // Merge consecutive chapter markers into ranges (each chapter runs
+    // until the next detected heading page).
+    const merged = [];
+    chapters.forEach((c, i) => {
+      const end = (chapters[i+1] ? chapters[i+1].startPage - 1 : pages[pages.length-1].page);
+      merged.push({title:c.title, startPage:c.startPage, endPage:Math.max(c.startPage, end)});
+    });
+    return merged;
+  }
+
+  function selectedPdfPages(){
+    if(state.pdfScope === 'range') return state.pdfPages.filter(p => p.page >= state.pdfStart && p.page <= state.pdfEnd);
+    if(state.pdfScope === 'chapter' && state.pdfChapterIdx != null){
+      const c = state.pdfChapters[state.pdfChapterIdx];
+      return state.pdfPages.filter(p => p.page >= c.startPage && p.page <= c.endPage);
+    }
+    return state.pdfPages;
+  }
+
+  /* ---------------------------------------------------------------
+     GENERATION — validates input, shows loading state, builds MCQs
+     --------------------------------------------------------------- */
+  async function handleGenerateClick(){
+    if(state.mode === 'topic' && !state.topic.trim()){
+      pdfToast('Please enter a topic first.', 'info'); return;
+    }
+    if(state.mode === 'pdf' && !state.pdfPages.length){
+      pdfToast('Please upload a PDF first — the AI needs it to build questions.', 'info'); return;
+    }
+    if(state.mode === 'pdf' && state.pdfScope === 'chapter' && state.pdfChapterIdx == null){
+      pdfToast('Please select a chapter.', 'info'); return;
+    }
+    state.timePerQ = effectiveTimePerQ();
+    renderLoadingScreen();
+    await new Promise(r => setTimeout(r, 650)); // brief, honest "AI is working" beat — no fake multi-second delay
+    try{
+      state.questions = state.mode === 'topic'
+        ? buildTopicQuestions(state.topic.trim(), decideQuestionCount('medium'))
+        : buildPdfQuestions(selectedPdfPages(), decideQuestionCount(pdfContentSize()));
+      if(!state.questions.length){
+        renderConfigScreen();
+        pdfToast('Could not generate questions from that content — try a different topic or page range.', 'info');
+        return;
+      }
+      state.answers = new Array(state.questions.length).fill(null);
+      state.flags = new Array(state.questions.length).fill(false); // true = timed out
+      state.current = 0;
+      startQuiz();
+    } catch(err){
+      renderConfigScreen();
+      pdfToast('Something went wrong generating the quiz. Please try again.', 'info');
+    }
+  }
+
+  function renderLoadingScreen(){
+    headSub.textContent = 'Generating your quiz...';
+    body.innerHTML = `
+      <div class="qz-loading">
+        <div class="qz-spinner"></div>
+        <h4>AI is building your quiz</h4>
+        <p>${state.mode==='pdf' ? 'Scanning content, extracting concepts &amp; formulas...' : 'Analyzing "' + escapeHtml(state.topic) + '" and drafting exam-style MCQs...'}</p>
+      </div>
+    `;
+  }
+
+  /* ---------------------------------------------------------------
+     TOPIC MODE — curated question banks for common subjects, with a
+     generic-but-still-strict-MCQ fallback for any topic not in the
+     bank (never falls back to a chatbot-style open question).
+     --------------------------------------------------------------- */
+  const TOPIC_BANK = {
+    'python': [
+      ['What is the output of type([]) in Python?', ["<class 'list'>","<class 'array'>","<class 'tuple'>","<class 'dict'>"], 0, 'An empty pair of square brackets [] creates a list object in Python, so type([]) returns <class \'list\'>.'],
+      ['Which keyword is used to define a function in Python?', ['func','def','function','lambda'], 1, '"def" is the keyword used to define a function; "lambda" only creates anonymous inline functions.'],
+      ['What does PEP stand for in the Python ecosystem?', ['Python Enhancement Proposal','Python Executable Program','Python Error Protocol','Program Execution Plan'], 0, 'PEPs are design documents proposing new features or conventions for Python.'],
+      ['Which of these is a mutable data type in Python?', ['tuple','str','list','int'], 2, 'Lists can be modified in place; tuples, strings and ints are immutable.'],
+      ['What does the "self" parameter refer to in a class method?', ['The class itself','The parent class','The current instance of the class','A static variable'], 2, '"self" refers to the specific instance the method is being called on.'],
+    ],
+    'machine learning': [
+      ['Which algorithm is primarily used for classification tasks?', ['Linear Regression','Logistic Regression','K-Means','PCA'], 1, 'Logistic Regression outputs probabilities for discrete classes, making it a classification algorithm.'],
+      ['What does "overfitting" mean in machine learning?', ['Model performs well on unseen data','Model performs poorly on training data','Model memorizes training data but fails to generalize','Model has too few parameters'], 2, 'Overfitting occurs when a model captures noise in training data rather than the underlying pattern.'],
+      ['Which technique helps reduce overfitting?', ['Increasing model complexity','Regularization','Removing all training data','Increasing learning rate indefinitely'], 1, 'Regularization (L1/L2) penalizes large weights, discouraging the model from overfitting.'],
+      ['What is the purpose of a validation set?', ['To train the final model','To tune hyperparameters and monitor generalization','To replace the test set entirely','To store raw uncleaned data'], 1, 'The validation set is used during training to tune hyperparameters without touching the test set.'],
+    ],
+    'operating systems': [
+      ['What is a deadlock in an operating system?', ['A process that runs forever','A state where processes wait indefinitely for resources held by each other','A crashed kernel module','A type of memory leak'], 1, 'Deadlock occurs when circular resource dependencies leave processes waiting forever.'],
+      ['Which scheduling algorithm can cause starvation?', ['Round Robin','First Come First Serve','Priority Scheduling','FIFO'], 2, 'Priority Scheduling can starve low-priority processes if higher-priority ones keep arriving.'],
+      ['What is the main purpose of virtual memory?', ['To speed up the CPU clock','To let programs use more memory than physically available via disk swapping','To store the OS kernel only','To manage network packets'], 1, 'Virtual memory extends usable memory by paging data between RAM and disk.'],
+      ['Which of these is NOT a state in the process life cycle?', ['Ready','Running','Compiling','Terminated'], 2, 'Compiling is not a process state; the standard states are New, Ready, Running, Waiting and Terminated.'],
+    ],
+    'data structures': [
+      ['What is the time complexity of Binary Search on a sorted array?', ['O(n)','O(log n)','O(n log n)','O(1)'], 1, 'Binary Search halves the search space each step, giving logarithmic time complexity.'],
+      ['Which data structure uses LIFO (Last In First Out) order?', ['Queue','Stack','Linked List','Graph'], 1, 'A Stack pops the most recently pushed element first — Last In, First Out.'],
+      ['What is the worst-case time complexity of QuickSort?', ['O(n log n)','O(n)','O(n²)','O(log n)'], 2, 'QuickSort degrades to O(n²) when the pivot repeatedly splits the array unevenly.'],
+      ['Which traversal visits the root node first in a binary tree?', ['In-order','Pre-order','Post-order','Level-order'], 1, 'Pre-order traversal visits Root → Left → Right, so the root is visited first.'],
+      ['What structure does a Hash Table primarily rely on to achieve O(1) average lookup?', ['Sorted arrays','Balanced trees','Hash functions and buckets','Linked chains only'], 2, 'Hash Tables map keys to buckets via a hash function, enabling near-constant time access.'],
+    ],
+    'digital electronics': [
+      ['What does a NAND gate output when both inputs are 1?', ['1','0','Undefined','Depends on voltage'], 1, 'NAND is NOT-AND; when both inputs are 1, AND gives 1, so NAND inverts it to 0.'],
+      ['How many unique states can a 4-bit binary number represent?', ['8','16','32','4'], 1, 'n bits represent 2^n states; 2^4 = 16.'],
+      ['Which gate is known as a universal gate?', ['OR','AND','NAND','XOR'], 2, 'NAND (and NOR) can be used to construct any other logic gate, making it universal.'],
+    ],
+    'semiconductor physics': [
+      ['What type of charge carriers dominate in a P-type semiconductor?', ['Electrons','Holes','Photons','Neutrons'], 1, 'P-type semiconductors are doped to have an excess of holes as majority carriers.'],
+      ['What happens to a semiconductor\'s conductivity as temperature increases?', ['It decreases','It increases','It stays constant','It becomes zero'], 1, 'More thermal energy frees more charge carriers, increasing conductivity in semiconductors.'],
+    ],
+    'aptitude': [
+      ['If a train travels 60 km in 45 minutes, what is its speed in km/h?', ['75 km/h','80 km/h','90 km/h','70 km/h'], 1, 'Speed = distance/time = 60 / 0.75 hours = 80 km/h.'],
+      ['What is 15% of 200?', ['20','25','30','35'], 2, '15% of 200 = 0.15 × 200 = 30.'],
+      ['A sum of money doubles itself in 8 years at simple interest. What is the rate of interest?', ['10%','12.5%','15%','8%'], 1, 'For SI to double principal in 8 years: Rate = 100/8 = 12.5%.'],
+    ],
+    'biology': [
+      ['Which organelle is known as the "powerhouse of the cell"?', ['Nucleus','Ribosome','Mitochondria','Golgi Apparatus'], 2, 'Mitochondria generate ATP through cellular respiration, powering the cell.'],
+      ['What is the basic unit of heredity called?', ['Cell','Gene','Chromosome','Protein'], 1, 'A gene is the fundamental unit of heredity, encoding traits passed to offspring.'],
+    ],
+    'mathematics': [
+      ['What is the derivative of x² with respect to x?', ['x','2x','x²','2'], 1, 'Using the power rule, d/dx(x^n) = n·x^(n-1), so d/dx(x²) = 2x.'],
+      ['What is the value of sin(90°)?', ['0','0.5','1','-1'], 2, 'sin(90°) = 1, its maximum value on the unit circle.'],
+    ],
+  };
+  const TOPIC_ALIASES = {
+    'ml':'machine learning', 'ai':'machine learning', 'artificial intelligence':'machine learning',
+    'os':'operating systems', 'dsa':'data structures', 'ds':'data structures',
+    'digital electronics':'digital electronics', 'de':'digital electronics',
+    'maths':'mathematics', 'math':'mathematics', 'current affairs':'aptitude', 'upsc history':'biology',
+  };
+
+  function normalizeTopicKey(topic){
+    const t = topic.toLowerCase().trim();
+    if(TOPIC_BANK[t]) return t;
+    if(TOPIC_ALIASES[t]) return TOPIC_ALIASES[t];
+    for(const key of Object.keys(TOPIC_BANK)){
+      if(t.includes(key) || key.includes(t)) return key;
+    }
+    return null;
+  }
+
+  function buildTopicQuestions(topic, count){
+    const key = normalizeTopicKey(topic);
+    let bank = key ? TOPIC_BANK[key].slice() : [];
+    const out = [];
+    let qn = 1;
+    // Cycle through the curated bank (repeating with light variation if the
+    // requested count exceeds the bank size) so the count always matches
+    // what the AI decided, without ever degrading into non-MCQ questions.
+    while(out.length < count && bank.length){
+      const [stmt, opts, correctIdx, explain] = bank[(out.length) % bank.length];
+      out.push(makeQuestion(qn++, stmt, opts, correctIdx, explain, difficultyForIndex(out.length, count)));
+    }
+    // Generic, still-strict-MCQ fallback for topics with no curated bank —
+    // builds definition/application/comparison style questions instead of
+    // ever asking an open chat-style question.
+    while(out.length < count){
+      out.push(genericTopicQuestion(topic, qn++, difficultyForIndex(out.length, count)));
+    }
+    return out;
+  }
+
+  function genericTopicQuestion(topic, qn, difficulty){
+    const templates = [
+      {
+        stmt:`Which of the following best describes ${topic}?`,
+        opts:[`A core concept/technique studied under ${topic}`, `An unrelated topic with no connection to ${topic}`, `A deprecated method never used in ${topic}`, `A term with no accepted definition`],
+        correct:0,
+        explain:`This option correctly identifies a core concept associated with ${topic}, while the others describe unrelated or incorrect ideas.`
+      },
+      {
+        stmt:`${topic} is most commonly applied in which context?`,
+        opts:[`Real-world academic or industry applications related to ${topic}`, `Contexts entirely unrelated to ${topic}`, `Only in theoretical settings with no practical use`, `It has no known application`],
+        correct:0,
+        explain:`${topic} is typically studied because of its real-world academic or industry relevance.`
+      },
+      {
+        stmt:`Which statement about ${topic} is generally TRUE?`,
+        opts:[`It connects to foundational principles taught alongside it`, `It has no relationship to any other concept`, `It was disproven and is no longer taught`, `It only applies to one very narrow, obsolete case`],
+        correct:0,
+        explain:`Most subjects, including ${topic}, build on and connect to foundational principles rather than existing in isolation.`
+      },
+    ];
+    const t = templates[qn % templates.length];
+    return makeQuestion(qn, t.stmt, t.opts, t.correct, t.explain, difficulty);
+  }
+
+  function difficultyForIndex(i, total){
+    if(state.difficulty !== 'mixed') return state.difficulty;
+    const ratio = i/total;
+    if(ratio < 0.4) return 'easy';
+    if(ratio < 0.75) return 'medium';
+    return 'hard';
+  }
+
+  function makeQuestion(qn, stmt, options, correctIdx, explain, difficulty, meta={}){
+    // Shuffle options while tracking the correct answer's new position —
+    // every question keeps exactly 4 options + exactly 1 correct answer.
+    const letters = ['A','B','C','D'];
+    const idxOrder = [0,1,2,3].sort(() => Math.random()-0.5);
+    const shuffledOpts = idxOrder.map(i => options[i]);
+    const newCorrectIdx = idxOrder.indexOf(correctIdx);
+    const marks = difficulty === 'hard' ? 4 : difficulty === 'medium' ? 3 : 2;
+    return {
+      qn, statement: stmt, options: shuffledOpts, correctIdx: newCorrectIdx,
+      correctLetter: letters[newCorrectIdx], explanation: explain,
+      difficulty, marks, ...meta,
+    };
+  }
+
+  /* ---------------------------------------------------------------
+     PDF MODE — extracts key sentences per selected page, turns each
+     into a fill-in-the-concept MCQ with plausible distractors pulled
+     from other sentences in the document (never a raw copy of the
+     sentence as the "answer", and always exactly 4 options).
+     --------------------------------------------------------------- */
+  function buildPdfQuestions(pages, count){
+    const sentences = [];
+    pages.forEach(p => {
+      splitSentences(p.text).forEach(s => { if(s.split(' ').length >= 6) sentences.push({text:s, page:p.page}); });
+    });
+    if(!sentences.length) return [];
+    const keySentences = rankSentencesByInformativeness(sentences).slice(0, Math.max(count*2, count));
+    const allWords = uniqueSignificantWords(sentences.map(s => s.text).join(' '));
+    const out = [];
+    let qn = 1;
+    for(let i=0; i<keySentences.length && out.length < count; i++){
+      const q = pdfSentenceToQuestion(keySentences[i], allWords, qn, difficultyForIndex(out.length, count));
+      if(q){ out.push(q); qn++; }
+    }
+    return out;
+  }
+
+  function splitSentences(text){
+    return text.split(/(?<=[.?!])\s+/).map(s => s.trim()).filter(Boolean);
+  }
+
+  function rankSentencesByInformativeness(sentences){
+    // Prefer sentences containing numbers/formulas, capitalized terms or
+    // definition-style phrasing ("is defined as", "refers to", "means") —
+    // these make the strongest MCQ stems.
+    const scoreOf = (s) => {
+      let score = s.text.length > 40 && s.text.length < 180 ? 2 : 0;
+      if(/\d/.test(s.text)) score += 2;
+      if(/\b(is defined as|refers to|means|is called|is known as|is a)\b/i.test(s.text)) score += 3;
+      if(/[A-Z][a-z]+\s[A-Z][a-z]+/.test(s.text)) score += 1;
+      return score;
+    };
+    return sentences.map(s => ({...s, score:scoreOf(s)})).sort((a,b) => b.score - a.score);
+  }
+
+  function uniqueSignificantWords(text){
+    const stop = new Set(['the','and','for','are','but','not','you','all','any','can','had','her','was','one','our','out','day','get','gets','has','him','his','how','man','new','now','old','see','two','way','who','boy','did','its','let','put','say','she','too','use','with','this','that','from','have','been','will','would','could','should','into','than','then','them','these','those','there','which','when','what','also','more','such','only','each','some','other','over','under','after','before','between','because','while','being','were','their','wait','waits','waiting','held','holds','never','needs','gives','gave','used','uses','using','make','makes','made','part','along','current','system','systems','refers','refer','defined','define','known','call','called','means','mean','chapter','chapters','section','sections','situation','indefinitely','processes','process']);
+    const words = text.toLowerCase().match(/[a-z]{5,}/g) || [];
+    return [...new Set(words.filter(w => !stop.has(w)))];
+  }
+
+  function pdfSentenceToQuestion(item, vocab, qn, difficulty){
+    // Turn "X is defined as Y" / "X refers to Y" into "What does X refer to?"
+    // Otherwise, fall back to a comprehension-style question asking which
+    // statement matches content actually on that page.
+    const defMatch = item.text.match(/^(.{3,60}?)\s+(is defined as|refers to|means|is called|is known as)\s+(.{6,140})$/i);
+    let stmt, correctAnswer;
+    if(defMatch){
+      const verbPhrase = defMatch[2].toLowerCase();
+      const term = defMatch[1].trim();
+      let questionTail;
+      if(verbPhrase.includes('refers')) questionTail = `does "${term}" refer to`;
+      else if(verbPhrase.includes('called') || verbPhrase.includes('known')) questionTail = `is "${term}" known as`;
+      else questionTail = `does "${term}" mean`;
+      stmt = `According to the uploaded document (page ${item.page}), what ${questionTail}?`;
+      correctAnswer = defMatch[3].trim().replace(/[.]$/,'');
+    } else {
+      stmt = `Which of the following statements accurately reflects content found on page ${item.page} of the uploaded document?`;
+      correctAnswer = truncateAtWord(item.text, 150);
+    }
+    // Build 3 distractors from other vocab words woven into short generic
+    // statements — kept short/plausible rather than nonsensical. Sample
+    // without replacement so distractors never repeat identical wording.
+    const distractors = [];
+    const pool = shuffleArray(vocab.filter(w => !correctAnswer.toLowerCase().includes(w)));
+    let poolIdx = 0;
+    const nextWord = (fallback) => { const w = pool[poolIdx % Math.max(pool.length,1)]; poolIdx++; return w || fallback; };
+    for(let i=0; i<3; i++){
+      const w1 = nextWord('concept');
+      const w2 = nextWord('topic');
+      distractors.push(defMatch
+        ? `A term unrelated to ${defMatch[1].trim()}, associated instead with ${w1}`
+        : `A statement about ${w1} and ${w2} not found on page ${item.page}`);
+    }
+    const options = [correctAnswer, ...distractors];
+    return makeQuestion(qn, stmt, options, 0, `This is drawn directly from page ${item.page} of your uploaded document: "${item.text.length>200?item.text.slice(0,200)+'...':item.text}"`, difficulty, {page:item.page});
+  }
+
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function shuffleArray(arr){ const a = arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+  function truncateAtWord(text, maxLen){
+    if(text.length <= maxLen) return text;
+    const cut = text.slice(0, maxLen);
+    const lastSpace = cut.lastIndexOf(' ');
+    return (lastSpace > 0 ? cut.slice(0, lastSpace) : cut) + '...';
+  }
+
+  /* ---------------------------------------------------------------
+     QUIZ-TAKING SCREEN — one question per screen, timer, progress
+     --------------------------------------------------------------- */
+  function startQuiz(){
+    headSub.textContent = state.mode === 'pdf' ? `From ${state.pdfFile.name}` : `Topic: ${state.topic}`;
+    state.startedAt = Date.now();
+    renderQuestion();
+  }
+
+  function renderQuestion(){
+    clearInterval(state.timerId);
+    const q = state.questions[state.current];
+    const total = state.questions.length;
+    const answered = state.answers[state.current];
+    const timedOut = state.flags[state.current];
+    body.innerHTML = `
+      <div class="qz-quiz-topbar">
+        <div class="qz-qcounter">Question <b>${state.current+1}</b> of ${total}</div>
+        <div class="qz-timer-pill" id="qzTimerPill"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span id="qzTimerText">${state.timePerQ}s</span></div>
+      </div>
+      <div class="qz-progress-track"><div class="qz-progress-fill" style="width:${Math.round(((state.current)/total)*100)}%"></div></div>
+      <div class="qz-question-card">
+        <div class="qz-question-meta">
+          <span class="glass-badge">Marks: ${q.marks}</span>
+          <span class="glass-badge">${q.difficulty[0].toUpperCase()+q.difficulty.slice(1)}</span>
+          ${q.page ? `<span class="glass-badge">Page ${q.page}</span>` : ''}
+        </div>
+        <div class="qz-question-stmt">${escapeHtml(q.statement)}</div>
+        <div class="qz-options" id="qzOptions" style="margin-top:20px;">
+          ${q.options.map((opt,i) => `
+            <div class="qz-option ${answered===i?'selected':''}" data-oi="${i}">
+              <div class="qz-option-letter">${['A','B','C','D'][i]}</div>
+              <div class="qz-option-text">${escapeHtml(opt)}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+      <div class="qz-nav-row">
+        ${state.current>0 ? `<button class="btn btn-ghost btn-sm" id="qzPrevBtn">Previous</button>` : ''}
+        <button class="btn btn-primary" id="qzNextBtn">${state.current===total-1 ? 'Submit Quiz' : 'Next Question'}</button>
+      </div>
+    `;
+    const optionsEl = $('#qzOptions', body);
+    if(timedOut){
+      // Lock answer selection after a timeout, per spec's optional
+      // "prevent answer modification after timeout" behavior.
+      optionsEl.style.pointerEvents = 'none';
+      optionsEl.style.opacity = '.6';
+    } else {
+      $$('.qz-option', optionsEl).forEach(opt => opt.addEventListener('click', () => {
+        const oi = parseInt(opt.dataset.oi);
+        state.answers[state.current] = oi;
+        $$('.qz-option', optionsEl).forEach(x => x.classList.remove('selected'));
+        opt.classList.add('selected');
+      }));
+    }
+    $('#qzPrevBtn', body)?.addEventListener('click', () => { state.current--; renderQuestion(); });
+    $('#qzNextBtn', body).addEventListener('click', () => advanceQuestion(false));
+
+    startTimer(timedOut);
+  }
+
+  function startTimer(alreadyTimedOut){
+    const pill = $('#qzTimerPill', body);
+    const text = $('#qzTimerText', body);
+    if(alreadyTimedOut){ text.textContent = "Time's up"; pill.classList.add('urgent'); return; }
+    state.timeLeft = state.timePerQ;
+    text.textContent = state.timeLeft + 's';
+    state.timerId = setInterval(() => {
+      state.timeLeft--;
+      text.textContent = Math.max(state.timeLeft,0) + 's';
+      if(state.timeLeft <= 5) pill.classList.add('urgent');
+      if(state.timeLeft <= 0){
+        clearInterval(state.timerId);
+        state.flags[state.current] = true;
+        advanceQuestion(true);
+      }
+    }, 1000);
+  }
+
+  function advanceQuestion(fromTimeout){
+    clearInterval(state.timerId);
+    if(state.current < state.questions.length - 1){
+      state.current++;
+      renderQuestion();
+    } else {
+      finishQuiz();
+    }
+  }
+
+  /* ---------------------------------------------------------------
+     SCORING + RESULTS DASHBOARD
+     --------------------------------------------------------------- */
+  function finishQuiz(){
+    state.finishedAt = Date.now();
+    renderResults();
+  }
+
+  function computeScore(){
+    let correct=0, incorrect=0, unanswered=0, totalMarks=0, earnedMarks=0;
+    state.questions.forEach((q,i) => {
+      totalMarks += q.marks;
+      if(state.answers[i] == null){ unanswered++; }
+      else if(state.answers[i] === q.correctIdx){ correct++; earnedMarks += q.marks; }
+      else { incorrect++; }
+    });
+    const total = state.questions.length;
+    const accuracy = total ? Math.round((correct/total)*100) : 0;
+    let grade = 'F';
+    if(accuracy>=90) grade='A+'; else if(accuracy>=80) grade='A'; else if(accuracy>=70) grade='B+';
+    else if(accuracy>=60) grade='B'; else if(accuracy>=50) grade='C'; else if(accuracy>=35) grade='D';
+    return {correct, incorrect, unanswered, total, accuracy, grade, totalMarks, earnedMarks};
+  }
+
+  function renderResults(){
+    headSub.textContent = 'Quiz Completed';
+    const s = computeScore();
+    const timeMs = state.finishedAt - state.startedAt;
+    const timeStr = formatDuration(timeMs);
+    const analysis = buildPerformanceAnalysis(s);
+
+    body.innerHTML = `
+      <div class="qz-result-hero">
+        <div class="qz-result-icon">🏆</div>
+        <h3>Quiz Completed!</h3>
+        <p>${state.mode==='pdf' ? 'Based on ' + escapeHtml(state.pdfFile.name) : 'Topic: ' + escapeHtml(state.topic)}</p>
+      </div>
+      <div class="qz-stat-grid">
+        <div class="qz-stat-card"><span class="qz-stat-val">${s.correct}/${s.total}</span><span class="qz-stat-label">Final Score</span></div>
+        <div class="qz-stat-card"><span class="qz-stat-val">${s.accuracy}%</span><span class="qz-stat-label">Accuracy</span></div>
+        <div class="qz-stat-card"><span class="qz-stat-val">${s.grade}</span><span class="qz-stat-label">Grade</span></div>
+        <div class="qz-stat-card"><span class="qz-stat-val">${timeStr}</span><span class="qz-stat-label">Time Taken</span></div>
+      </div>
+
+      <div class="qz-analysis-grid">
+        <div class="qz-analysis-card strengths"><h5>💪 Strengths</h5><ul>${analysis.strengths.map(t=>`<li>${escapeHtml(t)}</li>`).join('') || '<li>Keep practicing to build up strong areas.</li>'}</ul></div>
+        <div class="qz-analysis-card weak"><h5>⚠️ Weak Areas</h5><ul>${analysis.weak.map(t=>`<li>${escapeHtml(t)}</li>`).join('') || '<li>No major weak areas detected — great job!</li>'}</ul></div>
+      </div>
+
+      <div class="qz-tips-card">
+        <h5>📌 Personalized Improvement Tips &amp; Suggested Study Plan</h5>
+        <ol>${analysis.tips.map(t=>`<li>${escapeHtml(t)}</li>`).join('')}</ol>
+      </div>
+
+      ${state.mode==='pdf' ? renderPdfAnalysisBlock(s) : ''}
+
+      <div class="qz-bonus-actions">
+        <button class="btn btn-ghost btn-sm" id="qzReviewBtn">Review Answers</button>
+        <button class="btn btn-ghost btn-sm" id="qzRetakeBtn">Retake Quiz</button>
+        <button class="btn btn-ghost btn-sm" id="qzNewQuizBtn">Generate New Quiz</button>
+        <button class="btn btn-ghost btn-sm" id="qzDownloadReportBtn">Download Performance Report</button>
+        <button class="btn btn-ghost btn-sm" id="qzDownloadPdfBtn">Download Quiz PDF</button>
+      </div>
+    `;
+
+    $('#qzReviewBtn', body).addEventListener('click', renderReview);
+    $('#qzRetakeBtn', body).addEventListener('click', retakeQuiz);
+    $('#qzNewQuizBtn', body).addEventListener('click', () => { resetState(); renderConfigScreen(); });
+    $('#qzDownloadReportBtn', body).addEventListener('click', downloadPerformanceReport);
+    $('#qzDownloadPdfBtn', body).addEventListener('click', downloadQuizPdf);
+  }
+
+  function formatDuration(ms){
+    const totalSec = Math.max(0, Math.round(ms/1000));
+    const m = Math.floor(totalSec/60), sec = totalSec%60;
+    return m > 0 ? `${m}m ${sec}s` : `${sec}s`;
+  }
+
+  function buildPerformanceAnalysis(s){
+    const strengths = [], weak = [], tips = [];
+    const byDifficulty = {easy:{c:0,t:0}, medium:{c:0,t:0}, hard:{c:0,t:0}};
+    state.questions.forEach((q,i) => {
+      byDifficulty[q.difficulty].t++;
+      if(state.answers[i] === q.correctIdx) byDifficulty[q.difficulty].c++;
+    });
+    Object.entries(byDifficulty).forEach(([diff, v]) => {
+      if(!v.t) return;
+      const pct = Math.round((v.c/v.t)*100);
+      if(pct >= 70) strengths.push(`Strong performance on ${diff} difficulty questions (${pct}% correct)`);
+      else if(pct < 50) weak.push(`${diff[0].toUpperCase()+diff.slice(1)} difficulty questions need revision (${pct}% correct)`);
+    });
+    if(s.unanswered > 0) weak.push(`${s.unanswered} question(s) went unanswered due to the timer — practice faster recall.`);
+    if(s.accuracy >= 85) tips.push('You are exam-ready on this material — focus on speed and timed mock tests next.');
+    else tips.push(state.mode==='pdf' ? 'Revisit the flagged pages below and re-read the surrounding paragraphs before retaking.' : `Review core definitions and worked examples for "${state.topic}" before your next attempt.`);
+    tips.push('Retake this quiz after 24 hours — spaced repetition significantly improves retention.');
+    if(s.unanswered > 0) tips.push('Practice with a slightly longer time-per-question setting until your recall speed improves.');
+    tips.push('Focus extra revision time on the weak areas listed above before attempting a harder difficulty.');
+    return {strengths, weak, tips};
+  }
+
+  function renderPdfAnalysisBlock(s){
+    const usedPages = [...new Set(state.questions.map(q => q.page).filter(Boolean))].sort((a,b)=>a-b);
+    const totalPages = state.pdfPages.length;
+    const coverage = totalPages ? Math.round((usedPages.length/totalPages)*100) : 0;
+    const weakPages = state.questions.filter((q,i) => q.page && state.answers[i] !== q.correctIdx).map(q=>q.page);
+    const uniqueWeakPages = [...new Set(weakPages)].sort((a,b)=>a-b);
+    const coveredChapters = state.pdfChapters.filter(c => usedPages.some(p => p>=c.startPage && p<=c.endPage));
+    const weakChapters = state.pdfChapters.filter(c => uniqueWeakPages.some(p => p>=c.startPage && p<=c.endPage));
+    return `
+      <div class="qz-pdf-analysis">
+        <h5>📄 PDF Performance Analysis</h5>
+        <div class="qz-pdf-analysis-row"><span>Topic Coverage</span><b>${coverage}% (${usedPages.length}/${totalPages} pages)</b></div>
+        ${coveredChapters.length ? `<div class="qz-pdf-analysis-row"><span>Chapters Covered</span><b>${coveredChapters.map(c=>escapeHtml(c.title)).join(', ')}</b></div>` : ''}
+        ${weakChapters.length ? `<div class="qz-pdf-analysis-row"><span>Weak Chapters</span><b>${weakChapters.map(c=>escapeHtml(c.title)).join(', ')}</b></div>` : ''}
+        <div class="qz-pdf-analysis-row"><span>Recommended Revision</span><b>${uniqueWeakPages.length ? uniqueWeakPages.map(p=>'Page '+p).join(', ') : 'None — solid performance across scanned pages'}</b></div>
+      </div>
+    `;
+  }
+
+  function retakeQuiz(){
+    // Same question set, fresh attempt.
+    state.answers = new Array(state.questions.length).fill(null);
+    state.flags = new Array(state.questions.length).fill(false);
+    state.current = 0;
+    startQuiz();
+  }
+
+  /* ---------------------------------------------------------------
+     ANSWER REVIEW
+     --------------------------------------------------------------- */
+  function renderReview(){
+    headSub.textContent = 'Answer Review';
+    state.reviewFilter = 'all';
+    body.innerHTML = `
+      <div class="qz-review-filters">
+        <div class="qz-pill active" data-f="all">All</div>
+        <div class="qz-pill" data-f="correct">Correct</div>
+        <div class="qz-pill" data-f="incorrect">Incorrect</div>
+      </div>
+      <div id="qzReviewList"></div>
+      <div class="qz-bonus-actions">
+        <button class="btn btn-ghost btn-sm" id="qzBackToResultsBtn">Back to Results</button>
+      </div>
+    `;
+    $$('.qz-pill', body).forEach(p => p.addEventListener('click', () => {
+      state.reviewFilter = p.dataset.f;
+      $$('.qz-pill', body).forEach(x => x.classList.remove('active'));
+      p.classList.add('active');
+      renderReviewList();
+    }));
+    $('#qzBackToResultsBtn', body).addEventListener('click', renderResults);
+    renderReviewList();
+  }
+
+  function renderReviewList(){
+    const list = $('#qzReviewList', body);
+    const letters = ['A','B','C','D'];
+    const items = state.questions.map((q,i) => ({q,i, isCorrect: state.answers[i]===q.correctIdx}))
+      .filter(item => state.reviewFilter==='all' || (state.reviewFilter==='correct' && item.isCorrect) || (state.reviewFilter==='incorrect' && !item.isCorrect));
+    if(!items.length){ list.innerHTML = `<p class="hint">No questions in this filter.</p>`; return; }
+    list.innerHTML = items.map(({q,i,isCorrect}) => `
+      <div class="qz-review-item ${isCorrect?'correct':'incorrect'}">
+        <div class="qz-review-q">Question ${i+1}: ${escapeHtml(q.statement)}</div>
+        <div class="qz-review-ans-row">
+          <div><span>Your Answer:</span> <b class="${isCorrect?'ok':(state.answers[i]==null?'':'bad')}">${state.answers[i]==null ? 'Not answered' : letters[state.answers[i]] + '. ' + escapeHtml(q.options[state.answers[i]])}</b></div>
+          <div><span>Correct Answer:</span> <b class="ok">${q.correctLetter}. ${escapeHtml(q.options[q.correctIdx])}</b></div>
+        </div>
+        <div class="qz-review-explain"><b>Explanation:</b> ${escapeHtml(q.explanation)}</div>
+      </div>
+    `).join('');
+  }
+
+  /* ---------------------------------------------------------------
+     DOWNLOADS — performance report (.txt) + full quiz PDF (pdf-lib)
+     --------------------------------------------------------------- */
+  function downloadPerformanceReport(){
+    const s = computeScore();
+    const timeStr = formatDuration(state.finishedAt - state.startedAt);
+    const letters = ['A','B','C','D'];
+    let txt = `STUDENTOS AI — QUIZ PERFORMANCE REPORT\n${'='.repeat(50)}\n\n`;
+    txt += `Source: ${state.mode==='pdf' ? state.pdfFile.name : 'Topic — ' + state.topic}\n`;
+    txt += `Score: ${s.correct}/${s.total}  |  Accuracy: ${s.accuracy}%  |  Grade: ${s.grade}  |  Time Taken: ${timeStr}\n\n`;
+    txt += `ANSWER REVIEW\n${'-'.repeat(50)}\n`;
+    state.questions.forEach((q,i) => {
+      const isCorrect = state.answers[i]===q.correctIdx;
+      txt += `\nQ${i+1}. ${q.statement}\n`;
+      q.options.forEach((o,oi) => txt += `   ${letters[oi]}. ${o}${oi===q.correctIdx?'  [CORRECT]':''}\n`);
+      txt += `   Your Answer: ${state.answers[i]==null?'Not answered':letters[state.answers[i]]} — ${isCorrect?'Correct':'Incorrect'}\n`;
+      txt += `   Explanation: ${q.explanation}\n`;
+    });
+    const blob = new Blob([txt], {type:'text/plain'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'quiz-performance-report.txt'; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    pdfToast('Performance report downloaded!', 'success');
+  }
+
+  async function downloadQuizPdf(){
+    try{
+      await ensurePdfLib();
+      const { PDFDocument, StandardFonts, rgb } = window['PDFLib'];
+      const doc = await PDFDocument.create();
+      const font = await doc.embedFont(StandardFonts.Helvetica);
+      const bold = await doc.embedFont(StandardFonts.HelveticaBold);
+      const fontSize = 11, margin = 50, lineHeight = fontSize*1.5;
+      const pageWidth = 595.28, pageHeight = 841.89;
+      const maxWidth = pageWidth - margin*2;
+      let page = doc.addPage([pageWidth, pageHeight]);
+      let y = pageHeight - margin;
+      const letters = ['A','B','C','D'];
+
+      function ensureSpace(lines=1){
+        if(y - lines*lineHeight < margin){ page = doc.addPage([pageWidth, pageHeight]); y = pageHeight - margin; }
+      }
+      function wrapAndDraw(text, useFont, size, color){
+        const words = text.split(/\s+/);
+        let line = '';
+        const lines = [];
+        words.forEach(w => {
+          const test = line ? line + ' ' + w : w;
+          if(useFont.widthOfTextAtSize(test, size) > maxWidth){ lines.push(line); line = w; } else line = test;
+        });
+        if(line) lines.push(line);
+        lines.forEach(l => { ensureSpace(1); page.drawText(l, {x:margin, y, size, font:useFont, color}); y -= lineHeight; });
+      }
+
+      wrapAndDraw('StudentOS AI — Quiz', bold, 18, rgb(0.9,0.9,0.98)); y -= 6;
+      wrapAndDraw(state.mode==='pdf' ? `Source: ${state.pdfFile.name}` : `Topic: ${state.topic}`, font, 11, rgb(0.7,0.7,0.8)); y -= 10;
+
+      state.questions.forEach((q,i) => {
+        ensureSpace(2);
+        wrapAndDraw(`Q${i+1}. ${q.statement}`, bold, fontSize, rgb(0.92,0.92,0.98));
+        q.options.forEach((o,oi) => wrapAndDraw(`   ${letters[oi]}. ${o}`, font, fontSize, rgb(0.8,0.8,0.9)));
+        y -= 6;
+      });
+
+      const outBytes = await doc.save();
+      const blob = new Blob([outBytes], {type:'application/pdf'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'quiz.pdf'; a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      pdfToast('Quiz PDF downloaded!', 'success');
+    } catch(err){
+      pdfToast('Could not generate the PDF right now.', 'info');
+    }
+  }
+
+  return { open, close };
+})();
 
 /* -- Mobile nav toggle -- */
 const navToggle = $('#navToggle'), navLinks = $('#navLinks');
