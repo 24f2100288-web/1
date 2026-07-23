@@ -3207,15 +3207,71 @@ function scoreMediConcern(text){
   }).sort((a,b) => b.hits - a.hits);
 }
 
-/* ---- Secure backend hook (mirrors Legal AI's pattern exactly) ---- */
-async function callSecureMediBackend(text, answers){
+/* ---- Lazy-loaded OCR engine (Tesseract.js) — extracts real, visible
+   text from uploaded images (lab reports, prescriptions, printed
+   documents) entirely on-device, so uploaded files are genuinely
+   analyzed rather than silently ignored. ---- */
+let tesseractPromise = null;
+function ensureTesseract(){
+  if(!tesseractPromise){
+    tesseractPromise = loadScript('https://cdn.jsdelivr.net/npm/tesseract.js@5.0.5/dist/tesseract.min.js');
+  }
+  return tesseractPromise;
+}
+async function extractTextFromImage(file){
+  await ensureTesseract();
+  const { data } = await window['Tesseract'].recognize(file, 'eng');
+  return (data && data.text) ? data.text.trim() : '';
+}
+
+/* ---- Convert a file to a Base64 data URL — used only to send real
+   multimodal payloads to a connected backend (never stored, never
+   sent anywhere else). ---- */
+function fileToBase64(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ---- Extract usable text from ANY uploaded file (image → OCR,
+   PDF → pdf.js text layer). This is what makes "uploaded files are
+   analyzed" true rather than aspirational — every file the user
+   attaches is actually read before the report is generated. ---- */
+async function extractTextFromUploadedFile(file){
+  try{
+    if(file.type === 'application/pdf' || /\.pdf$/i.test(file.name)){
+      return await extractPdfText(file);
+    }
+    if(file.type.startsWith('image/')){
+      return await extractTextFromImage(file);
+    }
+  }catch(err){
+    console.error('MediAI file analysis failed for', file.name, err);
+  }
+  return '';
+}
+
+/* ---- Secure backend hook (mirrors Legal AI's pattern exactly) ----
+   Sends the user's text AND every uploaded file (Base64-encoded) so
+   a connected multimodal backend receives both inputs together, as
+   required. With no backend deployed in this static demo, this call
+   fails harmlessly and the caller falls back to the on-device path
+   below — which still genuinely reads the uploaded files via OCR /
+   PDF text extraction rather than ignoring them. ---- */
+async function callSecureMediBackend(text, answers, files){
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 3500);
   try{
+    const encodedFiles = files && files.length
+      ? await Promise.all(files.map(async f => ({ name:f.name, type:f.type, data: await fileToBase64(f) })))
+      : [];
     const res = await fetch('/api/medi-analysis', {
       method:'POST', signal: controller.signal,
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ query:text, answers })
+      body: JSON.stringify({ query:text, answers, files: encodedFiles })
     });
     clearTimeout(timeout);
     if(res.ok) return await res.json();
@@ -3226,9 +3282,12 @@ async function callSecureMediBackend(text, answers){
   }
 }
 
-/* ---- Local rule-based fallback report generator ---- */
-function generateLocalMediReport(text, answers){
-  const scored = scoreMediConcern(text);
+/* ---- Local rule-based fallback report generator ----
+   `combinedText` already includes the user's typed description PLUS
+   any text extracted from uploaded images/reports, so classification
+   and severity are based on BOTH inputs together. ---- */
+function generateLocalMediReport(combinedText, answers, hadFiles, fileExtractedText){
+  const scored = scoreMediConcern(combinedText);
   const top = scored[0];
   const second = scored[1];
   let confidence = 'Low';
@@ -3239,8 +3298,15 @@ function generateLocalMediReport(text, answers){
                : (second && second.hits > 0 && second.hits >= top.hits) ? 'Medium'
                : (top.hits >= 2 ? 'High' : 'Medium');
   }
+  // An uploaded report/prescription with real extracted text is treated as
+  // a medical-report concern by default unless the text strongly matches
+  // another category, and it boosts confidence since we have more signal.
+  if(hadFiles && fileExtractedText && fileExtractedText.length > 20){
+    if(!top || top.hits === 0) kbKey = 'reports';
+    if(confidence === 'Low') confidence = 'Medium';
+  }
   const kb = MEDI_KB[kbKey];
-  const trimmed = text.trim();
+  const trimmed = combinedText.trim();
 
   // Severity can escalate based on follow-up answers (e.g. chest pain radiating, fever + vomiting)
   let severity = kb.severity;
@@ -3264,13 +3330,37 @@ function generateLocalMediReport(text, answers){
     avoid: kb.avoid,
     immediate: kb.immediate,
     confidence,
+    filesAnalyzed: hadFiles || false,
+    fileExtractedText: fileExtractedText || '',
   };
 }
 
-async function analyzeMediScenario(text, answers){
-  const backendResult = await callSecureMediBackend(text, answers);
+/* ---- Entry point: analyzes the user's TEXT and every uploaded FILE
+   together, exactly as required — never one or the other alone. ---- */
+async function analyzeMediScenario(text, answers, files){
+  files = files || [];
+
+  // Step 1: actually read every uploaded file (OCR for images, text
+  // extraction for PDFs) so it becomes real input to the analysis,
+  // not just a UI preview thumbnail.
+  let fileExtractedText = '';
+  if(files.length){
+    const perFileText = await Promise.all(files.map(f => extractTextFromUploadedFile(f)));
+    fileExtractedText = perFileText.filter(Boolean).join('\n\n');
+  }
+
+  // Step 2: combine the user's description with whatever was extracted
+  // from their uploaded file(s) — this is the "combined analysis" the
+  // spec requires when both text and an image/report are provided.
+  const combinedText = [text, fileExtractedText].filter(Boolean).join('\n\n');
+
+  // Step 3: prefer a real multimodal backend if one is connected
+  // (receives the original text + Base64 file bytes together).
+  const backendResult = await callSecureMediBackend(text, answers, files);
   if(backendResult) return backendResult;
-  return generateLocalMediReport(text, answers);
+
+  // Step 4: on-device fallback — still genuinely informed by both inputs.
+  return generateLocalMediReport(combinedText, answers, files.length > 0, fileExtractedText);
 }
 
 /* ---- Animated placeholder rotation (smooth fade, no visible example
@@ -3385,6 +3475,7 @@ function buildMediReportText(report){
   return [
     `MediAI Health Report — ${report.category}`,
     '='.repeat(40),
+    report.filesAnalyzed ? `\nUploaded File Analysis:\n${report.fileExtractedText ? report.fileExtractedText.slice(0,1200) : 'No clear text could be extracted from the uploaded file.'}` : '',
     `\nHealth Problem Summary:\n${report.summary}`,
     `\nPossible Reasons:\n${report.reasons.map(l=>'- '+l).join('\n')}`,
     `\nPossible Conditions:\n${report.conditions.map(l=>'- '+l).join('\n')}`,
@@ -3402,11 +3493,14 @@ function buildMediReportText(report){
 function renderMediReport(report){
   const box = $('#mediReport');
   const confClass = report.confidence === 'High' ? 'confidence-high' : report.confidence === 'Medium' ? 'confidence-medium' : 'confidence-low';
+  const sourceLabel = report.filesAnalyzed
+    ? `${report.category} · Generated from your description and uploaded file(s) — educational information only`
+    : `${report.category} · Generated from your description — educational information only`;
   box.innerHTML = `
     <div class="medi-report-top">
       <div>
         <h3>MediAI Health Report</h3>
-        <div class="mr-sub">${report.category} · Generated from your description — educational information only</div>
+        <div class="mr-sub">${sourceLabel}</div>
       </div>
       <div class="confidence-badge ${confClass}">AI Confidence: ${report.confidence}</div>
     </div>
@@ -3416,6 +3510,14 @@ function renderMediReport(report){
       <button class="btn btn-ghost btn-sm" id="mediShareBtn">🔗 Share</button>
     </div>
     <div class="medi-report-body">
+      ${report.filesAnalyzed ? `
+      <div class="medi-section-card" style="border-bottom:1px dashed var(--border);">
+        <div class="medi-section-head"><div class="medi-section-num">📎</div><h4>Uploaded File Analysis</h4></div>
+        ${report.fileExtractedText
+          ? `<p>MediAI read your uploaded file and combined it with your description below.</p><div class="pdf-ai-output" style="margin-top:10px;max-height:180px;"><h5>Extracted Content</h5><p style="white-space:pre-wrap;font-size:13px;">${report.fileExtractedText.slice(0,1200)}${report.fileExtractedText.length>1200?'…':''}</p></div>`
+          : `<p>MediAI attempted to read your uploaded file, but could not extract clear text from it (this can happen with low-resolution or handwritten images). The analysis below is based on your typed description.</p>`
+        }
+      </div>` : ''}
       <div class="medi-section-card">
         <div class="medi-section-head"><div class="medi-section-num">1</div><h4>Health Problem Summary</h4></div>
         <p>${report.summary}</p>
@@ -3510,7 +3612,10 @@ async function runMediAnalysis(text, answers){
   const loadingBox = $('#mediLoading');
   loadingBox.style.display = 'block';
   loadingBox.scrollIntoView({behavior:'smooth', block:'center'});
-  const steps = ['Reading your symptoms...', 'Cross-referencing common causes...', 'Assessing severity...', 'Compiling your health report...'];
+  const files = mediSelectedImages.slice();
+  const steps = files.length
+    ? ['Reading your description...', `Analyzing ${files.length} uploaded file${files.length>1?'s':''}...`, 'Cross-referencing common causes...', 'Assessing severity...', 'Compiling your combined health report...']
+    : ['Reading your symptoms...', 'Cross-referencing common causes...', 'Assessing severity...', 'Compiling your health report...'];
   let stepIndex = 0;
   $('#mediLoadingText').textContent = steps[0];
   const stepTimer = setInterval(() => {
@@ -3519,7 +3624,7 @@ async function runMediAnalysis(text, answers){
   }, 500);
 
   const [report] = await Promise.all([
-    analyzeMediScenario(text, answers),
+    analyzeMediScenario(text, answers, files),
     new Promise(resolve => setTimeout(resolve, 1600)),
   ]);
 
@@ -3529,12 +3634,19 @@ async function runMediAnalysis(text, answers){
   $('#mediReport').scrollIntoView({behavior:'smooth', block:'start'});
 }
 
-/* ---- Entry point: decide whether to ask follow-ups or go straight to the report ---- */
+/* ---- Entry point: decide whether to ask follow-ups or go straight to
+   the report. A user is allowed to submit with ONLY an uploaded file
+   and no typed text — the file's extracted content becomes the input. ---- */
 function startMediAnalysis(){
   const text = $('#mediInput').value.trim();
-  if(!text){ $('#mediInput').focus(); return; }
+  const hasFiles = mediSelectedImages.length > 0;
+  if(!text && !hasFiles){ $('#mediInput').focus(); return; }
   $('#mediReport').style.display = 'none';
-  if(needsFollowup(text)){
+  // Skip the clarifying follow-up flow whenever a file was uploaded —
+  // the uploaded report/image already provides strong signal, and we
+  // want image analysis to always run immediately rather than being
+  // blocked behind unrelated questions.
+  if(!hasFiles && needsFollowup(text)){
     renderMediFollowup(text);
   } else {
     runMediAnalysis(text, {});
