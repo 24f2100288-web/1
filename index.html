@@ -798,18 +798,6 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 }
 .legal-disclaimer b{color:var(--text);}
 
-/* Category explorer cards — color-coded accents */
-.legal-category-card{
-  padding:22px;cursor:pointer;position:relative;overflow:hidden;transition:transform .4s var(--ease), border-color .4s var(--ease);
-}
-.legal-category-card:hover{transform:translateY(-5px);border-color:var(--border-strong);}
-.legal-category-card .lc-icon{
-  width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;
-  margin-bottom:14px;border:1px solid var(--border);
-}
-.legal-category-card h4{font-size:14.5px;font-weight:600;margin-bottom:6px;}
-.legal-category-card p{font-size:12.5px;color:var(--text-dim);}
-
 /* Legal Knowledge Hub cards reuse .tool-card via markup, no extra class needed */
 
 @media (max-width:760px){
@@ -1838,14 +1826,6 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 
     <!-- Structured AI Legal Report (populated by JS) -->
     <div class="legal-report" id="legalReport" style="display:none;"></div>
-
-    <!-- Category Explorer -->
-    <div class="section-head reveal" style="margin-top:20px;">
-      <div class="eyebrow">Explore</div>
-      <h2>Legal <span class="gradient-text">Categories</span></h2>
-      <p>Tap a category to pre-fill the console with a related scenario.</p>
-    </div>
-    <div class="grid grid-cols" id="legalCategoryGrid"></div>
 
     <!-- Disclaimer -->
     <div class="glass reveal legal-disclaimer" style="margin-top:40px;">
@@ -3177,30 +3157,6 @@ const LEGAL_KEYWORDS = {
   social:['fake profile','morphed photo','defamation','deepfake','online abuse','trolling','abusive post','fake account using my photos'],
 };
 
-/* ---- Category explorer cards (20, per spec) — mapped to KB entries above ---- */
-const LEGAL_CATEGORIES = [
-  {title:'Consumer Rights', icon:'🛍️', kb:'consumer', desc:'Refunds, defective products & unfair trade practices.', sample:{en:'I bought a defective phone online and the seller is refusing a refund.', hi:'मैंने ऑनलाइन एक खराब फोन खरीदा और विक्रेता रिफंड देने से इनकार कर रहा है।'}},
-  {title:'Cyber Crime', icon:'💻', kb:'cyber', desc:'Hacking, phishing & unauthorized account access.', sample:{en:'Someone hacked my Instagram account and is demanding money.', hi:'किसी ने मेरा इंस्टाग्राम अकाउंट हैक कर लिया और पैसे की मांग कर रहा है।'}},
-  {title:'Traffic Laws', icon:'🚦', kb:'traffic', desc:'Licence violations, challans & road safety rules.', sample:{en:'I was caught driving without a driving licence.', hi:'मैं बिना ड्राइविंग लाइसेंस के पकड़ा गया।'}},
-  {title:'Employment Laws', icon:'💼', kb:'employment', desc:'Salary disputes, wrongful termination & workplace rights.', sample:{en:'My employer has not paid my salary for two months.', hi:'मेरे नियोक्ता ने दो महीने से मेरा वेतन नहीं दिया है।'}},
-  {title:'Labour Laws', icon:'🛠️', kb:'employment', desc:'Working conditions, wages & industrial disputes.', sample:{en:'My supervisor is forcing overtime without extra pay.', hi:'मेरा सुपरवाइज़र बिना अतिरिक्त वेतन के ओवरटाइम करवा रहा है।'}},
-  {title:'Student Rights', icon:'🎓', kb:'education', desc:'Certificates, admissions & institutional grievances.', sample:{en:'My college is refusing to provide my certificates.', hi:'मेरा कॉलेज मेरे सर्टिफिकेट देने से इनकार कर रहा है।'}},
-  {title:'Property Disputes', icon:'🏠', kb:'property', desc:'Ownership, tenancy & landlord-tenant conflicts.', sample:{en:'My landlord is not returning my security deposit.', hi:'मेरा मकान मालिक सिक्योरिटी डिपॉज़िट वापस नहीं कर रहा है।'}},
-  {title:'Banking Laws', icon:'🏦', kb:'banking', desc:'Loan recovery practices & banking grievances.', sample:{en:'A recovery agent is harassing me over a loan EMI delay.', hi:'एक रिकवरी एजेंट लोन ईएमआई में देरी को लेकर मुझे परेशान कर रहा है।'}},
-  {title:'Family Laws', icon:'👪', kb:'family', desc:'Marriage, maintenance & domestic matters.', sample:{en:'My husband is not providing maintenance after separation.', hi:'अलगाव के बाद मेरे पति भरण-पोषण नहीं दे रहे हैं।'}},
-  {title:'Digital Privacy', icon:'🔒', kb:'privacy', desc:'Data leaks, surveillance & personal data misuse.', sample:{en:'My personal data was leaked by a mobile app without consent.', hi:'एक मोबाइल ऐप ने मेरी सहमति के बिना मेरा डेटा लीक कर दिया।'}},
-  {title:'Social Media Crimes', icon:'📱', kb:'social', desc:'Fake profiles, defamation & online abuse.', sample:{en:'Someone created a fake profile using my photos.', hi:'किसी ने मेरी फोटो से एक फर्जी प्रोफाइल बना दी है।'}},
-  {title:'Rental Issues', icon:'🔑', kb:'property', desc:'Rent hikes, eviction & lease disagreements.', sample:{en:'My landlord is trying to increase my rent suddenly.', hi:'मेरा मकान मालिक अचानक किराया बढ़ाने की कोशिश कर रहा है।'}},
-  {title:'Police Matters', icon:'👮', kb:'criminal', desc:'FIR registration & police complaint procedures.', sample:{en:'The police are refusing to register my FIR.', hi:'पुलिस मेरी एफआईआर दर्ज करने से इनकार कर रही है।'}},
-  {title:'Criminal Laws', icon:'⚖️', kb:'criminal', desc:'Offences, arrests & criminal procedure basics.', sample:{en:'I was falsely accused of theft by a neighbour.', hi:'एक पड़ोसी ने मुझ पर चोरी का झूठा आरोप लगाया।'}},
-  {title:'Constitutional Rights', icon:'📜', kb:'constitutional', desc:'Fundamental rights & constitutional remedies.', sample:{en:'I want to understand my fundamental rights as a citizen.', hi:'मैं एक नागरिक के रूप में अपने मौलिक अधिकार जानना चाहता हूं।'}},
-  {title:'Educational Rights', icon:'📚', kb:'education', desc:'Right to education & institutional accountability.', sample:{en:'My school is denying admission without valid reason.', hi:'मेरा स्कूल बिना वैध कारण के दाखिला देने से इनकार कर रहा है।'}},
-  {title:'Women Rights', icon:'🚺', kb:'women', desc:'Safety, harassment & workplace protection.', sample:{en:'I am facing harassment from a colleague at work.', hi:'मुझे ऑफिस में एक सहकर्मी से उत्पीड़न का सामना करना पड़ रहा है।'}},
-  {title:'Senior Citizen Rights', icon:'🧓', kb:'senior', desc:'Maintenance & protection for elderly citizens.', sample:{en:'My elderly parents are being neglected by my sibling.', hi:'मेरे बुजुर्ग माता-पिता की मेरे भाई/बहन द्वारा अनदेखी की जा रही है।'}},
-  {title:'Financial Fraud', icon:'💰', kb:'scam', desc:'Online scams, OTP fraud & investment schemes.', sample:{en:'I received an online scam call asking for my OTP.', hi:'मुझे एक ऑनलाइन स्कैम कॉल आया जिसमें ओटीपी मांगा गया।'}},
-  {title:'Startup and Business Laws', icon:'🚀', kb:'business', desc:'Contracts, compliance & business disputes.', sample:{en:'My business partner is not honouring our signed agreement.', hi:'मेरा बिज़नेस पार्टनर हमारे हस्ताक्षरित समझौते का पालन नहीं कर रहा है।'}},
-];
-
 /* ---- Scoring engine: identify the most relevant category from free text ---- */
 function scoreLegalCategories(text){
   const lower = ' ' + text.toLowerCase() + ' ';
@@ -3276,27 +3232,6 @@ function renderLegalStaticText(){
     $('#legalInput').value = currentLegalLang === 'hi' ? chip.dataset.hi : chip.dataset.en;
     $('#legalInput').focus();
   }));
-}
-
-function renderLegalCategories(){
-  const grid = $('#legalCategoryGrid');
-  grid.innerHTML = '';
-  LEGAL_CATEGORIES.forEach((cat, i) => {
-    const card = el('div', 'tool-card legal-category-card glass reveal');
-    card.style.transitionDelay = (i % 6) * 0.05 + 's';
-    card.innerHTML = `
-      <div class="lc-icon tool-icon">${cat.icon}</div>
-      <h4>${cat.title}</h4>
-      <p>${cat.desc}</p>
-      <div class="tc-arrow">Explore <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    `;
-    card.addEventListener('click', () => {
-      $('#legalInput').value = currentLegalLang==='hi' ? cat.sample.hi : cat.sample.en;
-      $('.legal-console').scrollIntoView({behavior:'smooth', block:'center'});
-      setTimeout(() => $('#legalInput').focus(), 400);
-    });
-    grid.appendChild(card);
-  });
 }
 
 function buildLegalReportText(report, originalText, lang){
@@ -3436,7 +3371,6 @@ $$('#legalLangToggle .lang-btn').forEach(btn => btn.addEventListener('click', ()
 }));
 
 renderLegalStaticText();
-renderLegalCategories();
 
 /* ================================================================
    MEDIAI — MODULE
