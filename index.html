@@ -673,44 +673,46 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
    follow-up card and the AI-generated report — the same restrained
    distribution used everywhere else on the site.
    ================================================================ */
-.medi-console{padding:30px;max-width:920px;margin:0 auto 32px;position:relative;overflow:hidden;}
+/* ---- MediAI hero header text (kicker / tagline, sits above the console) ---- */
+.medi-hero-kicker{font-size:18px;font-weight:700;color:var(--text);margin-top:16px;margin-bottom:4px;letter-spacing:-0.01em;}
+.medi-hero-tagline{font-size:15px;font-weight:600;color:var(--cyan-soft);margin-bottom:16px;}
+
+/* ---- MediAI console: one large premium input + one CTA. Deliberately
+   minimal — no example chips, no upload row, no secondary buttons — so
+   it reads as a consultation instrument rather than a chatbot demo. ---- */
+.medi-console{padding:40px;max-width:760px;margin:0 auto 60px;position:relative;overflow:hidden;}
 .medi-console::before{
   content:'';position:absolute;top:-55%;right:-15%;width:55%;height:200%;
   background:radial-gradient(circle, rgba(103,232,249,0.10), transparent 65%);pointer-events:none;
 }
-.medi-console-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:16px;position:relative;z-index:1;}
-.medi-console-badge{
-  display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--cyan-soft);
-  padding:7px 14px;border-radius:999px;background:var(--grad-soft);border:1px solid var(--border);
-  backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
-}
+.medi-console-top{display:flex;justify-content:flex-end;position:relative;z-index:1;margin-bottom:8px;min-height:16px;}
+.medi-hero-clear{font-size:12px;font-weight:500;color:var(--text-faint);text-decoration:underline;text-underline-offset:2px;cursor:pointer;transition:color .2s;}
+.medi-hero-clear:hover{color:var(--text-dim);}
+.medi-input-wrap{position:relative;z-index:1;}
 #mediInput{
-  width:100%;min-height:110px;padding:16px 18px;border-radius:14px;background:rgba(255,255,255,0.045);
+  width:100%;min-height:130px;padding:20px 22px;border-radius:16px;background:rgba(255,255,255,0.04);
   backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
-  border:1px solid var(--border);font-size:15px;color:var(--text);resize:vertical;position:relative;z-index:1;
+  border:1px solid var(--border);font-size:16px;color:var(--text);resize:vertical;position:relative;
   font-family:inherit;line-height:1.6;transition:border-color .25s;
 }
 #mediInput:focus{outline:none;border-color:var(--cyan-soft);}
-.medi-examples{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;position:relative;z-index:1;}
-.medi-console-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;position:relative;z-index:1;}
-.medi-console-meta{font-size:11.5px;color:var(--text-faint);margin-top:10px;position:relative;z-index:1;display:flex;align-items:center;gap:6px;}
+.medi-placeholder{
+  position:absolute;top:20px;left:22px;right:22px;font-size:16px;line-height:1.6;color:var(--text-faint);
+  pointer-events:none;transition:opacity .4s var(--ease);opacity:1;
+}
+.medi-placeholder.fade{opacity:0;}
+.medi-hero-actions{display:flex;justify-content:center;margin-top:24px;position:relative;z-index:1;}
+.medi-hero-actions .btn{padding:15px 44px;font-size:15px;}
+.medi-console-meta{font-size:11.5px;color:var(--text-faint);margin-top:16px;position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:6px;}
 
-/* Optional image upload row inside the console */
-.medi-upload-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;position:relative;z-index:1;}
-.medi-upload-chip{
-  display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:12px;font-size:12.5px;font-weight:600;color:var(--text-dim);
-  background:var(--glass-bg);border:1px solid var(--glass-border);cursor:pointer;transition:.25s;
-  backdrop-filter:var(--glass-blur-1);-webkit-backdrop-filter:var(--glass-blur-1);
+/* Single small attach affordance (photo / blood report / prescription) —
+   intentionally understated so it never competes with the main input. */
+.medi-attach-btn{
+  display:inline-flex;align-items:center;gap:6px;margin-top:10px;position:relative;z-index:1;
+  font-size:12px;font-weight:500;color:var(--text-faint);cursor:pointer;transition:color .2s;
 }
-.medi-upload-chip:hover{color:var(--text);border-color:var(--glass-border-strong);}
-.medi-upload-chip input[type=file]{display:none;}
-.medi-image-preview{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;position:relative;z-index:1;}
-.medi-image-thumb{position:relative;width:64px;height:64px;border-radius:12px;overflow:hidden;border:1px solid var(--glass-border);}
-.medi-image-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
-.medi-image-thumb button{
-  position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:6px;background:rgba(0,0,0,0.6);
-  color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;
-}
+.medi-attach-btn:hover{color:var(--cyan-soft);}
+.medi-attach-btn input[type=file]{display:none;}
 
 /* Conversational follow-up card (asked before the final report) */
 .medi-followup{
@@ -803,10 +805,6 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
   max-width:920px;margin:0 auto;padding:22px 26px;text-align:center;font-size:13px;color:var(--text-dim);line-height:1.7;
 }
 .medi-disclaimer b{color:var(--text);}
-
-/* Concern chips (the "special features" list — fitness/skin/sleep/etc.) */
-.medi-concern-card{padding:20px;text-align:center;}
-.medi-concern-card .tool-icon{margin:0 auto 12px;}
 
 @media (max-width:760px){
   .medi-console-head{flex-direction:column;align-items:flex-start;}
@@ -1302,27 +1300,31 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
     <div class="section-head reveal">
       <div class="eyebrow">🩺 Health Intelligence</div>
       <h2>Medi<span class="gradient-text">AI</span></h2>
-      <p id="mediTagline">Understand Your Health. Smarter.</p>
+      <p class="medi-hero-kicker">Your AI Health Consultant.</p>
+      <p id="mediTagline" class="medi-hero-tagline">Understand Your Health. Smarter.</p>
+      <p>Describe any health concern, symptom, medical report, fitness goal, or lifestyle problem in your own words.</p>
     </div>
 
-    <!-- Console: describe your health concern naturally -->
+    <!-- Console: one large premium input, one CTA — a consultation
+         instrument, not a chatbot demo. Optional image/report upload
+         lives behind a single small attach icon inside the input. -->
     <div class="medi-console glass reveal">
-      <div class="medi-console-head">
-        <div class="medi-console-badge">🧠 AI Health Analysis Engine</div>
+      <div class="medi-console-top">
+        <span class="medi-hero-clear" id="mediClearBtn" style="visibility:hidden;">Clear</span>
       </div>
-      <textarea id="mediInput" placeholder="Describe how you're feeling in your own words... e.g. 'I have severe acne for the last two years.'"></textarea>
-      <div class="medi-examples" id="mediExamples"></div>
-
-      <!-- Optional image analysis -->
-      <div class="medi-upload-row">
-        <label class="medi-upload-chip">📷 Add a photo (skin, hair, face)<input type="file" id="mediImageInput" accept="image/*" multiple></label>
-        <label class="medi-upload-chip">📄 Add a medical report or prescription<input type="file" id="mediDocInput" accept="image/*,.pdf" multiple></label>
+      <div class="medi-input-wrap">
+        <textarea id="mediInput" placeholder=""></textarea>
+        <div class="medi-placeholder" id="mediPlaceholder">Describe your symptoms...</div>
       </div>
       <div class="medi-image-preview" id="mediImagePreview"></div>
+      <label class="medi-attach-btn" id="mediAttachLabel">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21.44 11.05l-9.19 9.19a5 5 0 01-7.07-7.07l9.19-9.19a3.5 3.5 0 014.95 4.95l-9.2 9.19a1.5 1.5 0 01-2.12-2.12l8.49-8.48" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Attach a photo or report (optional)</span>
+        <input type="file" id="mediImageInput" accept="image/*,.pdf" multiple>
+      </label>
 
-      <div class="medi-console-actions">
-        <button class="btn btn-ghost btn-sm" id="mediClearBtn">Clear</button>
-        <button class="btn btn-primary" id="mediAnalyzeBtn">Ask MediAI</button>
+      <div class="medi-hero-actions">
+        <button class="btn btn-primary" id="mediAnalyzeBtn">Analyze Health</button>
       </div>
       <div class="medi-console-meta"><span class="dot-live"></span> Educational health information only — not a substitute for a doctor.</div>
     </div>
@@ -1339,14 +1341,6 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 
     <!-- Structured AI Health Report -->
     <div class="medi-report" id="mediReport" style="display:none;"></div>
-
-    <!-- What MediAI can help with -->
-    <div class="section-head reveal" style="margin-top:20px;">
-      <div class="eyebrow">Ask About</div>
-      <h2>What <span class="gradient-text">MediAI</span> can help with</h2>
-      <p>Tap a topic to pre-fill the console, or just describe your concern in your own words above.</p>
-    </div>
-    <div class="grid grid-cols" id="mediConcernGrid"></div>
 
     <!-- Disclaimer -->
     <div class="glass reveal medi-disclaimer" style="margin-top:40px;">
@@ -2910,30 +2904,21 @@ renderLegalCategories();
    rule-based health-knowledge engine so the feature works today.
    ================================================================ */
 
-/* ---- Example scenarios shown as chips under the console ---- */
-const MEDI_EXAMPLES = [
-  'I have severe acne for the last two years.',
-  'My hair is falling excessively.',
-  'I have chest pain while running.',
-  'I have been experiencing headaches for five days.',
-  'I am skinny fat and want to build muscle.',
-  'I am sleeping 12 hours every day and still feel tired.',
-];
-
-/* ---- "What MediAI can help with" concern categories ---- */
-const MEDI_CONCERNS = [
-  {title:'Fitness', icon:'🏋️', kb:'muscle', desc:'Muscle building, workouts & body composition.', sample:'I am skinny fat and want to build muscle.'},
-  {title:'Skin Care', icon:'🧴', kb:'skin', desc:'Acne, pigmentation & skincare routines.', sample:'I have severe acne for the last two years.'},
-  {title:'Hair Care', icon:'💇', kb:'hair', desc:'Hair fall, dandruff & premature greying.', sample:'My hair is falling excessively.'},
-  {title:'Nutrition', icon:'🥗', kb:'nutrition', desc:'Diet, deficiencies & healthy eating.', sample:'I want to gain 10kg naturally.'},
-  {title:'Sleep Health', icon:'😴', kb:'sleep', desc:'Sleep quality, fatigue & daytime tiredness.', sample:'I am sleeping 12 hours every day and still feel tired.'},
-  {title:'Mental Wellness', icon:'🧘', kb:'mental', desc:'Anxiety, stress & emotional wellbeing.', sample:'I feel anxious all the time.'},
-  {title:'Digestive Health', icon:'🍽️', kb:'digestive', desc:'Stomach pain, bloating & digestion.', sample:'I have stomach pain after eating.'},
-  {title:'Heart & Fitness Safety', icon:'❤️', kb:'cardio', desc:'Chest discomfort & exercise safety.', sample:'I have chest pain while running.'},
-  {title:'Headaches', icon:'🤕', kb:'headache', desc:'Recurring headaches & migraines.', sample:'I have been experiencing headaches for five days.'},
-  {title:'Weight Goals', icon:'⚖️', kb:'weight', desc:'Weight gain or loss, done naturally.', sample:'I want to gain 10kg naturally.'},
-  {title:'Medical Reports', icon:'📋', kb:'reports', desc:'Understanding blood work & prescriptions.', sample:'I want help understanding my blood report.'},
-  {title:'General Health', icon:'🩺', kb:'general', desc:'Anything else on your mind.', sample:'I have not been feeling like myself lately.'},
+/* ---- Animated placeholder phrases for the console input ----
+   Rotated with a smooth fade (no example chips are shown on screen —
+   the phrases live only inside the placeholder text itself). */
+const MEDI_PLACEHOLDER_PHRASES = [
+  'Describe your symptoms...',
+  'Upload and analyze your blood report...',
+  'Help me gain muscle naturally...',
+  'Analyze my skin concerns...',
+  'Create my nutrition plan...',
+  "I'm experiencing headaches for five days...",
+  'Help me improve my sleep quality...',
+  'Explain my medical report...',
+  'Why am I losing hair?',
+  'Help me lose weight safely.',
+  'Analyze my lab reports.',
 ];
 
 /* ---- Health knowledge base — one structured entry per concern ----
@@ -3218,37 +3203,32 @@ async function analyzeMediScenario(text, answers){
   return generateLocalMediReport(text, answers);
 }
 
-/* ---- Rendering: static text + example chips ---- */
-function renderMediStaticText(){
-  $('#mediExamples').innerHTML = MEDI_EXAMPLES.map(ex => `<span class="legal-chip" data-text="${ex.replace(/"/g,'&quot;')}">${ex}</span>`).join('');
-  $$('#mediExamples .legal-chip').forEach(chip => chip.addEventListener('click', () => {
-    $('#mediInput').value = chip.dataset.text;
-    $('#mediInput').focus();
-  }));
+/* ---- Animated placeholder rotation (smooth fade, no visible example
+   chips) — the console itself stays completely minimal. ---- */
+let mediPlaceholderIndex = 0;
+function rotateMediPlaceholder(){
+  const el = $('#mediPlaceholder');
+  if(!el) return;
+  el.classList.add('fade');
+  setTimeout(() => {
+    mediPlaceholderIndex = (mediPlaceholderIndex + 1) % MEDI_PLACEHOLDER_PHRASES.length;
+    el.textContent = MEDI_PLACEHOLDER_PHRASES[mediPlaceholderIndex];
+    el.classList.remove('fade');
+  }, 400);
+}
+function updateMediPlaceholderVisibility(){
+  const input = $('#mediInput');
+  const ph = $('#mediPlaceholder');
+  if(!input || !ph) return;
+  ph.style.display = input.value.length ? 'none' : 'block';
+}
+function initMediPlaceholderRotation(){
+  const ph = $('#mediPlaceholder');
+  if(ph) ph.textContent = MEDI_PLACEHOLDER_PHRASES[0];
+  setInterval(rotateMediPlaceholder, 3200);
 }
 
-function renderMediConcerns(){
-  const grid = $('#mediConcernGrid');
-  grid.innerHTML = '';
-  MEDI_CONCERNS.forEach((c, i) => {
-    const card = el('div', 'tool-card legal-category-card glass reveal medi-concern-card');
-    card.style.transitionDelay = (i % 6) * 0.05 + 's';
-    card.innerHTML = `
-      <div class="tool-icon">${c.icon}</div>
-      <h4>${c.title}</h4>
-      <p>${c.desc}</p>
-      <div class="tc-arrow">Explore <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    `;
-    card.addEventListener('click', () => {
-      $('#mediInput').value = c.sample;
-      $('.medi-console').scrollIntoView({behavior:'smooth', block:'center'});
-      setTimeout(() => $('#mediInput').focus(), 400);
-    });
-    grid.appendChild(card);
-  });
-}
-
-/* ---- Image upload previews (client-side only — never uploaded anywhere) ---- */
+/* ---- Image/report upload previews (client-side only — never uploaded anywhere) ---- */
 let mediSelectedImages = [];
 function drawMediImagePreviews(){
   const box = $('#mediImagePreview');
@@ -3264,7 +3244,7 @@ function drawMediImagePreviews(){
   });
 }
 $('#mediImageInput').addEventListener('change', (e) => { mediSelectedImages = mediSelectedImages.concat([...e.target.files]); drawMediImagePreviews(); });
-$('#mediDocInput').addEventListener('change', (e) => { mediSelectedImages = mediSelectedImages.concat([...e.target.files]); drawMediImagePreviews(); });
+$('#mediInput').addEventListener('input', updateMediPlaceholderVisibility);
 
 /* ---- Conversational follow-up flow ---- */
 let mediPendingText = '';
@@ -3500,11 +3480,15 @@ $('#mediClearBtn').addEventListener('click', () => {
   $('#mediLoading').style.display = 'none';
   mediSelectedImages = [];
   drawMediImagePreviews();
+  updateMediPlaceholderVisibility();
+  $('#mediClearBtn').style.visibility = 'hidden';
   $('#mediInput').focus();
 });
+$('#mediInput').addEventListener('input', () => {
+  $('#mediClearBtn').style.visibility = $('#mediInput').value.length ? 'visible' : 'hidden';
+});
 
-renderMediStaticText();
-renderMediConcerns();
+initMediPlaceholderRotation();
 
 /* ================================================================
    PDF STUDIO — MODULE
