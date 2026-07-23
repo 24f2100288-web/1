@@ -186,21 +186,29 @@ html{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.14) transparent;}
    2. LAYOUT UTILITIES
    ================================================================ */
 .container{width:100%;max-width:1240px;margin:0 auto;padding:0 24px;}
-.section{padding:130px 0 70px;position:relative;}
-.section-tight{padding:90px 0;}
-.section-top-tight{padding-top:70px;}
+.section{padding:130px 0 50px;position:relative;}
+.section-tight{padding:70px 0;}
+.section-top-tight{padding-top:52px;}
+.section-tight.section-top-tight{padding-top:36px;}
 
 /* ---- Glowing section divider — a soft, centered, half-width line that
-   fades to nothing at both ends (never a hard-edged rule). Used between
-   sections that otherwise leave a large empty gap. ---- */
+   fades to nothing at both ends (never a hard-edged rule). Sits between
+   every top-level section to close the gap and give a clean seam, with
+   a bright, luminous core rather than a flat tinted rule. ---- */
 .section-glow-divider{
-  width:50%;max-width:600px;height:1px;margin:0 auto;position:relative;z-index:1;
-  background:linear-gradient(90deg, transparent, var(--blue-soft) 35%, var(--purple-soft) 65%, transparent);
-  opacity:.55;
+  width:50%;max-width:640px;height:2px;margin:0 auto;position:relative;z-index:1;
+  border-radius:2px;
+  background:linear-gradient(90deg, transparent, var(--blue-soft) 22%, #ffffff 50%, var(--purple-soft) 78%, transparent);
+  opacity:.95;
+  box-shadow:0 0 8px 1px rgba(167,139,250,0.6);
 }
 .section-glow-divider::before{
-  content:'';position:absolute;top:50%;left:50%;width:70%;height:10px;transform:translate(-50%,-50%);
-  background:radial-gradient(ellipse, rgba(139,92,246,0.35), transparent 75%);filter:blur(4px);
+  content:'';position:absolute;top:50%;left:50%;width:78%;height:22px;transform:translate(-50%,-50%);
+  background:radial-gradient(ellipse, rgba(167,139,250,0.55), transparent 72%);filter:blur(6px);
+}
+.section-glow-divider::after{
+  content:'';position:absolute;top:50%;left:50%;width:36%;height:10px;transform:translate(-50%,-50%);
+  background:radial-gradient(ellipse, rgba(255,255,255,0.7), transparent 70%);filter:blur(3px);
 }
 .section-head{max-width:680px;margin:0 auto 60px;text-align:center;}
 .eyebrow{
@@ -1675,7 +1683,8 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
      honest "cloud required" fallback for formats/features that
      genuinely cannot run in the browser (Office formats, OCR, etc).
      ============================================================ -->
-<section class="section" id="pdf-studio">
+<div class="section-glow-divider" aria-hidden="true"></div>
+<section class="section section-top-tight" id="pdf-studio">
   <div class="container">
     <div class="section-head reveal">
       <div class="eyebrow">📄 PDF Studio</div>
@@ -1761,7 +1770,8 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 <!-- ============================================================
      STUDY SECTION
      ============================================================ -->
-<section class="section" id="study">
+<div class="section-glow-divider" aria-hidden="true"></div>
+<section class="section section-top-tight" id="study">
   <div class="container">
     <div class="section-head reveal">
       <div class="eyebrow">Study Tools</div>
@@ -1775,7 +1785,8 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 <!-- ============================================================
      ENGINEERING TOOLS SECTION
      ============================================================ -->
-<section class="section" id="engineering">
+<div class="section-glow-divider" aria-hidden="true"></div>
+<section class="section section-top-tight" id="engineering">
   <div class="container">
     <div class="section-head reveal">
       <div class="eyebrow">Engineering Tools</div>
@@ -1791,7 +1802,8 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
      A premium AI-powered legal information dashboard — NOT a chatbot.
      Structured console input + structured report output.
      ============================================================ -->
-<section class="section" id="legal-ai">
+<div class="section-glow-divider" aria-hidden="true"></div>
+<section class="section section-top-tight" id="legal-ai">
   <div class="container">
     <div class="section-head reveal">
       <div class="eyebrow">⚖️ Legal Intelligence</div>
@@ -1848,7 +1860,8 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
      chatbot, and NOT a doctor. Console input → conversational
      follow-up questions (when needed) → structured health report.
      ============================================================ -->
-<section class="section" id="mediai">
+<div class="section-glow-divider" aria-hidden="true"></div>
+<section class="section section-top-tight" id="mediai">
   <div class="container">
     <div class="section-head reveal">
       <div class="eyebrow">🩺 Health Intelligence</div>
@@ -1905,7 +1918,8 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 <!-- ============================================================
      AI ROADMAP GENERATOR SECTION
      ============================================================ -->
-<section class="section" id="roadmap">
+<div class="section-glow-divider" aria-hidden="true"></div>
+<section class="section section-top-tight" id="roadmap">
   <div class="container">
     <div class="section-head reveal">
       <div class="eyebrow">Career Roadmap</div>
@@ -1922,7 +1936,8 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 <!-- ============================================================
      FUTURE FEATURES SECTION
      ============================================================ -->
-<section class="section-tight" id="future">
+<div class="section-glow-divider" aria-hidden="true"></div>
+<section class="section-tight section-top-tight" id="future">
   <div class="container">
     <div class="section-head reveal">
       <div class="eyebrow">Coming Soon</div>
@@ -1936,7 +1951,8 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 <!-- ============================================================
      ABOUT SECTION
      ============================================================ -->
-<section class="section-tight" id="about">
+<div class="section-glow-divider" aria-hidden="true"></div>
+<section class="section-tight section-top-tight" id="about">
   <div class="container">
     <div class="glass reveal" style="padding:48px;display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:center;">
       <div>
@@ -1958,7 +1974,8 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 <!-- ============================================================
      ABOUT THE CREATOR
      ============================================================ -->
-<section class="section-tight" id="creator">
+<div class="section-glow-divider" aria-hidden="true"></div>
+<section class="section-tight section-top-tight" id="creator">
   <div class="container">
     <div class="glass reveal" style="padding:52px;max-width:780px;margin:0 auto;text-align:center;">
       <div class="eyebrow" style="margin:0 auto 20px;display:inline-flex;">About the Creator</div>
@@ -1978,7 +1995,8 @@ table.calc-table th{color:var(--text-dim);font-weight:600;font-size:12px;text-tr
 <!-- ============================================================
      CONTACT SECTION
      ============================================================ -->
-<section class="section-tight" id="contact">
+<div class="section-glow-divider" aria-hidden="true"></div>
+<section class="section-tight section-top-tight" id="contact">
   <div class="container">
     <div class="glass reveal" style="padding:48px;max-width:700px;margin:0 auto;text-align:center;">
       <div class="eyebrow" style="margin:0 auto 18px;display:inline-flex;">Contact</div>
